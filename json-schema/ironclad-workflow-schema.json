@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.com/schemas/ironclad/ironclad-workflow-schema.json",
+  "title": "Ironclad Workflow",
+  "description": "Schema for an Ironclad Workflow resource — the in-progress contract authoring, negotiation, approval, and signature state machine surfaced by /workflows under the Ironclad Public API.",
+  "type": "object",
+  "required": ["id", "creator", "template", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the workflow instance."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title for the workflow, typically derived from a workflow attribute or the configured workflow template."
+    },
+    "template": {
+      "type": "string",
+      "description": "Identifier of the workflow schema/template that this workflow instance was launched from."
+    },
+    "templateVersion": {
+      "type": "integer",
+      "description": "Version of the workflow schema/template in effect when the workflow was launched."
+    },
+    "status": {
+      "type": "string",
+      "description": "Current step or phase in the workflow lifecycle (e.g., create, review, sign, complete).",
+      "enum": ["create", "review", "sign", "complete", "cancelled", "paused"]
+    },
+    "step": {
+      "type": "string",
+      "description": "Current step name within the workflow template."
+    },
+    "creator": {
+      "$ref": "#/$defs/User",
+      "description": "User who launched the workflow."
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the workflow was created."
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of the most recent change to the workflow."
+    },
+    "isCancelled": {
+      "type": "boolean",
+      "description": "Whether the workflow has been cancelled."
+    },
+    "isComplete": {
+      "type": "boolean",
+      "description": "Whether the workflow has completed all steps."
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Free-form key/value map of workflow attribute values configured by the workflow template (counterparty, contract value, dates, custom fields)."
+    },
+    "approvals": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Approval" },
+      "description": "List of approval roles and their current decision state."
+    },
+    "roles": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/Role" },
+      "description": "Map of role names to role assignment configuration."
+    },
+    "signers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Signer" },
+      "description": "Configured signers on the active signature packet."
+    },
+    "documents": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Document" },
+      "description": "Documents associated with the workflow — draft contracts, attachments, signed PDFs."
+    },
+    "recipients": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Counterparty recipient configuration for the negotiation phase."
+    }
+  },
+  "$defs": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["user", "user-group"] }
+      }
+    },
+    "Approval": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the approval role." },
+        "status": {
+          "type": "string",
+          "description": "Current approval status.",
+          "enum": ["pending", "approved", "rejected", "skipped"]
+        },
+        "approvers": { "type": "array", "items": { "$ref": "#/$defs/User" } },
+        "current": { "type": "boolean" }
+      }
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "assignees": { "type": "array", "items": { "$ref": "#/$defs/User" } }
+      }
+    },
+    "Signer": {
+      "type": "object",
+      "properties": {
+        "signerRoleName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "fullName": { "type": "string" },
+        "title": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "viewed", "signed", "declined"]
+        }
+      }
+    },
+    "Document": {
+      "type": "object",
+      "properties": {
+        "key": { "type": "string", "description": "Workflow attribute key for the document attribute." },
+        "filename": { "type": "string" },
+        "downloadURL": { "type": "string", "format": "uri" },
+        "type": { "type": "string", "enum": ["draft", "supporting", "signed"] }
+      }
+    }
+  }
+}

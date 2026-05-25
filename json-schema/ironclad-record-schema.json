@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.com/schemas/ironclad/ironclad-record-schema.json",
+  "title": "Ironclad Record",
+  "description": "Schema for an Ironclad Record — an executed contract stored in the Ironclad repository with structured metadata, attachments, and references to entities and workflows. Surfaced via /records under the Ironclad Public API.",
+  "type": "object",
+  "required": ["id", "type"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the record."
+    },
+    "type": {
+      "type": "string",
+      "description": "Record type identifier corresponding to a Records schema (e.g., MSA, NDA, Order Form)."
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name of the contract record."
+    },
+    "schemaId": {
+      "type": "string",
+      "description": "Identifier of the Records schema defining the record's metadata fields."
+    },
+    "status": {
+      "type": "string",
+      "description": "Lifecycle status of the contract (e.g., active, expired, terminated)."
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lastUpdatedDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "effectiveDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "expirationDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "renewalDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Free-form map of record metadata properties (counterparty, total value, payment terms, custom fields). Field structure is governed by the record's schema."
+    },
+    "attachments": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/Attachment" },
+      "description": "Map of attachment keys to attachment metadata."
+    },
+    "workflowId": {
+      "type": "string",
+      "description": "Identifier of the workflow instance this record was generated from, if applicable."
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Hypermedia links to related resources."
+    }
+  },
+  "$defs": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "filename": { "type": "string" },
+        "size": { "type": "integer" },
+        "mimeType": { "type": "string" },
+        "downloadURL": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

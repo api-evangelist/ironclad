@@ -1,0 +1,154 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Ironclad
+providerId: ironclad
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: false
+tags:
+  - CLM
+  - Contracts
+  - Enterprise
+  - LegalTech
+description: >-
+  Ironclad does not publish a public price list. All plans are quote-based and assembled from a configurable
+  product/support/add-on matrix. The structure below captures the publicly described product surface
+  (https://ironcladapp.com/pricing) so that the plan shape can be reconciled with an actual quote during sales
+  engagement. Pricing dollar amounts are intentionally left blank — fill them in from a signed order form,
+  master subscription agreement, or order schedule before relying on this file for FinOps reporting.
+sources:
+  - https://ironcladapp.com/pricing
+  - https://ironcladapp.com/master-subscription-agreement/
+plans:
+  - id: ironclad-clm
+    name: Ironclad CLM Platform
+    type: quote-based
+    description: >-
+      Core contract lifecycle management — Workflow Designer, Records repository, Repository Search, eSignature.
+      Priced per seat (legal + business users) and scoped to a tenant region (NA1 or EU1).
+    entries:
+      - label: Platform subscription
+        name: platform
+        type: subscription
+        metric: tenant
+        limit: 1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: 'quote'
+        userMultiplied: false
+      - label: Seat license
+        name: seat
+        type: subscription
+        metric: user
+        limit: -1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: 'quote'
+        userMultiplied: true
+    elements:
+      - name: Workflow Designer
+      - name: Records repository
+      - name: Repository and conversational search
+      - name: Native eSignature
+      - name: Standard integrations (Salesforce, Slack, Microsoft 365, Box, Zapier)
+  - id: ironclad-jurist
+    name: Jurist AI Assistant
+    type: quote-based
+    description: >-
+      Agentic AI add-on — contract review, redlining, drafting, summarization, and conversational repository
+      search. Sold as an add-on to the CLM Platform.
+    entries:
+      - label: Jurist add-on
+        name: jurist
+        type: subscription
+        metric: tenant
+        limit: 1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: 'quote'
+        userMultiplied: false
+    elements:
+      - name: AI contract review
+      - name: AI drafting and redlining
+      - name: Word add-in
+      - name: Conversational repository search
+  - id: ironclad-clickwrap
+    name: Ironclad Clickwrap
+    type: quote-based
+    description: >-
+      Standalone or add-on online-agreement acceptance product. Pricing is typically tiered by monthly
+      acceptance volume.
+    entries:
+      - label: Clickwrap subscription
+        name: clickwrap
+        type: subscription
+        metric: tenant
+        limit: 1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: 'quote'
+        userMultiplied: false
+      - label: Monthly acceptances
+        name: acceptances
+        type: metered
+        metric: acceptance
+        limit: -1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: 'quote'
+        userMultiplied: false
+    elements:
+      - name: PS.js JavaScript library
+      - name: Activity API
+      - name: REST API for sites, groups, contracts, signers
+      - name: Acceptance-record evidence export
+  - id: ironclad-api-add-on
+    name: API Access Add-On
+    type: quote-based
+    description: >-
+      Public API access is an add-on on most plans. Includes OAuth 2.0, SCIM 2.0, and webhooks. Rate-limited
+      per tier (see rate-limits/ironclad-rate-limits.yml).
+    entries:
+      - label: API access
+        name: api-access
+        type: subscription
+        metric: tenant
+        limit: 1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: 'quote'
+        userMultiplied: false
+    elements:
+      - name: Public API
+      - name: OAuth 2.0 (Authorization Code + Client Credentials)
+      - name: SCIM 2.0 provisioning
+      - name: Webhooks
+      - name: Data Exports
+  - id: ironclad-security-data-pro
+    name: Security & Data Pro
+    type: quote-based
+    description: >-
+      Per-tenant encryption add-on with Hold-Your-Own-Key support via Antimatter or GCP. For regulated and
+      sensitive deployments.
+    entries:
+      - label: Security & Data Pro
+        name: security-data-pro
+        type: subscription
+        metric: tenant
+        limit: 1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: 'quote'
+        userMultiplied: false
+    elements:
+      - name: Per-tenant encryption
+      - name: Hold-Your-Own-Key (HYOK) via Antimatter
+      - name: HYOK via GCP

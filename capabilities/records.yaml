@@ -1,0 +1,382 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: "Ironclad Public API \u2014 Records"
+  description: "Ironclad Public API \u2014 Records. 17 operations across 10 resource paths. Self-contained Naftiko capability\
+    \ covering the Ironclad Records business surface."
+  tags:
+  - Ironclad
+  - Records
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    IRONCLAD_ACCESS_TOKEN: IRONCLAD_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: records
+    baseUri: https://na1.ironcladapp.com/public/api/v1
+    description: Ironclad Records business capability.
+    resources:
+    - name: records
+      path: /records
+      operations: &id001
+      - name: list-all-records
+        method: GET
+        description: List All Records
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: sortField
+          in: query
+          type: string
+          description: The field to sort Records. Only one field is supported in the sort operation.
+          required: false
+        - name: sortDirection
+          in: query
+          type: string
+          description: The direction the records are sorted by in correlation with the `sortField`.
+          required: false
+      - name: create-a-record
+        method: POST
+        description: Create a Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: records-attachments-download-urls
+      path: /records/attachments/download-urls
+      operations: &id002
+      - name: create-attachment-download-urls
+        method: POST
+        description: Create Attachment Download URLs
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: records-attachments-download-urls-jobid
+      path: /records/attachments/download-urls/{jobId}
+      operations: &id003
+      - name: get-attachment-download-urls-status
+        method: GET
+        description: Get Attachment Download URLs Status
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: jobId
+          in: path
+          type: string
+          description: The job ID returned from the create attachment download URLs endpoint.
+          required: true
+    - name: records-smart-import
+      path: /records/smart-import
+      operations: &id004
+      - name: retrieve-import-predictions
+        method: GET
+        description: Retrieve Predictions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: recordId
+          in: query
+          type: string
+          description: The ID of the Record for prediction status.
+          required: false
+        - name: importId
+          in: query
+          type: string
+          description: The ID of the Import for prediction statuses.
+          required: false
+      - name: create-a-smart-import-record
+        method: POST
+        description: Create a Smart Import Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: records-smart-import-importid
+      path: /records/smart-import/{importId}
+      operations: &id005
+      - name: create-a-smart-import-record-to-import
+        method: POST
+        description: Upload a Smart Import Record to an existing Import
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: importId
+          in: path
+          type: string
+          description: The Import Id. You can upload a record to an existing import in the repository.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: records-id
+      path: /records/{id}
+      operations: &id006
+      - name: retrieve-a-record
+        method: GET
+        description: Retrieve a Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Record.
+          required: true
+      - name: replace-a-record
+        method: PUT
+        description: Replace a Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Record.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: delete-a-record
+        method: DELETE
+        description: Delete a Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Record.
+          required: true
+      - name: update-record-metadata
+        method: PATCH
+        description: Update Record Metadata
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Record.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: records-metadata
+      path: /records/metadata
+      operations: &id007
+      - name: list-all-records-metadata
+        method: GET
+        description: Retrieve Records Schema
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: records-id-attachments-key
+      path: /records/{id}/attachments/{key}
+      operations: &id008
+      - name: create-an-attachment-on-a-record
+        method: POST
+        description: Create an Attachment on a Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Record. For an explanation of Record IDs or Ironclad IDs and how to find
+            them, see [Getting Started](https://developer.ironcladapp.com/reference/getting-started-api).
+          required: true
+        - name: key
+          in: path
+          type: string
+          description: The attachment key at which to store the attachment. This can be any arbitrary string.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: retrieve-an-attachment-on-a-record
+        method: GET
+        description: Retrieve an Attachment on a Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID of the Record.
+          required: true
+        - name: key
+          in: path
+          type: string
+          description: The attachment key.
+          required: true
+      - name: delete-an-attachment-on-a-record
+        method: DELETE
+        description: Delete an Attachment on a Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Record.
+          required: true
+        - name: key
+          in: path
+          type: string
+          description: The attachment key.
+          required: true
+    - name: records-id-actions
+      path: /records/{id}/actions
+      operations: &id009
+      - name: run-an-action-on-a-record
+        method: POST
+        description: Run an Action on a Record
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Record. For an explanation of Record IDs or Ironclad IDs and how to find
+            them, see [Getting Started](https://developer.ironcladapp.com/reference/getting-started-api).
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: records-export
+      path: /records/export
+      operations: &id010
+      - name: retrieve-xlsx-export-file-of-all-records
+        method: GET
+        description: Retrieve XLSX Export File of Records
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: types
+          in: query
+          type: string
+          description: 'Comma separated list of record types to export. Example: `mutualNDA,NDA`'
+          required: false
+        - name: properties
+          in: query
+          type: string
+          description: 'IDs of properties to export, comma separated. Example: `counterpartyName,agreementDate`'
+          required: false
+    authentication:
+      type: apikey
+      key: Authorization
+      value: Bearer {{env.IRONCLAD_ACCESS_TOKEN}}
+      placement: header
+  exposes:
+  - type: rest
+    namespace: records-rest
+    port: 8080
+    description: REST adapter for Ironclad Records. One resource per consumed operation.
+    resources:
+    - name: records
+      path: /v1/records
+      operations: *id001
+    - name: records-attachments-download-urls
+      path: /v1/records/attachments/download-urls
+      operations: *id002
+    - name: records-attachments-download-urls-jobid
+      path: /v1/records/attachments/download-urls/{jobId}
+      operations: *id003
+    - name: records-smart-import
+      path: /v1/records/smart-import
+      operations: *id004
+    - name: records-smart-import-importid
+      path: /v1/records/smart-import/{importId}
+      operations: *id005
+    - name: records-id
+      path: /v1/records/{id}
+      operations: *id006
+    - name: records-metadata
+      path: /v1/records/metadata
+      operations: *id007
+    - name: records-id-attachments-key
+      path: /v1/records/{id}/attachments/{key}
+      operations: *id008
+    - name: records-id-actions
+      path: /v1/records/{id}/actions
+      operations: *id009
+    - name: records-export
+      path: /v1/records/export
+      operations: *id010

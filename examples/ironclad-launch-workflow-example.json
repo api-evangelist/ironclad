@@ -1,0 +1,57 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://na1.ironcladapp.com/public/api/v1/workflows",
+    "headers": {
+      "Authorization": "Bearer <access_token>",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "template": "msa-template",
+      "creator": {
+        "email": "kin@example.com",
+        "type": "user"
+      },
+      "attributes": {
+        "counterparty": "Acme Inc.",
+        "contractValue": {
+          "amount": 50000,
+          "currency": "USD"
+        },
+        "effectiveDate": "2026-06-01",
+        "termLength": "12 months",
+        "autoRenew": true
+      }
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "id": "wf_01HXYZ1234567890ABCDEFGHJK",
+      "title": "MSA — Acme Inc.",
+      "template": "msa-template",
+      "templateVersion": 7,
+      "status": "review",
+      "step": "Legal Review",
+      "creator": {
+        "email": "kin@example.com",
+        "userId": "usr_01ABCDEF",
+        "type": "user"
+      },
+      "created": "2026-05-25T18:30:00Z",
+      "lastUpdated": "2026-05-25T18:30:00Z",
+      "isCancelled": false,
+      "isComplete": false,
+      "attributes": {
+        "counterparty": "Acme Inc.",
+        "contractValue": {
+          "amount": 50000,
+          "currency": "USD"
+        },
+        "effectiveDate": "2026-06-01",
+        "termLength": "12 months",
+        "autoRenew": true
+      }
+    }
+  }
+}

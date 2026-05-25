@@ -1,0 +1,97 @@
+vocabulary: Ironclad
+provider: Ironclad
+providerId: ironclad
+version: '0.1'
+created: '2026-05-25'
+modified: '2026-05-25'
+description: >-
+  Controlled vocabulary for Ironclad CLM concepts, operations, and capabilities. Aligns the Ironclad domain
+  language with API Evangelist's operational/capability dimensions so artifacts (OpenAPI, JSON Schema,
+  capabilities, plans, rate-limits, finops) share a consistent terminology.
+concepts:
+  - term: Workflow
+    definition: An in-progress contract negotiation, approval, and signature state machine instance, launched from a Workflow Schema (template).
+    aliases: [contract workflow, workflow instance]
+  - term: Workflow Schema
+    definition: The reusable workflow template — attributes, roles, approval gates, signature packets — used to launch Workflow instances.
+    aliases: [workflow template]
+  - term: Record
+    definition: An executed contract stored in the Ironclad repository with structured metadata, schema, and attachments.
+    aliases: [contract record, repository record]
+  - term: Records Schema
+    definition: The reusable record-type definition — fields, types, validation — used to structure a Record.
+    aliases: [record type]
+  - term: Entity
+    definition: A counterparty, internal party, or referenced organization/person linked to Workflows, Records, and Obligations.
+    aliases: [counterparty, party]
+  - term: Obligation
+    definition: A post-signature commitment extracted from a contract — renewal date, SLA, payment milestone, regulatory deadline.
+  - term: Signature Packet
+    definition: The bundle of documents sent out for signature on a Workflow.
+  - term: Signer
+    definition: A counterparty or internal recipient assigned to sign documents in a Signature Packet.
+  - term: Approval
+    definition: A required decision on a Workflow assigned to a role; resolves to approved, rejected, or skipped.
+  - term: Smart Import
+    definition: ML-driven metadata extraction that ingests legacy PDF contracts into Records.
+  - term: Jurist
+    definition: Ironclad's agentic AI assistant for contract review, drafting, redlining, and conversational repository search.
+  - term: Clickwrap
+    definition: An online-agreement acceptance flow (click-to-accept) with court-ready acceptance records.
+  - term: Browsewrap
+    definition: An online agreement accepted by continued use of a site, tracked via the Activity API.
+  - term: Webhook
+    definition: An HTTP callback subscription that delivers signed event payloads to a target URL on Workflow, Record, and Entity lifecycle events.
+  - term: Data Export
+    definition: An asynchronous bulk-export job that delivers tenant contract data to a data lake or warehouse.
+  - term: Scope
+    definition: An OAuth permission of the form public.{resource}.{action} (e.g., public.workflows.readWorkflows).
+operations:
+  - name: list
+    description: GET on a collection — paginated read.
+  - name: retrieve
+    description: GET on a single resource.
+  - name: create
+    description: POST on a collection — synchronous or asynchronous variants.
+  - name: update
+    description: PATCH on a single resource — partial update.
+  - name: replace
+    description: PUT on a single resource — full replacement.
+  - name: delete
+    description: DELETE on a single resource.
+  - name: action
+    description: POST on a sub-resource that performs a side-effect verb (cancel, pause, resume, revert, send, schedule, remind).
+capabilities:
+  - name: Contract Authoring
+    operations: [create, retrieve, update]
+    concepts: [Workflow, Workflow Schema]
+  - name: Contract Approval
+    operations: [list, update, action]
+    concepts: [Approval, Workflow]
+  - name: Signature Collection
+    operations: [list, action]
+    concepts: [Signature Packet, Signer, Workflow]
+  - name: Repository Management
+    operations: [list, retrieve, create, update, replace, delete]
+    concepts: [Record, Records Schema]
+  - name: Counterparty Management
+    operations: [list, retrieve, create, update, delete]
+    concepts: [Entity]
+  - name: Obligation Tracking
+    operations: [list, retrieve, create, update]
+    concepts: [Obligation, Record]
+  - name: Event Integration
+    operations: [list, retrieve, create, update, delete]
+    concepts: [Webhook]
+  - name: Data Movement
+    operations: [create, retrieve]
+    concepts: [Data Export]
+  - name: Conversational Search
+    operations: [action]
+    concepts: [Jurist, Record]
+  - name: Online Acceptance
+    operations: [action]
+    concepts: [Clickwrap, Browsewrap]
+  - name: Identity and Provisioning
+    operations: [list, retrieve, create, update, replace, delete]
+    concepts: [User, Group]

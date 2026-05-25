@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.com/schemas/ironclad/ironclad-user-schema.json",
+  "title": "Ironclad SCIM User",
+  "description": "SCIM 2.0 User resource as implemented by the Ironclad SCIM API at /scim/v2/Users. Follows RFC 7643 with Ironclad-specific group memberships and role assignments.",
+  "type": "object",
+  "required": ["schemas", "userName"],
+  "properties": {
+    "schemas": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "SCIM schema URNs identifying the resource type.",
+      "default": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+    },
+    "id": {
+      "type": "string",
+      "description": "Server-assigned unique identifier for the user."
+    },
+    "externalId": {
+      "type": "string",
+      "description": "Identifier from the upstream identity provider."
+    },
+    "userName": {
+      "type": "string",
+      "description": "Unique username, typically the user's email."
+    },
+    "name": {
+      "type": "object",
+      "properties": {
+        "givenName": { "type": "string" },
+        "familyName": { "type": "string" },
+        "formatted": { "type": "string" }
+      }
+    },
+    "active": { "type": "boolean" },
+    "emails": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": { "type": "string", "format": "email" },
+          "type": { "type": "string", "enum": ["work", "home", "other"] },
+          "primary": { "type": "boolean" }
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": { "type": "string" },
+          "display": { "type": "string" },
+          "$ref": { "type": "string" }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "resourceType": { "type": "string" },
+        "created": { "type": "string", "format": "date-time" },
+        "lastModified": { "type": "string", "format": "date-time" },
+        "location": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

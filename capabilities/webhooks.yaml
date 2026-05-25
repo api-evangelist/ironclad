@@ -1,0 +1,114 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: "Ironclad Public API \u2014 Webhooks"
+  description: "Ironclad Public API \u2014 Webhooks. 6 operations across 3 resource paths. Self-contained Naftiko capability\
+    \ covering the Ironclad Webhooks business surface."
+  tags:
+  - Ironclad
+  - Webhooks
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    IRONCLAD_ACCESS_TOKEN: IRONCLAD_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: webhooks
+    baseUri: https://na1.ironcladapp.com/public/api/v1
+    description: Ironclad Webhooks business capability.
+    resources:
+    - name: webhooks
+      path: /webhooks
+      operations: &id001
+      - name: create-a-webhook
+        method: POST
+        description: Create a Webhook
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: list-all-webhooks
+        method: GET
+        description: List All Webhooks
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: webhooks-id
+      path: /webhooks/{id}
+      operations: &id002
+      - name: retrieve-a-webhook
+        method: GET
+        description: Retrieve a Webhook
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+      - name: update-a-webhook
+        method: PATCH
+        description: Update a Webhook
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: delete-a-webhook
+        method: DELETE
+        description: Delete a Webhook
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: webhooks-verification-key
+      path: /webhooks/verification-key
+      operations: &id003
+      - name: retrieve-webhook-verification-key
+        method: GET
+        description: Retrieve Webhook Verification Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    authentication:
+      type: apikey
+      key: Authorization
+      value: Bearer {{env.IRONCLAD_ACCESS_TOKEN}}
+      placement: header
+  exposes:
+  - type: rest
+    namespace: webhooks-rest
+    port: 8080
+    description: REST adapter for Ironclad Webhooks. One resource per consumed operation.
+    resources:
+    - name: webhooks
+      path: /v1/webhooks
+      operations: *id001
+    - name: webhooks-id
+      path: /v1/webhooks/{id}
+      operations: *id002
+    - name: webhooks-verification-key
+      path: /v1/webhooks/verification-key
+      operations: *id003

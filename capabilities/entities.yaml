@@ -1,0 +1,139 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: "Ironclad Public API \u2014 Entities"
+  description: "Ironclad Public API \u2014 Entities. 6 operations across 3 resource paths. Self-contained Naftiko capability\
+    \ covering the Ironclad Entities business surface."
+  tags:
+  - Ironclad
+  - Entities
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    IRONCLAD_ACCESS_TOKEN: IRONCLAD_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: entities
+    baseUri: https://na1.ironcladapp.com/public/api/v1
+    description: Ironclad Entities business capability.
+    resources:
+    - name: entities-relationship-types
+      path: /entities/relationship-types
+      operations: &id001
+      - name: get-all-entity-relationship-types
+        method: GET
+        description: Get All Entity Relationship Types
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters: []
+    - name: entities
+      path: /entities
+      operations: &id002
+      - name: list-all-entities
+        method: GET
+        description: List All Entities
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: sortField
+          in: query
+          type: string
+          description: The field to sort Entities. Only one field is supported in the sort operation. Default is `name`.
+          required: false
+        - name: sortDirection
+          in: query
+          type: string
+          description: The direction the entities are sorted by in correlation with the `sortField`. Default is `DESC`.
+          required: false
+      - name: create-an-entity
+        method: POST
+        description: Create an Entity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: entities-id
+      path: /entities/{id}
+      operations: &id003
+      - name: retrieve-an-entity
+        method: GET
+        description: Retrieve an Entity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Entity to fetch.
+          required: true
+      - name: update-an-entity
+        method: PATCH
+        description: Update an Entity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Entity to update.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: delete-an-entity
+        method: DELETE
+        description: Delete an Entity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The ID or Ironclad ID of the Entity to delete.
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: Bearer {{env.IRONCLAD_ACCESS_TOKEN}}
+      placement: header
+  exposes:
+  - type: rest
+    namespace: entities-rest
+    port: 8080
+    description: REST adapter for Ironclad Entities. One resource per consumed operation.
+    resources:
+    - name: entities-relationship-types
+      path: /v1/entities/relationship-types
+      operations: *id001
+    - name: entities
+      path: /v1/entities
+      operations: *id002
+    - name: entities-id
+      path: /v1/entities/{id}
+      operations: *id003

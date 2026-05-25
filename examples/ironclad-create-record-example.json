@@ -1,0 +1,50 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://na1.ironcladapp.com/public/api/v1/records",
+    "headers": {
+      "Authorization": "Bearer <access_token>",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "type": "msa",
+      "name": "Acme Inc. — MSA (2026)",
+      "properties": {
+        "counterparty": "Acme Inc.",
+        "effectiveDate": "2026-06-01",
+        "expirationDate": "2027-06-01",
+        "renewalDate": "2027-05-01",
+        "contractValue": 50000,
+        "currency": "USD",
+        "autoRenew": true,
+        "owner": "kin@example.com"
+      }
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "id": "rec_01HXYZ9876543210ABCDEFGHJK",
+      "type": "msa",
+      "name": "Acme Inc. — MSA (2026)",
+      "schemaId": "schema_msa_v3",
+      "status": "active",
+      "createdDate": "2026-05-25T18:31:12Z",
+      "lastUpdatedDate": "2026-05-25T18:31:12Z",
+      "effectiveDate": "2026-06-01",
+      "expirationDate": "2027-06-01",
+      "renewalDate": "2027-05-01",
+      "properties": {
+        "counterparty": "Acme Inc.",
+        "contractValue": 50000,
+        "currency": "USD",
+        "autoRenew": true,
+        "owner": "kin@example.com"
+      },
+      "attachments": {},
+      "links": {
+        "self": "https://na1.ironcladapp.com/public/api/v1/records/rec_01HXYZ9876543210ABCDEFGHJK"
+      }
+    }
+  }
+}

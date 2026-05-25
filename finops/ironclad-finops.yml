@@ -1,0 +1,109 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Ironclad
+providerId: ironclad
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: false
+tags:
+  - FinOps
+  - Cost Management
+  - FOCUS
+  - CLM
+description: >-
+  FOCUS-aligned FinOps definition for the Ironclad CLM platform. Ironclad's commercial model is subscription-
+  per-seat with quote-based pricing and add-on lanes for Jurist (AI), Clickwrap (acceptance volume), API
+  access, and Security & Data Pro. There is no public token- or operation-level metering surface — cost is
+  largely fixed-fee with optional usage components on Clickwrap acceptance volume and (potentially) Jurist AI
+  usage when negotiated.
+sources:
+  - https://ironcladapp.com/pricing
+  - https://developer.ironcladapp.com/reference/clm-api-rate-limits
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Ironclad
+serviceCategory: Business Applications
+billingModel:
+  pricingCategory: Subscription-Based
+  billingFrequency: Annual
+  billingCurrency: USD
+  chargeCategories:
+    - Subscription
+    - Usage
+    - Tax
+    - Credit
+    - Adjustment
+  primaryUnit: seat-year
+  secondaryUnits:
+    - acceptance
+    - workflow
+    - tenant-year
+focusColumns:
+  ServiceName: Ironclad CLM
+  ServiceCategory: Business Applications
+  ProviderName: Ironclad
+  PublisherName: Ironclad
+  InvoiceIssuerName: Ironclad, Inc.
+  PricingCategory: Subscription-Based
+  PricingUnit: Seat
+  BillingCurrency: USD
+meters:
+  - name: clm_seats
+    unit: seat-year
+    aggregation: max
+    dimensions:
+      - tenant
+      - workspace
+      - role
+    notes: Counted as the maximum provisioned seats across the billing period.
+  - name: jurist_addon
+    unit: tenant-year
+    aggregation: flat
+    dimensions:
+      - tenant
+    notes: Fixed annual add-on per tenant.
+  - name: clickwrap_acceptances
+    unit: acceptance
+    aggregation: sum
+    dimensions:
+      - tenant
+      - site
+      - group
+    notes: Counted from Activity API events. Subject to negotiated tiers and overage rates.
+  - name: api_access
+    unit: tenant-year
+    aggregation: flat
+    dimensions:
+      - tenant
+  - name: data_exports
+    unit: tenant-year
+    aggregation: flat
+    dimensions:
+      - tenant
+    notes: Data Exports surface is typically bundled with API access; bandwidth/storage covered by tenant subscription.
+allocationDimensions:
+  - tenant
+  - workspace
+  - cost-center
+  - business-unit
+  - region
+optimization:
+  - lever: Right-size seat licensing
+    description: Reconcile provisioned vs. active seats quarterly using SCIM and the user audit log.
+  - lever: Reduce workflow proliferation
+    description: Consolidate ad-hoc templates into a small set of governed workflow schemas; use approval roles instead of new templates.
+  - lever: Use Data Exports instead of paginating List Records
+    description: Bulk exports are operationally cheaper than thousands of paginated reads and avoid hitting CLM API rate limits.
+  - lever: Batch SCIM provisioning
+    description: Use PATCH with batched operations rather than per-attribute PUTs to reduce request volume.
+  - lever: Cache OAuth tokens
+    description: Cache tokens for their full lifetime; do not request a new token per API call.
+notes: >-
+  This FinOps profile is intentionally conservative because Ironclad does not publish public unit pricing.
+  Once a signed order schedule is available, populate per-meter unit costs and reconcile against the
+  ironclad-plans-pricing.yml file.

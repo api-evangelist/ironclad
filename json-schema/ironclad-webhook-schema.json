@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.com/schemas/ironclad/ironclad-webhook-schema.json",
+  "title": "Ironclad Webhook",
+  "description": "Schema for an Ironclad Webhook subscription and the event envelope delivered to subscribers. Webhooks deliver workflow, record, and entity lifecycle events to registered target URLs with signed payloads verifiable against the webhook verification key.",
+  "type": "object",
+  "$defs": {
+    "WebhookSubscription": {
+      "type": "object",
+      "required": ["id", "targetURL", "events"],
+      "properties": {
+        "id": { "type": "string", "description": "Unique webhook subscription identifier." },
+        "targetURL": { "type": "string", "format": "uri", "description": "HTTPS endpoint that receives event POSTs." },
+        "events": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of event types this subscription receives.",
+          "examples": [["workflow.created", "workflow.launched", "workflow.signed", "workflow.completed", "record.created", "record.updated", "record.deleted"]]
+        },
+        "active": { "type": "boolean" },
+        "createdDate": { "type": "string", "format": "date-time" }
+      }
+    },
+    "WebhookEvent": {
+      "type": "object",
+      "required": ["event", "data"],
+      "properties": {
+        "event": {
+          "type": "string",
+          "description": "The event type that fired."
+        },
+        "data": {
+          "type": "object",
+          "description": "Event payload — varies by event type. For workflow events, contains the workflow resource. For record events, contains the record. For entity events, contains the entity."
+        },
+        "company": { "type": "string", "description": "Company (tenant) identifier." },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

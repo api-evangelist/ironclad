@@ -1,0 +1,47 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://na1.ironcladapp.com/public/api/v1/search/conversational",
+    "headers": {
+      "Authorization": "Bearer <access_token>",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "query": "Show every MSA expiring in Q3 2026 with auto-renew enabled and contract value over $100,000.",
+      "recordTypes": ["msa"],
+      "maxResults": 25
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "results": [
+        {
+          "recordId": "rec_01ABCDEFGHIJ",
+          "name": "Globex Corp. — MSA (2025)",
+          "expirationDate": "2026-08-15",
+          "contractValue": 250000,
+          "autoRenew": true,
+          "snippet": "Master Services Agreement between Globex Corp. and the Customer, effective 2025-08-15..."
+        },
+        {
+          "recordId": "rec_01KLMNOPQRST",
+          "name": "Initech LLC — MSA (2024)",
+          "expirationDate": "2026-09-30",
+          "contractValue": 175000,
+          "autoRenew": true,
+          "snippet": "MSA with Initech LLC, includes auto-renewal clause unless terminated 60 days prior..."
+        }
+      ],
+      "totalResults": 2,
+      "interpretation": {
+        "filters": {
+          "recordType": "msa",
+          "expirationDate": "2026-07-01..2026-09-30",
+          "autoRenew": true,
+          "contractValue.gt": 100000
+        }
+      }
+    }
+  }
+}

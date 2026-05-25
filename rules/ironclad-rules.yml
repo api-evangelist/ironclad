@@ -1,0 +1,96 @@
+extends:
+  - spectral:oas
+  - spectral:asyncapi
+functions: []
+rules:
+  ironclad-info-version-numeric:
+    description: Ironclad uses a single integer (1) as the API version on every public spec.
+    severity: warn
+    given: $.info.version
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[0-9]+$'
+
+  ironclad-server-includes-region:
+    description: Every Ironclad server URL must encode a region (na1, eu1, or demo).
+    severity: warn
+    given: $.servers[*].url
+    then:
+      function: pattern
+      functionOptions:
+        match: '^https://(na1|eu1|demo)\\.ironcladapp\\.com'
+
+  ironclad-operation-id-camelcase:
+    description: Ironclad operationIds are camelCase.
+    severity: warn
+    given: $.paths[*][get,post,put,patch,delete].operationId
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[a-z][A-Za-z0-9]+$'
+
+  ironclad-operation-summary-title-case:
+    description: Operation summaries should be Title Case (e.g., "List All Workflows", not "list all workflows").
+    severity: warn
+    given: $.paths[*][get,post,put,patch,delete].summary
+    then:
+      function: pattern
+      functionOptions:
+        match: '^([A-Z][A-Za-z0-9-]*(\\s|$))+'
+
+  ironclad-tag-defined:
+    description: Every operation must be tagged with at least one of the canonical resource tags.
+    severity: error
+    given: $.paths[*][get,post,put,patch,delete]
+    then:
+      field: tags
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum:
+              - Workflows
+              - Records
+              - Entities
+              - Obligations
+              - Webhooks
+              - Exports
+              - Search
+              - OAuth
+              - SCIM
+              - Users
+              - Groups
+              - Schemas
+
+  ironclad-pagination-cursor-param:
+    description: List endpoints should expose cursor-based pagination via a 'nextPageToken' or 'cursor' query parameter.
+    severity: info
+    given: $.paths[?(@.get && @.get.operationId =~ /list.*/i)].get.parameters[*].name
+    then:
+      function: enumeration
+      functionOptions:
+        values:
+          - cursor
+          - nextPageToken
+          - pageToken
+          - page
+
+  ironclad-error-schema-defined:
+    description: 4xx and 5xx responses should reference a shared error schema.
+    severity: warn
+    given: $.paths[*][get,post,put,patch,delete].responses['400','401','403','404','409','422','429','500']
+    then:
+      field: content.application/json.schema.$ref
+      function: defined
+
+  ironclad-oauth-bearer-security:
+    description: Public API operations should declare the OAuth bearer security scheme.
+    severity: warn
+    given: $.paths[*][get,post,put,patch,delete]
+    then:
+      field: security
+      function: defined

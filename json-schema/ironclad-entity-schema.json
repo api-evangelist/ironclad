@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.com/schemas/ironclad/ironclad-entity-schema.json",
+  "title": "Ironclad Entity",
+  "description": "Schema for an Ironclad Entity — a counterparty, internal party, or referenced organization/person that is linked to workflows, records, and obligations. Surfaced via /entities under the Ironclad Public API.",
+  "type": "object",
+  "required": ["id", "type"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the entity."
+    },
+    "type": {
+      "type": "string",
+      "description": "Entity type — e.g., company, person, vendor, customer."
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name of the entity."
+    },
+    "schemaId": {
+      "type": "string",
+      "description": "Identifier of the Entities schema defining this entity's metadata fields."
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lastUpdatedDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Free-form metadata properties for the entity. Field structure is governed by the entity's schema."
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "relationshipType": { "type": "string" },
+          "targetEntityId": { "type": "string" },
+          "targetEntityType": { "type": "string" }
+        }
+      },
+      "description": "Typed relationships to other entities (parent/child, subsidiary, signatory-of, etc.)."
+    }
+  }
+}

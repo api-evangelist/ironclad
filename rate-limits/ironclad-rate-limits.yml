@@ -1,0 +1,71 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Ironclad
+providerId: ironclad
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: true
+tags:
+  - Rate Limiting
+  - CLM
+  - Webhooks
+description: >-
+  Rate limits applied to the Ironclad Public API and SCIM API. Limits are enforced per company (tenant) and
+  per access-token client. Webhooks have separate delivery-retry behavior. Limits below capture the public
+  guidance at https://developer.ironcladapp.com/reference/clm-api-rate-limits; exact tier-specific limits may
+  be negotiated in the order form for high-volume customers.
+sources:
+  - https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - https://developer.ironcladapp.com/reference/getting-started-api
+headers:
+  limit: X-RateLimit-Limit
+  remaining: X-RateLimit-Remaining
+  reset: X-RateLimit-Reset
+  retryAfter: Retry-After
+responseCodes:
+  throttled: 429
+  quotaExceeded: 429
+algorithm: token-bucket
+limits:
+  - api: Ironclad Public API
+    scope: tenant
+    rpm: 600
+    rps: 10
+    notes: >-
+      Default published guidance. Bulk endpoints (List Records, List Workflows, Exports) may be subject to
+      additional per-endpoint pacing. Use the Data Exports API for large pulls instead of paginating
+      List Records.
+  - api: Ironclad Public API — async workflow create
+    scope: tenant
+    rpm: 60
+    rps: 2
+    notes: >-
+      POST /workflows/async is recommended for high-volume launches; poll
+      GET /workflows/async/{asyncJobId} for status.
+  - api: Ironclad Public API — Data Exports
+    scope: tenant
+    notes: >-
+      Exports are asynchronous jobs. Submit via POST /exports, poll status via GET /exports/{jobId},
+      download via GET /exports/{jobId}/download. Concurrent job limits apply per tenant.
+  - api: Ironclad SCIM API
+    scope: tenant
+    rpm: 600
+    notes: >-
+      SCIM list/search operations support filtering and pagination; prefer filter-based requests over
+      full enumeration.
+  - api: Ironclad OAuth 2.0 — token
+    scope: client
+    notes: >-
+      Token issuance is rate-limited per OAuth client. Cache access tokens for their full lifetime and use
+      refresh tokens for the Authorization Code grant; do not request a new token per API call.
+webhooks:
+  scope: tenant
+  delivery:
+    retry: exponential-backoff
+    maxRetries: 8
+    deactivationOnFailure: true
+  notes: >-
+    Webhook target URLs are deactivated after a sustained failure window. See
+    https://developer.ironcladapp.com/reference/webhook-deactivation. Verify webhook signatures with the key
+    returned by GET /webhooks/verification-key.

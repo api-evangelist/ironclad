@@ -1,0 +1,52 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: "Ironclad Public API \u2014 Search"
+  description: "Ironclad Public API \u2014 Search. 1 operations across 1 resource paths. Self-contained Naftiko capability\
+    \ covering the Ironclad Search business surface."
+  tags:
+  - Ironclad
+  - Search
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    IRONCLAD_ACCESS_TOKEN: IRONCLAD_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search
+    baseUri: https://na1.ironcladapp.com/public/api/v1
+    description: Ironclad Search business capability.
+    resources:
+    - name: search-conversational
+      path: /search/conversational
+      operations: &id001
+      - name: run-conversational-search
+        method: POST
+        description: Run Conversational Search
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: Bearer {{env.IRONCLAD_ACCESS_TOKEN}}
+      placement: header
+  exposes:
+  - type: rest
+    namespace: search-rest
+    port: 8080
+    description: REST adapter for Ironclad Search. One resource per consumed operation.
+    resources:
+    - name: search-conversational
+      path: /v1/search/conversational
+      operations: *id001

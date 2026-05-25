@@ -1,0 +1,95 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://schema.org/",
+    "ironclad": "https://developer.ironcladapp.com/reference/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "hydra": "http://www.w3.org/ns/hydra/core#",
+
+    "Workflow": {
+      "@id": "ironclad:Workflow",
+      "@context": {
+        "id": { "@id": "ironclad:Workflow/id", "@type": "xsd:string" },
+        "title": { "@id": "ironclad:Workflow/title", "@type": "xsd:string" },
+        "template": { "@id": "ironclad:Workflow/template", "@type": "xsd:string" },
+        "status": { "@id": "ironclad:Workflow/status", "@type": "xsd:string" },
+        "step": { "@id": "ironclad:Workflow/step", "@type": "xsd:string" },
+        "creator": { "@id": "ironclad:Workflow/creator", "@type": "@id" },
+        "created": { "@id": "ironclad:Workflow/created", "@type": "xsd:dateTime" },
+        "lastUpdated": { "@id": "ironclad:Workflow/lastUpdated", "@type": "xsd:dateTime" },
+        "isCancelled": { "@id": "ironclad:Workflow/isCancelled", "@type": "xsd:boolean" },
+        "isComplete": { "@id": "ironclad:Workflow/isComplete", "@type": "xsd:boolean" },
+        "attributes": { "@id": "ironclad:Workflow/attributes" },
+        "approvals": { "@id": "ironclad:Workflow/approvals", "@container": "@list" },
+        "signers": { "@id": "ironclad:Workflow/signers", "@container": "@list" },
+        "documents": { "@id": "ironclad:Workflow/documents", "@container": "@list" }
+      }
+    },
+
+    "Record": {
+      "@id": "ironclad:Record",
+      "@context": {
+        "id": { "@id": "ironclad:Record/id", "@type": "xsd:string" },
+        "type": { "@id": "ironclad:Record/type", "@type": "xsd:string" },
+        "name": { "@id": "ironclad:Record/name", "@type": "xsd:string" },
+        "schemaId": { "@id": "ironclad:Record/schemaId", "@type": "xsd:string" },
+        "status": { "@id": "ironclad:Record/status", "@type": "xsd:string" },
+        "createdDate": { "@id": "ironclad:Record/createdDate", "@type": "xsd:dateTime" },
+        "lastUpdatedDate": { "@id": "ironclad:Record/lastUpdatedDate", "@type": "xsd:dateTime" },
+        "effectiveDate": { "@id": "ironclad:Record/effectiveDate", "@type": "xsd:date" },
+        "expirationDate": { "@id": "ironclad:Record/expirationDate", "@type": "xsd:date" },
+        "renewalDate": { "@id": "ironclad:Record/renewalDate", "@type": "xsd:date" },
+        "properties": { "@id": "ironclad:Record/properties" },
+        "attachments": { "@id": "ironclad:Record/attachments" },
+        "workflowId": { "@id": "ironclad:Record/workflowId", "@type": "xsd:string" }
+      }
+    },
+
+    "Entity": {
+      "@id": "ironclad:Entity",
+      "@context": {
+        "id": { "@id": "ironclad:Entity/id", "@type": "xsd:string" },
+        "type": { "@id": "ironclad:Entity/type", "@type": "xsd:string" },
+        "name": { "@id": "ironclad:Entity/name", "@type": "xsd:string" },
+        "schemaId": { "@id": "ironclad:Entity/schemaId", "@type": "xsd:string" },
+        "createdDate": { "@id": "ironclad:Entity/createdDate", "@type": "xsd:dateTime" },
+        "properties": { "@id": "ironclad:Entity/properties" },
+        "relationships": { "@id": "ironclad:Entity/relationships", "@container": "@list" }
+      }
+    },
+
+    "Obligation": {
+      "@id": "ironclad:Obligation",
+      "@context": {
+        "id": { "@id": "ironclad:Obligation/id", "@type": "xsd:string" },
+        "type": { "@id": "ironclad:Obligation/type", "@type": "xsd:string" },
+        "description": { "@id": "ironclad:Obligation/description", "@type": "xsd:string" },
+        "dueDate": { "@id": "ironclad:Obligation/dueDate", "@type": "xsd:date" },
+        "status": { "@id": "ironclad:Obligation/status", "@type": "xsd:string" },
+        "recordId": { "@id": "ironclad:Obligation/recordId", "@type": "xsd:string" }
+      }
+    },
+
+    "Webhook": {
+      "@id": "ironclad:Webhook",
+      "@context": {
+        "id": { "@id": "ironclad:Webhook/id", "@type": "xsd:string" },
+        "targetURL": { "@id": "ironclad:Webhook/targetURL", "@type": "xsd:anyURI" },
+        "events": { "@id": "ironclad:Webhook/events", "@container": "@list" },
+        "active": { "@id": "ironclad:Webhook/active", "@type": "xsd:boolean" }
+      }
+    },
+
+    "User": {
+      "@id": "ironclad:User",
+      "@context": {
+        "id": { "@id": "ironclad:User/id", "@type": "xsd:string" },
+        "userName": { "@id": "ironclad:User/userName", "@type": "xsd:string" },
+        "email": { "@id": "ironclad:User/email", "@type": "xsd:string" },
+        "active": { "@id": "ironclad:User/active", "@type": "xsd:boolean" }
+      }
+    }
+  }
+}

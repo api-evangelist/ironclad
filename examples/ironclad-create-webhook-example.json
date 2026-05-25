@@ -1,0 +1,36 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://na1.ironcladapp.com/public/api/v1/webhooks",
+    "headers": {
+      "Authorization": "Bearer <access_token>",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "targetURL": "https://webhooks.example.com/ironclad",
+      "events": [
+        "workflow.launched",
+        "workflow.signed",
+        "workflow.completed",
+        "record.created",
+        "record.updated"
+      ]
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "id": "wh_01HXYZWEBHOOK1234567890",
+      "targetURL": "https://webhooks.example.com/ironclad",
+      "events": [
+        "workflow.launched",
+        "workflow.signed",
+        "workflow.completed",
+        "record.created",
+        "record.updated"
+      ],
+      "active": true,
+      "createdDate": "2026-05-25T18:35:00Z"
+    }
+  }
+}
