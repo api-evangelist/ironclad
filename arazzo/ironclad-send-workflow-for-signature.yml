@@ -1,0 +1,87 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Send a Workflow for Signature
+  summary: Read sign-step status, send the signature request, then confirm the packet documents.
+  description: >-
+    Moves a workflow that is on the Sign step out for signature. The flow reads
+    the current sign status to confirm the workflow is ready, sends the
+    signature request to recipients, and then lists the workflow documents to
+    confirm what is included in the signature packet. Each step inlines its
+    request so the chain can be read and executed without opening the underlying
+    OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: send-workflow-for-signature
+  summary: Check sign status, send the signature request, then list packet documents.
+  description: >-
+    Retrieves the sign-step status, sends the signature request out to
+    recipients, and lists the documents on the workflow.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - workflowId
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      workflowId:
+        type: string
+        description: The unique identifier or Ironclad ID of the workflow on the Sign step.
+  steps:
+  - stepId: getSignStatus
+    description: >-
+      Retrieve information about the workflow in the sign step to confirm it is
+      ready to be sent.
+    operationId: get-sign-status
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      signStatus: $response.body
+  - stepId: sendSignature
+    description: >-
+      Send the signature request out for signature to the workflow's
+      recipients.
+    operationId: send-signature-request
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      sentStatus: $response.body
+  - stepId: confirmDocuments
+    description: >-
+      List the workflow documents to confirm what is included in the signature
+      packet after the request was sent.
+    operationId: retrieve-workflow-documents
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      signaturePacketDocuments: $response.body#/signaturePacketDocuments
+  outputs:
+    signStatus: $steps.getSignStatus.outputs.signStatus
+    sentStatus: $steps.sendSignature.outputs.sentStatus
+    signaturePacketDocuments: $steps.confirmDocuments.outputs.signaturePacketDocuments

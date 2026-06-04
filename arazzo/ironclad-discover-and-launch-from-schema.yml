@@ -1,0 +1,89 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Discover a Template and Launch a Workflow
+  summary: List workflow launch schemas, then launch a workflow against a chosen template.
+  description: >-
+    A schema-driven launch flow. Before launching, the workflow lists all
+    workflow launch schemas to discover available templates and their required
+    attributes, launches a new workflow against the first matching template, and
+    retrieves the launched workflow to confirm its step. Each step inlines its
+    request so the chain can be read and executed without opening the underlying
+    OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: discover-and-launch-from-schema
+  summary: Discover a launch schema, launch a workflow from it, then retrieve it.
+  description: >-
+    Lists the launch schemas to resolve a template id, launches a new workflow
+    using that template and the supplied attributes, and retrieves the result.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - attributes
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      attributes:
+        type: object
+        description: The attribute values used to populate the workflow's launch form.
+  steps:
+  - stepId: listSchemas
+    description: >-
+      List all workflow launch schemas to discover available templates and their
+      attributes.
+    operationId: list-all-workflow-schemas
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: form
+      in: query
+      value: launch
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      templateId: $response.body#/list/0/id
+      templateName: $response.body#/list/0/name
+  - stepId: launchWorkflow
+    description: >-
+      Launch a new workflow synchronously against the resolved template id.
+    operationId: launch-a-new-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    requestBody:
+      contentType: application/json
+      payload:
+        template: $steps.listSchemas.outputs.templateId
+        attributes: $inputs.attributes
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      workflowId: $response.body#/id
+  - stepId: retrieveWorkflow
+    description: >-
+      Retrieve the launched workflow to confirm its current step.
+    operationId: retrieve-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.launchWorkflow.outputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      title: $response.body#/title
+      step: $response.body#/step
+  outputs:
+    templateId: $steps.listSchemas.outputs.templateId
+    workflowId: $steps.launchWorkflow.outputs.workflowId
+    step: $steps.retrieveWorkflow.outputs.step

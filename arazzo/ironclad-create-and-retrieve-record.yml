@@ -1,0 +1,94 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Create and Retrieve a Contract Record
+  summary: Resolve the records schema, create a contract record, then read it back.
+  description: >-
+    A schema-aware record creation flow. The flow first retrieves the records
+    metadata to confirm the available record types and property keys, creates a
+    new contract record with the supplied metadata, and then retrieves the
+    created record to confirm the write. Each step inlines its request so the
+    chain can be read and executed without opening the underlying OpenAPI
+    description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: create-and-retrieve-record
+  summary: Resolve the records schema, create a record, then retrieve it.
+  description: >-
+    Reads the records metadata, creates a contract record with the supplied
+    type, name, and properties, and retrieves the new record.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - type
+    - name
+    - properties
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      type:
+        type: string
+        description: The record type to create (e.g. consultingAgreement).
+      name:
+        type: string
+        description: The name of the record.
+      properties:
+        type: object
+        description: Key/value map of record metadata properties.
+  steps:
+  - stepId: resolveSchema
+    description: >-
+      Retrieve the records metadata to confirm the available record types and
+      property keys before writing.
+    operationId: list-all-records-metadata
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      recordTypes: $response.body#/recordTypes
+      schemaProperties: $response.body#/properties
+  - stepId: createRecord
+    description: >-
+      Create a new contract record with the supplied type, name, and
+      properties.
+    operationId: create-a-record
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    requestBody:
+      contentType: application/json
+      payload:
+        type: $inputs.type
+        name: $inputs.name
+        properties: $inputs.properties
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      recordId: $response.body#/id
+  - stepId: retrieveRecord
+    description: >-
+      Retrieve the newly created record to confirm the write.
+    operationId: retrieve-a-record
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.createRecord.outputs.recordId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      record: $response.body
+  outputs:
+    recordId: $steps.createRecord.outputs.recordId
+    record: $steps.retrieveRecord.outputs.record

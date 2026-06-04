@@ -1,0 +1,101 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Pause and Resume a Workflow
+  summary: Retrieve a workflow, pause it with a comment, then resume it with a comment.
+  description: >-
+    A workflow control loop for the Review step. The flow retrieves the workflow
+    to confirm its current step, pauses the active workflow with an explanatory
+    comment, and then resumes the paused workflow with a comment. Each step
+    inlines its request so the chain can be read and executed without opening
+    the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: pause-and-resume-workflow
+  summary: Retrieve a workflow, pause it, then resume it.
+  description: >-
+    Retrieves a workflow, pauses the active workflow with a comment, and resumes
+    it with a comment.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - workflowId
+    - pauseMessage
+    - resumeMessage
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      workflowId:
+        type: string
+        description: The unique identifier of the workflow.
+      pauseMessage:
+        type: string
+        description: The comment message explaining why the workflow is being paused.
+      resumeMessage:
+        type: string
+        description: The comment message explaining why the workflow is being resumed.
+  steps:
+  - stepId: retrieveWorkflow
+    description: >-
+      Retrieve the workflow to confirm its current step before pausing.
+    operationId: retrieve-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      step: $response.body#/step
+  - stepId: pauseWorkflow
+    description: >-
+      Pause the active workflow with an explanatory comment.
+    operationId: pause-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    requestBody:
+      contentType: application/json
+      payload:
+        comment:
+          message: $inputs.pauseMessage
+    successCriteria:
+    - condition: $statusCode == 204
+    outputs:
+      paused: $statusCode
+  - stepId: resumeWorkflow
+    description: >-
+      Resume the paused workflow with an explanatory comment.
+    operationId: resume-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    requestBody:
+      contentType: application/json
+      payload:
+        comment:
+          message: $inputs.resumeMessage
+    successCriteria:
+    - condition: $statusCode == 204
+    outputs:
+      resumed: $statusCode
+  outputs:
+    step: $steps.retrieveWorkflow.outputs.step
+    paused: $steps.pauseWorkflow.outputs.paused
+    resumed: $steps.resumeWorkflow.outputs.resumed

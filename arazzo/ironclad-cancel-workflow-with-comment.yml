@@ -1,0 +1,102 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Cancel a Workflow with an Audit Comment
+  summary: Retrieve a workflow, add an explanatory comment, then cancel the workflow.
+  description: >-
+    Cleanly terminates a contract workflow while leaving an audit trail. The
+    flow retrieves the workflow to confirm it exists and its current step, adds
+    an explanatory comment to the workflow's activity feed, and then cancels the
+    workflow with a cancellation comment. Each step inlines its request so the
+    chain can be read and executed without opening the underlying OpenAPI
+    description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: cancel-workflow-with-comment
+  summary: Retrieve a workflow, add a comment, then cancel it.
+  description: >-
+    Retrieves a workflow, posts an activity-feed comment, and cancels the
+    workflow with a cancellation comment.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - workflowId
+    - commentText
+    - cancelMessage
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      workflowId:
+        type: string
+        description: The unique identifier or Ironclad ID of the workflow.
+      commentText:
+        type: string
+        description: The activity-feed comment to add before cancelling.
+      cancelMessage:
+        type: string
+        description: The cancellation comment message recorded on the workflow.
+  steps:
+  - stepId: retrieveWorkflow
+    description: >-
+      Retrieve the workflow to confirm it exists and capture its current step.
+    operationId: retrieve-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      step: $response.body#/step
+  - stepId: addComment
+    description: >-
+      Add an explanatory comment to the workflow's activity feed before
+      cancelling.
+    operationId: create-a-comment-on-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    requestBody:
+      contentType: application/json
+      payload:
+        comment: $inputs.commentText
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      comment: $response.body
+  - stepId: cancelWorkflow
+    description: >-
+      Cancel the workflow with a recorded cancellation comment.
+    operationId: cancel-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    requestBody:
+      contentType: application/json
+      payload:
+        comment:
+          message: $inputs.cancelMessage
+    successCriteria:
+    - condition: $statusCode == 204
+    outputs:
+      cancelled: $statusCode
+  outputs:
+    step: $steps.retrieveWorkflow.outputs.step
+    comment: $steps.addComment.outputs.comment
+    cancelled: $steps.cancelWorkflow.outputs.cancelled

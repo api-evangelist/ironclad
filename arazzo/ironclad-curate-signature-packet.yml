@@ -1,0 +1,96 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Curate a Signature Packet
+  summary: List workflow documents, reorder the signature packet, then re-check sign status.
+  description: >-
+    Lets an integration assemble exactly the documents that should go out for
+    signature. The flow first lists all workflow documents to capture their
+    keys, updates the signature packet to the desired set and order using those
+    keys, and then reads the sign status to confirm the workflow's readiness.
+    Each step inlines its request so the chain can be read and executed without
+    opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: curate-signature-packet
+  summary: Discover document keys, set the signature packet order, then verify sign status.
+  description: >-
+    Lists the documents on a workflow, updates the signature packet to the
+    supplied document keys and order, and retrieves the sign status.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - workflowId
+    - signaturePacketDocumentKeys
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      workflowId:
+        type: string
+        description: The unique identifier or Ironclad ID of the workflow at the Review stage.
+      signaturePacketDocumentKeys:
+        type: array
+        description: Ordered list of document keys that should make up the signature packet.
+        items:
+          type: string
+  steps:
+  - stepId: listDocuments
+    description: >-
+      List the documents on the workflow to capture the available document keys.
+    operationId: retrieve-workflow-documents
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      signaturePacketDocuments: $response.body#/signaturePacketDocuments
+      excludedDocuments: $response.body#/excludedFromSignaturePacketDocuments
+  - stepId: updatePacket
+    description: >-
+      Update the signature packet to the supplied set and order of document
+      keys.
+    operationId: update-workflow-signature-packet
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    requestBody:
+      contentType: application/json
+      payload:
+        signaturePacketDocumentKeys: $inputs.signaturePacketDocumentKeys
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      updatedPacket: $response.body#/signaturePacketDocuments
+  - stepId: checkSignStatus
+    description: >-
+      Retrieve the sign status to confirm the workflow's readiness after the
+      packet update.
+    operationId: get-sign-status
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      signStatus: $response.body
+  outputs:
+    updatedPacket: $steps.updatePacket.outputs.updatedPacket
+    signStatus: $steps.checkSignStatus.outputs.signStatus

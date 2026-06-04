@@ -1,0 +1,95 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Update a Webhook Subscription
+  summary: Find an existing webhook by target URL, retrieve it, then update its events.
+  description: >-
+    Reconfigures an existing event subscription. The flow lists all webhooks to
+    locate the subscription, retrieves the located webhook to capture its
+    current configuration, and updates its event list and status. Each step
+    inlines its request so the chain can be read and executed without opening
+    the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: update-webhook-subscription
+  summary: List webhooks, retrieve the first one, then update its events and status.
+  description: >-
+    Lists webhooks to resolve a webhook id, retrieves that webhook, and updates
+    its subscribed events and status.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - events
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      events:
+        type: array
+        description: The updated set of event types the webhook should subscribe to.
+        items:
+          type: string
+      status:
+        type: string
+        description: Optional updated webhook status (enabled or disabled).
+  steps:
+  - stepId: listWebhooks
+    description: >-
+      List all webhooks to resolve the webhook to update.
+    operationId: list-all-webhooks
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: pageSize
+      in: query
+      value: 1
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      webhookId: $response.body#/list/0/id
+  - stepId: retrieveWebhook
+    description: >-
+      Retrieve the resolved webhook to capture its current configuration.
+    operationId: retrieve-a-webhook
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.listWebhooks.outputs.webhookId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      currentEvents: $response.body#/events
+      targetURL: $response.body#/targetURL
+  - stepId: updateWebhook
+    description: >-
+      Update the webhook's subscribed events and status.
+    operationId: update-a-webhook
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.listWebhooks.outputs.webhookId
+    requestBody:
+      contentType: application/json
+      payload:
+        events: $inputs.events
+        status: $inputs.status
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      updatedEvents: $response.body#/events
+      updatedStatus: $response.body#/status
+  outputs:
+    webhookId: $steps.listWebhooks.outputs.webhookId
+    updatedEvents: $steps.updateWebhook.outputs.updatedEvents
+    updatedStatus: $steps.updateWebhook.outputs.updatedStatus

@@ -1,0 +1,143 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Upsert a Contract Record
+  summary: Find a contract record by a filter and update it if found, otherwise create it.
+  description: >-
+    A common records integration pattern. The flow searches the records list
+    using a filter formula, and then branches: when a matching record is found
+    it updates that record's metadata, and when none matches it creates a new
+    record. Finally it retrieves the resulting record to confirm the write. Each
+    step inlines its request so the chain can be read and executed without
+    opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: upsert-contract-record
+  summary: Search for a record by filter, then update or create, and retrieve it.
+  description: >-
+    Lists records filtered by a formula, updates the matched record's metadata
+    or creates a new record, then retrieves the affected record.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - filter
+    - type
+    - name
+    - addProperties
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      filter:
+        type: string
+        description: A filter formula to find an existing record (e.g. Equals([counterpartyName], 'Test LLC')).
+      type:
+        type: string
+        description: The record type (e.g. consultingAgreement).
+      name:
+        type: string
+        description: The name of the record.
+      addProperties:
+        type: object
+        description: Key/value map of record metadata properties to set.
+  steps:
+  - stepId: findRecord
+    description: >-
+      Search the records list with the supplied filter formula, returning at
+      most one match.
+    operationId: list-all-records
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: filter
+      in: query
+      value: $inputs.filter
+    - name: pageSize
+      in: query
+      value: 1
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      matchedRecordId: $response.body#/list/0/id
+    onSuccess:
+    - name: recordExists
+      type: goto
+      stepId: updateExisting
+      criteria:
+      - context: $response.body
+        condition: $.count > 0
+        type: jsonpath
+    - name: recordMissing
+      type: goto
+      stepId: createNew
+      criteria:
+      - context: $response.body
+        condition: $.count == 0
+        type: jsonpath
+  - stepId: updateExisting
+    description: >-
+      Update the matched record's metadata with the supplied properties.
+    operationId: update-record-metadata
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.findRecord.outputs.matchedRecordId
+    requestBody:
+      contentType: application/json
+      payload:
+        type: $inputs.type
+        name: $inputs.name
+        addProperties: $inputs.addProperties
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      recordId: $response.body#/id
+    onSuccess:
+    - name: updated
+      type: goto
+      stepId: retrieveRecord
+  - stepId: createNew
+    description: >-
+      Create a new record when no existing record matched the filter.
+    operationId: create-a-record
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    requestBody:
+      contentType: application/json
+      payload:
+        type: $inputs.type
+        name: $inputs.name
+        properties: $inputs.addProperties
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      recordId: $response.body#/id
+  - stepId: retrieveRecord
+    description: >-
+      Retrieve the affected record to confirm the upsert result.
+    operationId: retrieve-a-record
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.updateExisting.outputs.recordId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      record: $response.body
+  outputs:
+    updatedRecordId: $steps.updateExisting.outputs.recordId
+    createdRecordId: $steps.createNew.outputs.recordId
+    record: $steps.retrieveRecord.outputs.record

@@ -1,0 +1,101 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Launch and Track a Workflow
+  summary: Launch a contract workflow synchronously, then read back its data and documents.
+  description: >-
+    The core Ironclad contract lifecycle entry point. The workflow launches a
+    new contract workflow from a template with a set of attributes, retrieves
+    the freshly launched workflow to confirm its current step and schema, and
+    then lists the documents attached to it (both inside and outside the
+    signature packet). Every step spells out its request inline so the flow can
+    be read and executed without opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: launch-and-track-workflow
+  summary: Launch a workflow, retrieve it, then list its documents.
+  description: >-
+    Launches a new workflow synchronously from a template, retrieves the
+    launched workflow by id, and lists the documents associated with it.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - template
+    - attributes
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header (e.g. "Bearer abc123").
+      template:
+        type: string
+        description: The identifier of the workflow template to launch.
+      attributes:
+        type: object
+        description: The attribute (property) values used to populate the workflow's launch form.
+      asUserEmail:
+        type: string
+        description: Optional x-as-user-email actor header for the request.
+  steps:
+  - stepId: launchWorkflow
+    description: >-
+      Launch a new contract workflow synchronously from the supplied template
+      and attributes.
+    operationId: launch-a-new-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: x-as-user-email
+      in: header
+      value: $inputs.asUserEmail
+    requestBody:
+      contentType: application/json
+      payload:
+        template: $inputs.template
+        attributes: $inputs.attributes
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      workflowId: $response.body#/id
+      step: $response.body#/step
+  - stepId: retrieveWorkflow
+    description: >-
+      Retrieve the launched workflow to confirm its current step and schema.
+    operationId: retrieve-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.launchWorkflow.outputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      title: $response.body#/title
+      step: $response.body#/step
+  - stepId: listDocuments
+    description: >-
+      Retrieve all documents on the workflow, both included in and excluded from
+      the signature packet.
+    operationId: retrieve-workflow-documents
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.launchWorkflow.outputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      signaturePacketDocuments: $response.body#/signaturePacketDocuments
+      excludedDocuments: $response.body#/excludedFromSignaturePacketDocuments
+  outputs:
+    workflowId: $steps.launchWorkflow.outputs.workflowId
+    title: $steps.retrieveWorkflow.outputs.title
+    signaturePacketDocuments: $steps.listDocuments.outputs.signaturePacketDocuments

@@ -1,0 +1,84 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Audit a Workflow's Activity
+  summary: Retrieve a workflow, then pull its turn history and comment thread for audit.
+  description: >-
+    Builds a read-only audit view of a single workflow. The flow retrieves the
+    workflow to confirm its current step, pulls the turn history describing each
+    party's turn on the workflow, and lists all comments in the workflow's
+    activity feed. Each step inlines its request so the chain can be read and
+    executed without opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: audit-workflow-activity
+  summary: Retrieve a workflow, then its turn history and comments.
+  description: >-
+    Retrieves a workflow, pulls its turn history, and lists its activity-feed
+    comments.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - workflowId
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      workflowId:
+        type: string
+        description: The unique identifier or Ironclad ID of the workflow.
+  steps:
+  - stepId: retrieveWorkflow
+    description: >-
+      Retrieve the workflow to confirm its current step and title.
+    operationId: retrieve-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      title: $response.body#/title
+      step: $response.body#/step
+  - stepId: turnHistory
+    description: >-
+      Retrieve the turn history describing each party's turn on the workflow.
+    operationId: turn-history
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      turns: $response.body#/list
+  - stepId: listComments
+    description: >-
+      List all comments in the workflow's activity feed.
+    operationId: list-all-comments-in-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      comments: $response.body#/list
+  outputs:
+    title: $steps.retrieveWorkflow.outputs.title
+    turns: $steps.turnHistory.outputs.turns
+    comments: $steps.listComments.outputs.comments

@@ -1,0 +1,91 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Register and Verify a Webhook
+  summary: Create a webhook, retrieve it to confirm, then list all webhooks.
+  description: >-
+    Stands up an event subscription for contract lifecycle events. The flow
+    creates a webhook for a set of event types and a target URL, retrieves the
+    created webhook to confirm its registration and status, and then lists all
+    webhooks to confirm the new subscription is present. Each step inlines its
+    request so the chain can be read and executed without opening the underlying
+    OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: register-and-verify-webhook
+  summary: Create a webhook, retrieve it, then list all webhooks.
+  description: >-
+    Creates a webhook for the supplied events and target URL, retrieves it by
+    id, and lists all webhooks for confirmation.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - events
+    - targetURL
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      events:
+        type: array
+        description: The event types to subscribe to (e.g. ["workflow_launched", "workflow_completed"]).
+        items:
+          type: string
+      targetURL:
+        type: string
+        description: The HTTPS URL to receive webhook event payloads.
+  steps:
+  - stepId: createWebhook
+    description: >-
+      Create a webhook subscribing to the supplied events for the target URL.
+    operationId: create-a-webhook
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    requestBody:
+      contentType: application/json
+      payload:
+        events: $inputs.events
+        targetURL: $inputs.targetURL
+        status: enabled
+    successCriteria:
+    - condition: $statusCode == 201
+    outputs:
+      webhookId: $response.body#/id
+  - stepId: retrieveWebhook
+    description: >-
+      Retrieve the created webhook to confirm its registration and status.
+    operationId: retrieve-a-webhook
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.createWebhook.outputs.webhookId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      status: $response.body#/status
+      events: $response.body#/events
+  - stepId: listWebhooks
+    description: >-
+      List all webhooks to confirm the new subscription is present.
+    operationId: list-all-webhooks
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      webhooks: $response.body#/list
+  outputs:
+    webhookId: $steps.createWebhook.outputs.webhookId
+    status: $steps.retrieveWebhook.outputs.status
+    webhooks: $steps.listWebhooks.outputs.webhooks

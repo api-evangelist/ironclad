@@ -1,0 +1,99 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Schedule a Signature Send
+  summary: Read sign status, schedule the signature request for a future time, then re-read the workflow.
+  description: >-
+    Schedules a signature request to go out at a future time for a workflow on
+    the Sign step. The flow reads the sign status to confirm the workflow is on
+    the Sign step and not yet out for signature, schedules the signature request
+    for a supplied notify-at timestamp, and retrieves the workflow to confirm
+    its state. Each step inlines its request so the chain can be read and
+    executed without opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: schedule-signature-send
+  summary: Check sign status, schedule the signature send, then retrieve the workflow.
+  description: >-
+    Retrieves the sign status, schedules the signature request for a future
+    timestamp, and retrieves the workflow.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - workflowId
+    - notifyAt
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      workflowId:
+        type: string
+        description: The unique identifier or Ironclad ID of the workflow on the Sign step.
+      notifyAt:
+        type: string
+        description: ISO8601 timestamp for when the signature request should be sent.
+      reminderDaysBefore:
+        type: integer
+        description: Optional number of days before the scheduled send to email a reminder (1-7).
+  steps:
+  - stepId: getSignStatus
+    description: >-
+      Retrieve the sign status to confirm the workflow is on the Sign step and
+      not yet out for signature.
+    operationId: get-sign-status
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      signStatus: $response.body
+  - stepId: scheduleSend
+    description: >-
+      Schedule the signature request to be sent at the supplied notify-at
+      timestamp, with an optional reminder.
+    operationId: schedule-send-signature-request
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    requestBody:
+      contentType: application/json
+      payload:
+        notifyAt: $inputs.notifyAt
+        reminder:
+          daysBefore: $inputs.reminderDaysBefore
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      scheduledStatus: $response.body
+  - stepId: retrieveWorkflow
+    description: >-
+      Retrieve the workflow to confirm its state after scheduling the send.
+    operationId: retrieve-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      step: $response.body#/step
+  outputs:
+    signStatus: $steps.getSignStatus.outputs.signStatus
+    scheduledStatus: $steps.scheduleSend.outputs.scheduledStatus
+    step: $steps.retrieveWorkflow.outputs.step

@@ -1,0 +1,101 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Launch a Workflow Asynchronously and Poll
+  summary: Launch a workflow async, poll the create job to completion, then retrieve the workflow.
+  description: >-
+    The non-blocking workflow launch path, recommended when files are provided
+    to the workflow. The flow submits an asynchronous launch request, polls the
+    async job status until the workflow has been created, and then retrieves the
+    fully launched workflow. Each step inlines its request so the chain can be
+    read and executed without opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: launch-workflow-async-poll
+  summary: Launch a workflow asynchronously, poll its job status, then retrieve it.
+  description: >-
+    Submits an asynchronous workflow launch, polls the async create job until it
+    reports success, and retrieves the resulting workflow.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - template
+    - attributes
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      template:
+        type: string
+        description: The identifier of the workflow template to launch.
+      attributes:
+        type: object
+        description: The attribute (property) values used to populate the workflow's launch form.
+  steps:
+  - stepId: launchAsync
+    description: >-
+      Submit an asynchronous workflow launch request, returning a job id that
+      can be polled for completion.
+    operationId: create-a-new-workflow-async
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    requestBody:
+      contentType: application/json
+      payload:
+        template: $inputs.template
+        attributes: $inputs.attributes
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      asyncJobId: $response.body#/asyncJobId
+  - stepId: pollStatus
+    description: >-
+      Poll the async create job to determine whether the workflow has been
+      created. Branches to retrieval once the job reports success.
+    operationId: retrieve-asynchronous-workflow-status
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: asyncJobId
+      in: path
+      value: $steps.launchAsync.outputs.asyncJobId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      status: $response.body#/status
+      workflowId: $response.body#/workflow/id
+    onSuccess:
+    - name: jobSucceeded
+      type: goto
+      stepId: retrieveWorkflow
+      criteria:
+      - context: $response.body
+        condition: $.status == "success"
+        type: jsonpath
+  - stepId: retrieveWorkflow
+    description: >-
+      Retrieve the launched workflow created by the async job.
+    operationId: retrieve-a-workflow
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $steps.pollStatus.outputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      title: $response.body#/title
+      step: $response.body#/step
+  outputs:
+    asyncJobId: $steps.launchAsync.outputs.asyncJobId
+    workflowId: $steps.pollStatus.outputs.workflowId
+    title: $steps.retrieveWorkflow.outputs.title

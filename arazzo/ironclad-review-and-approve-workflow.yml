@@ -1,0 +1,106 @@
+arazzo: 1.0.1
+info:
+  title: Ironclad Review and Approve a Workflow
+  summary: Inspect a workflow's approvals and approval requests, then approve the active role.
+  description: >-
+    The approval half of the contract review stage. The flow lists the
+    approvals on a workflow to discover the roles and approval groups, retrieves
+    the approval-request history for additional context, and then updates the
+    approval status of a specified approver role to approved. Each step inlines
+    its request so the chain can be read and executed without opening the
+    underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: ironcladPublicApi
+  url: ../openapi/ironclad-public-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: review-and-approve-workflow
+  summary: List workflow approvals, review the request history, then approve a role.
+  description: >-
+    Lists the approvals on a workflow, retrieves the approval-request history,
+    and patches the approval status of the supplied role to approved.
+  inputs:
+    type: object
+    required:
+    - authorization
+    - workflowId
+    - roleId
+    properties:
+      authorization:
+        type: string
+        description: Bearer token for the Ironclad Authorization header.
+      workflowId:
+        type: string
+        description: The unique identifier or Ironclad ID of the workflow.
+      roleId:
+        type: string
+        description: The approver role id whose status should be changed.
+      approverEmail:
+        type: string
+        description: Optional email of the Ironclad user approving the workflow.
+  steps:
+  - stepId: listApprovals
+    description: >-
+      List the triggered approvals on the workflow, exposing approval groups and
+      roles.
+    operationId: list-all-workflow-approvals
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      approvalGroups: $response.body#/approvalGroups
+      roles: $response.body#/roles
+  - stepId: reviewRequests
+    description: >-
+      Retrieve the approval-request history on the workflow for context on who
+      has acted and which requests are pending.
+    operationId: approval-requests
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    - name: requestType
+      in: query
+      value: role
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      requests: $response.body#/list
+  - stepId: approveRole
+    description: >-
+      Update the approval status of the supplied role to approved.
+    operationId: update-workflow-approval
+    parameters:
+    - name: Authorization
+      in: header
+      value: $inputs.authorization
+    - name: id
+      in: path
+      value: $inputs.workflowId
+    - name: roleId
+      in: path
+      value: $inputs.roleId
+    requestBody:
+      contentType: application/json
+      payload:
+        status: approved
+        user:
+          email: $inputs.approverEmail
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      approved: $response.body
+  outputs:
+    approvalGroups: $steps.listApprovals.outputs.approvalGroups
+    requests: $steps.reviewRequests.outputs.requests
+    approved: $steps.approveRole.outputs.approved
