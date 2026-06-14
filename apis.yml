@@ -42,27 +42,17 @@ apis:
     type: Example
   - url: examples/ironclad-conversational-search-example.json
     type: Example
-  - type: NaftikoCapability
-    url: capabilities/workflows.yaml
-  - type: NaftikoCapability
-    url: capabilities/records.yaml
-  - type: NaftikoCapability
-    url: capabilities/entities.yaml
-  - type: NaftikoCapability
-    url: capabilities/obligations.yaml
-  - type: NaftikoCapability
-    url: capabilities/webhooks.yaml
-  - type: NaftikoCapability
-    url: capabilities/exports.yaml
-  - type: NaftikoCapability
-    url: capabilities/search.yaml
-  description: The Ironclad Public API exposes contract lifecycle management primitives — Workflows (contract
-    authoring, approvals, signature packets, comments, signers), Records (the executed contract repository with
-    metadata, attachments, smart-import predictions), Entities (counterparties and parties referenced across
-    workflows and records), Obligations (post-signature commitments derived from contracts), Webhooks
-    (event-driven integration into downstream systems), Exports (bulk data warehouse pulls), and Conversational
-    Search (Jurist-powered natural-language queries over the contract repository). REST/JSON over HTTPS with
-    OAuth 2.0 (Authorization Code and Client Credentials) and bearer-token authentication; OpenAPI 3.1; regional
+  - url: graphql/ironclad-graphql.md
+    type: GraphQL
+  description: The Ironclad Public API exposes contract lifecycle management primitives
+    — Workflows (contract authoring, approvals, signature packets, comments, signers),
+    Records (the executed contract repository with metadata, attachments, smart-import
+    predictions), Entities (counterparties and parties referenced across workflows
+    and records), Obligations (post-signature commitments derived from contracts),
+    Webhooks (event-driven integration into downstream systems), Exports (bulk data
+    warehouse pulls), and Conversational Search (Jurist-powered natural-language queries
+    over the contract repository). REST/JSON over HTTPS with OAuth 2.0 (Authorization
+    Code and Client Credentials) and bearer-token authentication; OpenAPI 3.1; regional
     NA1, EU1, and demo servers.
 - aid: ironclad:ironclad-oauth-api
   name: Ironclad OAuth 2.0 API
@@ -86,13 +76,11 @@ apis:
     type: Documentation
   - url: openapi/ironclad-oauth-20-api-openapi.yml
     type: OpenAPI
-  - type: NaftikoCapability
-    url: capabilities/oauth.yaml
-  description: OAuth 2.0 endpoints for delegated and machine-to-machine access to the Ironclad Public API.
-    Supports the Authorization Code grant (with PKCE for public clients) and the Client Credentials grant for
-    server-to-server integrations. Exposes /authorize, /token, /userinfo, and /company-info; scopes follow the
-    `public.{resource}.{action}` convention (e.g., `public.workflows.readWorkflows`,
-    `public.records.createRecords`).
+  description: OAuth 2.0 endpoints for delegated and machine-to-machine access to
+    the Ironclad Public API. Supports the Authorization Code grant (with PKCE for
+    public clients) and the Client Credentials grant for server-to-server integrations.
+    Exposes /authorize, /token, /userinfo, and /company-info; scopes follow the `public.{resource}.{action}`
+    convention (e.g., `public.workflows.readWorkflows`, `public.records.createRecords`).
 - aid: ironclad:ironclad-scim-api
   name: Ironclad SCIM 2.0 API
   tags:
@@ -110,11 +98,10 @@ apis:
     type: OpenAPI
   - url: json-schema/ironclad-user-schema.json
     type: JSONSchema
-  - type: NaftikoCapability
-    url: capabilities/scim.yaml
-  description: SCIM 2.0 endpoints for Just-in-Time and bulk provisioning of Ironclad users and groups from an
-    upstream identity provider (Okta, Azure AD, OneLogin, etc.). Implements /Users, /Groups, and /Schemas with
-    standard SCIM semantics — list/get/create/replace/delete plus PATCH for partial updates and group-membership
+  description: SCIM 2.0 endpoints for Just-in-Time and bulk provisioning of Ironclad
+    users and groups from an upstream identity provider (Okta, Azure AD, OneLogin,
+    etc.). Implements /Users, /Groups, and /Schemas with standard SCIM semantics —
+    list/get/create/replace/delete plus PATCH for partial updates and group-membership
     edits. Enables SSO-aligned lifecycle management and role-based access.
 - aid: ironclad:ironclad-clickwrap-api
   name: Ironclad Clickwrap API
@@ -134,22 +121,25 @@ apis:
     type: SDK
   - url: https://clickwrap-developer.ironcladapp.com/docs/getting-your-access-token
     type: Authentication
-  description: The Ironclad Clickwrap (formerly PactSafe) API delivers programmatic clickwrap and browsewrap
-    acceptance tracking for online agreements — terms of service, privacy policies, EULAs, and checkout-flow
-    agreements. Comprises a JavaScript library (PS.js) for rendering and capturing acceptance events, an
-    Activity API for sending acceptance/visit/displayed/agreed events server-side, and a REST API for managing
-    Sites, Groups, Contracts, and Signer records. Powers in-product acceptance for SaaS sign-ups, checkout
-    pages, mobile apps, and embedded forms.
+  description: The Ironclad Clickwrap (formerly PactSafe) API delivers programmatic
+    clickwrap and browsewrap acceptance tracking for online agreements — terms of
+    service, privacy policies, EULAs, and checkout-flow agreements. Comprises a JavaScript
+    library (PS.js) for rendering and capturing acceptance events, an Activity API
+    for sending acceptance/visit/displayed/agreed events server-side, and a REST API
+    for managing Sites, Groups, Contracts, and Signer records. Powers in-product acceptance
+    for SaaS sign-ups, checkout pages, mobile apps, and embedded forms.
 name: Ironclad
-description: Ironclad is the enterprise contract lifecycle management (CLM) platform used by legal, sales,
-  procurement, and finance teams to draft, negotiate, approve, sign, store, and analyze contracts at scale.
-  The platform combines a no-code Workflow Designer, AI-powered Jurist agentic assistant (contract review,
-  redlining, drafting, repository search), a Records repository with smart import and metadata extraction,
-  Clickwrap for online acceptance, and deep integrations with Salesforce, Microsoft 365, Slack, Workday,
-  ServiceNow, Jira, HubSpot, NetSuite, Dynamics 365, and Power Automate. Ironclad publishes three first-party
-  OpenAPI 3.1 specifications (Public API, OAuth 2.0, SCIM 2.0) plus the Clickwrap REST/JS surface, supports
-  regional NA1/EU1 hosting, OAuth 2.0 with scoped tokens, SCIM-based provisioning, and event-driven webhooks.
-  Ironclad reported surpassing $200M in ARR in February 2026.
+description: Ironclad is the enterprise contract lifecycle management (CLM) platform
+  used by legal, sales, procurement, and finance teams to draft, negotiate, approve,
+  sign, store, and analyze contracts at scale. The platform combines a no-code Workflow
+  Designer, AI-powered Jurist agentic assistant (contract review, redlining, drafting,
+  repository search), a Records repository with smart import and metadata extraction,
+  Clickwrap for online acceptance, and deep integrations with Salesforce, Microsoft
+  365, Slack, Workday, ServiceNow, Jira, HubSpot, NetSuite, Dynamics 365, and Power
+  Automate. Ironclad publishes three first-party OpenAPI 3.1 specifications (Public
+  API, OAuth 2.0, SCIM 2.0) plus the Clickwrap REST/JS surface, supports regional
+  NA1/EU1 hosting, OAuth 2.0 with scoped tokens, SCIM-based provisioning, and event-driven
+  webhooks. Ironclad reported surpassing $200M in ARR in February 2026.
 tags:
 - Contract Lifecycle Management
 - CLM
@@ -168,12 +158,15 @@ kind: contract
 image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 access: 3rd-Party
 common:
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/ironclad/overview
 - type: ArazzoWorkflows
   url: arazzo/
   workflows:
   - url: arazzo/ironclad-audit-workflow-activity.yml
     name: Ironclad Audit a Workflow's Activity
-    summary: Retrieve a workflow, then pull its turn history and comment thread for audit.
+    summary: Retrieve a workflow, then pull its turn history and comment thread for
+      audit.
   - url: arazzo/ironclad-cancel-workflow-with-comment.yml
     name: Ironclad Cancel a Workflow with an Audit Comment
     summary: Retrieve a workflow, add an explanatory comment, then cancel the workflow.
@@ -182,16 +175,20 @@ common:
     summary: Resolve the records schema, create a contract record, then read it back.
   - url: arazzo/ironclad-curate-signature-packet.yml
     name: Ironclad Curate a Signature Packet
-    summary: List workflow documents, reorder the signature packet, then re-check sign status.
+    summary: List workflow documents, reorder the signature packet, then re-check
+      sign status.
   - url: arazzo/ironclad-discover-and-launch-from-schema.yml
     name: Ironclad Discover a Template and Launch a Workflow
-    summary: List workflow launch schemas, then launch a workflow against a chosen template.
+    summary: List workflow launch schemas, then launch a workflow against a chosen
+      template.
   - url: arazzo/ironclad-launch-and-track-workflow.yml
     name: Ironclad Launch and Track a Workflow
-    summary: Launch a contract workflow synchronously, then read back its data and documents.
+    summary: Launch a contract workflow synchronously, then read back its data and
+      documents.
   - url: arazzo/ironclad-launch-workflow-async-poll.yml
     name: Ironclad Launch a Workflow Asynchronously and Poll
-    summary: Launch a workflow async, poll the create job to completion, then retrieve the workflow.
+    summary: Launch a workflow async, poll the create job to completion, then retrieve
+      the workflow.
   - url: arazzo/ironclad-pause-and-resume-workflow.yml
     name: Ironclad Pause and Resume a Workflow
     summary: Retrieve a workflow, pause it with a comment, then resume it with a comment.
@@ -200,19 +197,24 @@ common:
     summary: Create a webhook, retrieve it to confirm, then list all webhooks.
   - url: arazzo/ironclad-review-and-approve-workflow.yml
     name: Ironclad Review and Approve a Workflow
-    summary: Inspect a workflow's approvals and approval requests, then approve the active role.
+    summary: Inspect a workflow's approvals and approval requests, then approve the
+      active role.
   - url: arazzo/ironclad-schedule-signature-send.yml
     name: Ironclad Schedule a Signature Send
-    summary: Read sign status, schedule the signature request for a future time, then re-read the workflow.
+    summary: Read sign status, schedule the signature request for a future time, then
+      re-read the workflow.
   - url: arazzo/ironclad-send-workflow-for-signature.yml
     name: Ironclad Send a Workflow for Signature
-    summary: Read sign-step status, send the signature request, then confirm the packet documents.
+    summary: Read sign-step status, send the signature request, then confirm the packet
+      documents.
   - url: arazzo/ironclad-update-webhook-subscription.yml
     name: Ironclad Update a Webhook Subscription
-    summary: Find an existing webhook by target URL, retrieve it, then update its events.
+    summary: Find an existing webhook by target URL, retrieve it, then update its
+      events.
   - url: arazzo/ironclad-upsert-contract-record.yml
     name: Ironclad Upsert a Contract Record
-    summary: Find a contract record by a filter and update it if found, otherwise create it.
+    summary: Find a contract record by a filter and update it if found, otherwise
+      create it.
 - type: Portal
   url: https://developer.ironcladapp.com/
   name: Ironclad Developer Portal
@@ -279,89 +281,92 @@ common:
 - type: Features
   data:
   - name: AI-Powered Contract Review
-    description: Jurist agentic AI assistant reviews redlines, drafts clauses, summarizes contracts, and
-      answers natural-language questions across the executed-contract repository.
+    description: Jurist agentic AI assistant reviews redlines, drafts clauses, summarizes
+      contracts, and answers natural-language questions across the executed-contract
+      repository.
   - name: No-Code Workflow Designer
-    description: Business users design contract workflows — conditional approvals, signature packets,
-      counterparty negotiation, and CRM/ERP fanout — without engineering.
+    description: Business users design contract workflows — conditional approvals,
+      signature packets, counterparty negotiation, and CRM/ERP fanout — without engineering.
   - name: Smart Import
-    description: ML-driven metadata extraction that ingests legacy contract PDFs and predicts record metadata
-      (counterparty, effective date, term length, renewal, obligations).
+    description: ML-driven metadata extraction that ingests legacy contract PDFs and
+      predicts record metadata (counterparty, effective date, term length, renewal,
+      obligations).
   - name: Repository and Records
-    description: Centralized contract repository with versioned attachments, structured metadata, configurable
-      schemas, and full-text + conversational search.
+    description: Centralized contract repository with versioned attachments, structured
+      metadata, configurable schemas, and full-text + conversational search.
   - name: Webhooks
-    description: Subscribe to workflow, record, and entity events for event-driven integration with
-      downstream systems (CRM, ERP, ITSM, data warehouse).
+    description: Subscribe to workflow, record, and entity events for event-driven
+      integration with downstream systems (CRM, ERP, ITSM, data warehouse).
   - name: Data Exports
-    description: Asynchronous bulk-export jobs deliver contract metadata and content to a data lake or
-      warehouse — Snowflake, BigQuery, Databricks, Redshift.
+    description: Asynchronous bulk-export jobs deliver contract metadata and content
+      to a data lake or warehouse — Snowflake, BigQuery, Databricks, Redshift.
   - name: Clickwrap and Browsewrap
-    description: Embed enforceable online acceptance flows (terms, EULAs, policies) into web, mobile, and
-      checkout experiences with court-ready acceptance records.
+    description: Embed enforceable online acceptance flows (terms, EULAs, policies)
+      into web, mobile, and checkout experiences with court-ready acceptance records.
   - name: Entity Management
-    description: First-class counterparty and entity records linked to workflows, records, and obligations,
-      with reference-type modeling.
+    description: First-class counterparty and entity records linked to workflows,
+      records, and obligations, with reference-type modeling.
   - name: Obligation Tracking
-    description: Extract and track post-signature commitments — renewal dates, SLAs, payment terms,
-      regulatory deadlines.
+    description: Extract and track post-signature commitments — renewal dates, SLAs,
+      payment terms, regulatory deadlines.
   - name: OAuth 2.0 and SCIM 2.0
-    description: Standards-based authentication (Authorization Code + Client Credentials) and provisioning
-      from any SCIM-compliant identity provider.
+    description: Standards-based authentication (Authorization Code + Client Credentials)
+      and provisioning from any SCIM-compliant identity provider.
   - name: Regional Hosting
-    description: North America (na1) and EU (eu1) hosting for data-residency compliance, plus a demo region
-      for testing.
+    description: North America (na1) and EU (eu1) hosting for data-residency compliance,
+      plus a demo region for testing.
   - name: Per-Tenant Encryption
-    description: Optional Hold-Your-Own-Key (HYOK) encryption via Antimatter and GCP for the Security & Data
-      Pro add-on.
+    description: Optional Hold-Your-Own-Key (HYOK) encryption via Antimatter and GCP
+      for the Security & Data Pro add-on.
 - type: UseCases
   data:
   - name: Sales Contract Automation
-    description: Salesforce-triggered NDA, MSA, and order-form workflows that fan out for legal approval,
-      counterparty signature, and CRM record update.
+    description: Salesforce-triggered NDA, MSA, and order-form workflows that fan
+      out for legal approval, counterparty signature, and CRM record update.
   - name: Procurement Lifecycle
-    description: Sync vendor onboarding, intake forms, and approval gating with procurement systems
-      (Workday, NetSuite, Coupa, ServiceNow).
+    description: Sync vendor onboarding, intake forms, and approval gating with procurement
+      systems (Workday, NetSuite, Coupa, ServiceNow).
   - name: Legal Operations
-    description: Centralize matter-management, contract review queues, and clause libraries; offload
-      first-pass review to Jurist AI.
+    description: Centralize matter-management, contract review queues, and clause
+      libraries; offload first-pass review to Jurist AI.
   - name: HR and Employment Agreements
-    description: Offer letters, NDAs, separation agreements, and contractor agreements with
-      conditional-routing approvals and esignature.
+    description: Offer letters, NDAs, separation agreements, and contractor agreements
+      with conditional-routing approvals and esignature.
   - name: Repository Migration
-    description: Smart-import legacy PDF contracts into the structured Records repository with
-      ML-extracted metadata.
+    description: Smart-import legacy PDF contracts into the structured Records repository
+      with ML-extracted metadata.
   - name: Online Agreement Acceptance
-    description: Embed clickwrap acceptance into SaaS sign-up, checkout, and policy-acknowledgement flows
-      with court-ready evidence.
+    description: Embed clickwrap acceptance into SaaS sign-up, checkout, and policy-acknowledgement
+      flows with court-ready evidence.
   - name: Compliance and Obligation Management
-    description: Surface renewal dates, payment milestones, SLAs, and regulatory commitments from executed
-      contracts.
+    description: Surface renewal dates, payment milestones, SLAs, and regulatory commitments
+      from executed contracts.
   - name: AI-Augmented Repository Search
-    description: Run conversational queries ("show every MSA expiring in Q3 with auto-renew") across the
-      contract repository using Jurist.
+    description: Run conversational queries ("show every MSA expiring in Q3 with auto-renew")
+      across the contract repository using Jurist.
 - type: Integrations
   data:
   - name: Salesforce
-    description: Bi-directional CRM integration — launch workflows from opportunities, sync record fields,
-      update opportunity stage on contract execution.
+    description: Bi-directional CRM integration — launch workflows from opportunities,
+      sync record fields, update opportunity stage on contract execution.
   - name: Microsoft Word
-    description: Native Word add-in for in-editor AI drafting, redlining, and clause comparison powered by
-      Jurist.
+    description: Native Word add-in for in-editor AI drafting, redlining, and clause
+      comparison powered by Jurist.
   - name: Microsoft 365 / Power Automate
     description: Power Automate connector for low-code Microsoft 365 workflow orchestration.
   - name: Microsoft Dynamics 365
     description: Bi-directional contract status and document sync with Dynamics 365.
   - name: ServiceNow
-    description: Procurement-process integration — request intake, approval routing, and contract record
-      back-fill.
+    description: Procurement-process integration — request intake, approval routing,
+      and contract record back-fill.
   - name: Slack
-    description: Approval notifications, signature reminders, and contract-status messages in Slack.
+    description: Approval notifications, signature reminders, and contract-status
+      messages in Slack.
   - name: HubSpot
     description: Launch contract workflows from HubSpot deals via Tray.io connector.
   - name: Jira
-    description: Launch Ironclad workflows from Jira tickets and update Jira on contract progression
-      (Zapier + Jira Automation patterns).
+    description: Launch Ironclad workflows from Jira tickets and update Jira on contract
+      progression (Zapier + Jira Automation patterns).
   - name: NetSuite
     description: Sync vendor contracts and obligations with NetSuite via Tray.io.
   - name: Zapier
@@ -369,22 +374,24 @@ common:
   - name: MuleSoft
     description: Anypoint-Exchange connector for enterprise iPaaS integration.
   - name: Box
-    description: Smart-import contracts from Box folders into the Ironclad Records repository.
+    description: Smart-import contracts from Box folders into the Ironclad Records
+      repository.
   - name: Snowflake / BigQuery / Databricks / Redshift
     description: Event-driven and bulk data-warehouse loads via the Data Exports surface.
 - type: Solutions
   data:
   - name: Ironclad CLM Platform
-    description: Core contract lifecycle management — workflows, records, repository, AI assistant.
+    description: Core contract lifecycle management — workflows, records, repository,
+      AI assistant.
   - name: Jurist AI Assistant
-    description: Agentic AI for contract review, redlining, drafting, summarization, and conversational
-      repository search.
+    description: Agentic AI for contract review, redlining, drafting, summarization,
+      and conversational repository search.
   - name: Ironclad Clickwrap
-    description: Online-agreement acceptance and acceptance-record management for terms, EULAs, and
-      checkout flows.
+    description: Online-agreement acceptance and acceptance-record management for
+      terms, EULAs, and checkout flows.
   - name: Security & Data Pro
-    description: Per-tenant encryption (HYOK via Antimatter or GCP) and elevated data-protection controls
-      for regulated industries.
+    description: Per-tenant encryption (HYOK via Antimatter or GCP) and elevated data-protection
+      controls for regulated industries.
   - name: Ironclad Insights
     description: Reporting, dashboards, and BI over contract metadata.
 maintainers:

@@ -1,0 +1,1076 @@
+"""
+Ironclad GraphQL Schema
+Conceptual schema derived from the Ironclad Public REST API
+Reference: https://developer.ironcladapp.com/reference
+"""
+
+# ─── Scalars ─────────────────────────────────────────────────────────────────
+
+scalar DateTime
+scalar JSON
+scalar URL
+
+# ─── Enumerations ────────────────────────────────────────────────────────────
+
+"""Status values for a contract workflow in progress."""
+enum WorkflowStatus {
+  PENDING
+  IN_PROGRESS
+  REVIEW
+  APPROVED
+  SIGNING
+  SIGNED
+  EXECUTED
+  DECLINED
+  CANCELLED
+  PAUSED
+  EXPIRED
+}
+
+"""The type of step within a workflow."""
+enum StepType {
+  FORM_FILL
+  REVIEW
+  APPROVAL
+  SIGNATURE
+  NEGOTIATION
+  NOTIFICATION
+  INTEGRATION
+  CONDITION
+}
+
+"""Status of a document attached to a workflow."""
+enum DocumentStatus {
+  DRAFT
+  PENDING_REVIEW
+  REVIEWED
+  APPROVED
+  SIGNING
+  SIGNED
+  EXECUTED
+  SUPERSEDED
+}
+
+"""The role of an approver in a workflow approval step."""
+enum ApproverRole {
+  PRIMARY
+  ALTERNATE
+  OBSERVER
+  REQUIRED
+  OPTIONAL
+}
+
+"""Current status of a signature request."""
+enum SignatureStatus {
+  NOT_SENT
+  PENDING
+  VIEWED
+  SIGNED
+  DECLINED
+  BOUNCED
+  CANCELLED
+  EXPIRED
+}
+
+"""The ordering method for signers in a signature packet."""
+enum SignerOrder {
+  SEQUENTIAL
+  PARALLEL
+  CUSTOM
+}
+
+"""High-level status of an executed contract record."""
+enum ContractStatus {
+  ACTIVE
+  EXPIRED
+  TERMINATED
+  PENDING_RENEWAL
+  RENEWED
+  CANCELLED
+  DRAFT
+  ARCHIVED
+}
+
+"""Category of contract."""
+enum ContractType {
+  NDA
+  MSA
+  SOW
+  ORDER_FORM
+  VENDOR_AGREEMENT
+  EMPLOYMENT
+  CONSULTANT
+  LICENSE
+  SAAS
+  PARTNERSHIP
+  AMENDMENT
+  ADDENDUM
+  OTHER
+}
+
+"""Role of a party in a contract."""
+enum PartyRole {
+  CUSTOMER
+  VENDOR
+  PARTNER
+  EMPLOYER
+  EMPLOYEE
+  LICENSOR
+  LICENSEE
+  COUNTERPARTY
+  INTERNAL
+}
+
+"""Clause category."""
+enum ClauseType {
+  LIMITATION_OF_LIABILITY
+  INDEMNIFICATION
+  GOVERNING_LAW
+  DISPUTE_RESOLUTION
+  CONFIDENTIALITY
+  TERMINATION
+  PAYMENT_TERMS
+  RENEWAL
+  INTELLECTUAL_PROPERTY
+  WARRANTY
+  FORCE_MAJEURE
+  DATA_PROTECTION
+  ASSIGNMENT
+  OTHER
+}
+
+"""Review step status."""
+enum ReviewStatus {
+  PENDING
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+  CHANGES_REQUESTED
+}
+
+"""User permission role within Ironclad."""
+enum UserRole {
+  ADMIN
+  LEGAL
+  REQUESTER
+  VIEWER
+  APPROVER
+  SIGNER
+  OWNER
+}
+
+"""Events that can trigger a webhook notification."""
+enum WebhookEvent {
+  WORKFLOW_CREATED
+  WORKFLOW_UPDATED
+  WORKFLOW_COMPLETED
+  WORKFLOW_CANCELLED
+  WORKFLOW_PAUSED
+  WORKFLOW_RESUMED
+  APPROVAL_REQUESTED
+  APPROVAL_APPROVED
+  APPROVAL_REJECTED
+  SIGNATURE_REQUESTED
+  SIGNATURE_SIGNED
+  SIGNATURE_DECLINED
+  RECORD_CREATED
+  RECORD_UPDATED
+  RECORD_DELETED
+  ENTITY_CREATED
+  ENTITY_UPDATED
+  OBLIGATION_DUE
+  RENEWAL_UPCOMING
+}
+
+# ─── Core Workflow Types ──────────────────────────────────────────────────────
+
+"""
+A workflow represents a contract in progress within Ironclad.
+Workflows are launched from a WorkflowType (template) and move through
+configurable steps: form fill, review, approval, and signature.
+"""
+type Workflow {
+  id: ID!
+  name: String
+  status: WorkflowStatus!
+  workflowType: WorkflowType
+  currentStep: WorkflowStep
+  steps: [WorkflowStep!]
+  metadata: Metadata
+  documents: [Document!]
+  approvers: [Approver!]
+  signers: [Signer!]
+  parties: [ContractParty!]
+  comments: [ReviewComment!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  completedAt: DateTime
+  createdBy: User
+  details: WorkflowDetails
+}
+
+"""Extended details for a workflow including audit trail and linked records."""
+type WorkflowDetails {
+  workflowId: ID!
+  templateId: ID
+  turnHistory: [JSON]
+  launchForm: JSON
+  signStatus: JSON
+  scheduledSignatureAt: DateTime
+  linkedRecordId: ID
+  exportJobId: ID
+  region: String
+}
+
+"""
+A workflow type (template / launch schema) defines the structure of a
+workflow — fields, conditional logic, approval routing, and document slots.
+"""
+type WorkflowType {
+  id: ID!
+  name: String!
+  description: String
+  fields: [TemplateField!]
+  schema: JSON
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  publishedAt: DateTime
+  archivedAt: DateTime
+  owner: User
+}
+
+"""A single step in a workflow's configured process."""
+type WorkflowStep {
+  id: ID!
+  name: String!
+  type: StepType!
+  order: Int!
+  status: WorkflowStatus
+  assignee: User
+  dueAt: DateTime
+  completedAt: DateTime
+  instructions: String
+  conditions: JSON
+}
+
+# ─── Document Types ───────────────────────────────────────────────────────────
+
+"""A document (Word, PDF) attached to a workflow or contract record."""
+type Document {
+  id: ID!
+  name: String!
+  status: DocumentStatus!
+  mimeType: String
+  sizeBytes: Int
+  version: DocumentVersion
+  versions: [DocumentVersion!]
+  workflowId: ID
+  contractId: ID
+  uploadedBy: User
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  details: DocumentDetails
+}
+
+"""Rich metadata and access URLs for a document."""
+type DocumentDetails {
+  documentId: ID!
+  downloadUrl: URL
+  previewUrl: URL
+  redlineUrl: URL
+  checksum: String
+  pageCount: Int
+  signaturePacketOrder: Int
+  isInSignaturePacket: Boolean
+}
+
+"""A specific version of a document."""
+type DocumentVersion {
+  id: ID!
+  versionNumber: Int!
+  uploadedBy: User
+  createdAt: DateTime!
+  notes: String
+  downloadUrl: URL
+}
+
+# ─── Template Types ───────────────────────────────────────────────────────────
+
+"""
+A template represents the launch schema for a workflow type — it defines
+fields, default values, and document slots for a category of contracts.
+"""
+type Template {
+  id: ID!
+  name: String!
+  description: String
+  workflowTypeId: ID!
+  fields: [TemplateField!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  details: TemplateDetails
+}
+
+"""Extended details for a template including schema and configuration."""
+type TemplateDetails {
+  templateId: ID!
+  rawSchema: JSON
+  defaultValues: JSON
+  conditionalLogic: JSON
+  documentSlots: [String!]
+  integrations: [String!]
+}
+
+"""A single field defined within a workflow template."""
+type TemplateField {
+  id: ID!
+  name: String!
+  key: String!
+  fieldType: String!
+  required: Boolean!
+  defaultValue: JSON
+  helpText: String
+  options: [String!]
+  conditionalOn: String
+}
+
+# ─── Approver and Approval Types ──────────────────────────────────────────────
+
+"""An approver assigned to a workflow approval step."""
+type Approver {
+  id: ID!
+  user: User!
+  role: ApproverRole!
+  stepName: String
+  approved: Boolean
+  approvedAt: DateTime
+  comment: String
+}
+
+"""A structured approval record for a workflow."""
+type Approval {
+  id: ID!
+  workflowId: ID!
+  stepName: String!
+  role: ApproverRole!
+  requester: User
+  approver: User
+  status: ReviewStatus!
+  requestedAt: DateTime!
+  respondedAt: DateTime
+  details: ApprovalDetails
+}
+
+"""Extended details for an approval including comments and decision."""
+type ApprovalDetails {
+  approvalId: ID!
+  decision: String
+  comment: String
+  dueAt: DateTime
+  reminderSentAt: DateTime
+  escalatedAt: DateTime
+}
+
+# ─── Signer and Signature Types ───────────────────────────────────────────────
+
+"""A signer added to a workflow's signature packet."""
+type Signer {
+  id: ID!
+  name: String!
+  email: String!
+  order: Int
+  signerOrder: SignerOrder
+  role: String
+  status: SignatureStatus!
+  signedAt: DateTime
+  details: SignerDetails
+}
+
+"""Extended details for a signer including routing and authentication."""
+type SignerDetails {
+  signerId: ID!
+  accessCode: String
+  authMethod: String
+  reminderSentAt: DateTime
+  declinedReason: String
+  ipAddress: String
+  userAgent: String
+}
+
+"""A signature event captured for a specific signer on a document."""
+type Signature {
+  id: ID!
+  signer: Signer!
+  documentId: ID!
+  status: SignatureStatus!
+  signedAt: DateTime
+  details: SignatureDetails
+}
+
+"""Detailed metadata for a captured signature."""
+type SignatureDetails {
+  signatureId: ID!
+  signatureImageUrl: URL
+  certificateUrl: URL
+  ipAddress: String
+  timestamp: DateTime
+  auditTrailUrl: URL
+}
+
+# ─── Contract and Record Types ────────────────────────────────────────────────
+
+"""
+A contract record in the Ironclad repository — the executed contract with
+structured metadata, attachments, obligations, and linked entities.
+"""
+type Contract {
+  id: ID!
+  name: String!
+  type: ContractType
+  status: ContractStatus!
+  metadata: Metadata
+  parties: [ContractParty!]
+  counterparties: [Counterparty!]
+  documents: [Document!]
+  clauses: [Clause!]
+  obligations: [Obligation!]
+  renewal: Renewal
+  expiration: ExpirationDetails
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  executedAt: DateTime
+  createdBy: User
+  details: ContractDetails
+}
+
+"""Extended details for a contract record."""
+type ContractDetails {
+  contractId: ID!
+  sourceWorkflowId: ID
+  smartImportJobId: ID
+  repositoryFolder: RepositoryFolder
+  tags: [String!]
+  linkedEntityIds: [ID!]
+  extractedFieldsRaw: JSON
+  region: String
+}
+
+"""Terms captured from a contract record."""
+type ContractTerms {
+  id: ID!
+  contractId: ID!
+  startDate: DateTime
+  endDate: DateTime
+  paymentTerms: String
+  governingLaw: String
+  autoRenews: Boolean
+  noticePeriodDays: Int
+  terminationForConvenience: Boolean
+  rawTerms: JSON
+}
+
+"""A party (internal or external) associated with a contract."""
+type ContractParty {
+  id: ID!
+  name: String!
+  role: PartyRole!
+  email: String
+  entity: Counterparty
+  details: PartyDetails
+}
+
+"""Extended details for a contract party."""
+type PartyDetails {
+  partyId: ID!
+  legalName: String
+  address: String
+  signatory: String
+  signatoryTitle: String
+  jurisdiction: String
+}
+
+"""
+A counterparty entity — the external organization or individual referenced
+across workflows, records, and obligations.
+"""
+type Counterparty {
+  id: ID!
+  name: String!
+  email: String
+  domain: String
+  workflows: [Workflow!]
+  contracts: [Contract!]
+  details: CounterpartyDetails
+}
+
+"""Extended details for a counterparty entity."""
+type CounterpartyDetails {
+  counterpartyId: ID!
+  legalName: String
+  address: String
+  country: String
+  industry: String
+  parentEntityId: ID
+  customFields: JSON
+}
+
+# ─── Metadata Types ───────────────────────────────────────────────────────────
+
+"""
+Structured metadata bag attached to a workflow or contract record.
+Metadata fields are defined by the template schema.
+"""
+type Metadata {
+  id: ID!
+  fields: [MetadataField!]!
+  raw: JSON
+}
+
+"""A metadata field definition derived from the workflow template schema."""
+type MetadataField {
+  key: String!
+  name: String!
+  fieldType: String!
+  required: Boolean!
+  description: String
+}
+
+"""A metadata value for a specific field on a workflow or contract."""
+type MetadataValue {
+  fieldKey: String!
+  fieldName: String
+  value: JSON
+  updatedAt: DateTime
+  updatedBy: User
+}
+
+# ─── Clause Types ─────────────────────────────────────────────────────────────
+
+"""A contract clause extracted from or associated with a contract record."""
+type Clause {
+  id: ID!
+  contractId: ID!
+  type: ClauseType!
+  title: String
+  body: String!
+  details: ClauseDetails
+}
+
+"""Extended details for a clause including extraction metadata."""
+type ClauseDetails {
+  clauseId: ID!
+  pageNumber: Int
+  extractionConfidence: Float
+  alternativeLanguage: String
+  fallbackToStandard: Boolean
+  linkedObligationId: ID
+}
+
+# ─── Review Types ─────────────────────────────────────────────────────────────
+
+"""A review step within a contract workflow."""
+type Review {
+  id: ID!
+  workflowId: ID!
+  reviewer: User!
+  status: ReviewStatus!
+  requestedAt: DateTime!
+  completedAt: DateTime
+  details: ReviewDetails
+}
+
+"""Extended details for a review including comments and redlines."""
+type ReviewDetails {
+  reviewId: ID!
+  instructions: String
+  dueAt: DateTime
+  redlineDocumentId: ID
+  commentCount: Int
+  decision: String
+  decisionNote: String
+}
+
+"""A comment posted on a workflow during review or negotiation."""
+type ReviewComment {
+  id: ID!
+  workflowId: ID!
+  author: User!
+  body: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  resolvedAt: DateTime
+  resolvedBy: User
+  parentCommentId: ID
+}
+
+# ─── Reminder, Renewal, and Expiration Types ─────────────────────────────────
+
+"""A reminder configured for a contract date or obligation milestone."""
+type Reminder {
+  id: ID!
+  contractId: ID
+  workflowId: ID
+  triggerAt: DateTime!
+  sentAt: DateTime
+  recipient: User!
+  details: ReminderDetails
+}
+
+"""Extended details for a reminder."""
+type ReminderDetails {
+  reminderId: ID!
+  subject: String
+  message: String
+  channel: String
+  daysBeforeDue: Int
+  obligationType: String
+}
+
+"""Renewal configuration extracted from a contract record."""
+type Renewal {
+  id: ID!
+  contractId: ID!
+  renewalDate: DateTime
+  autoRenews: Boolean!
+  noticePeriodDays: Int
+  renewalTerm: String
+  details: RenewalDetails
+}
+
+"""Extended details for a contract renewal."""
+type RenewalDetails {
+  renewalId: ID!
+  previousContractId: ID
+  cappedAt: DateTime
+  renewalType: String
+  notificationSentAt: DateTime
+  ownerId: ID
+}
+
+"""Expiration details extracted from a contract record."""
+type ExpirationDetails {
+  contractId: ID!
+  expiresAt: DateTime
+  expirationNoticeDate: DateTime
+  daysUntilExpiration: Int
+  isExpired: Boolean!
+  autoRenewWillTrigger: Boolean
+}
+
+# ─── Obligation Types ─────────────────────────────────────────────────────────
+
+"""
+A post-signature obligation derived from a contract — renewal dates,
+SLAs, payment milestones, and regulatory deadlines.
+"""
+type Obligation {
+  id: ID!
+  contractId: ID!
+  title: String!
+  description: String
+  dueAt: DateTime
+  owner: User
+  status: String
+  reminders: [Reminder!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# ─── Repository Types ─────────────────────────────────────────────────────────
+
+"""
+The Ironclad contract repository — a structured folder hierarchy
+containing executed contract records with metadata and attachments.
+"""
+type Repository {
+  id: ID!
+  name: String!
+  organization: Organization!
+  folders: [RepositoryFolder!]
+  totalContracts: Int
+  createdAt: DateTime!
+}
+
+"""A folder within the Ironclad contract repository."""
+type RepositoryFolder {
+  id: ID!
+  name: String!
+  path: String!
+  parentFolderId: ID
+  children: [RepositoryFolder!]
+  contracts: [Contract!]
+  contractCount: Int
+}
+
+# ─── Search Types ─────────────────────────────────────────────────────────────
+
+"""Input query for searching the contract repository."""
+type SearchQuery {
+  text: String!
+  filters: JSON
+  contractTypes: [ContractType!]
+  statuses: [ContractStatus!]
+  dateRange: JSON
+  counterpartyId: ID
+  folderId: ID
+  limit: Int
+  offset: Int
+}
+
+"""Results from a contract repository search."""
+type SearchResults {
+  total: Int!
+  contracts: [Contract!]!
+  workflows: [Workflow!]
+  query: String
+  took: Int
+  conversationalAnswer: String
+}
+
+# ─── User, Team, and Organization Types ──────────────────────────────────────
+
+"""A user provisioned in the Ironclad platform."""
+type User {
+  id: ID!
+  email: String!
+  name: String
+  role: UserRole!
+  teams: [Team!]
+  active: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  details: UserDetails
+}
+
+"""Extended details for a user."""
+type UserDetails {
+  userId: ID!
+  firstName: String
+  lastName: String
+  title: String
+  department: String
+  scimExternalId: String
+  lastLoginAt: DateTime
+  mfaEnabled: Boolean
+}
+
+"""A team grouping users within an organization."""
+type Team {
+  id: ID!
+  name: String!
+  members: [User!]
+  organization: Organization!
+  createdAt: DateTime!
+  details: TeamDetails
+}
+
+"""Extended details for a team."""
+type TeamDetails {
+  teamId: ID!
+  description: String
+  permissions: JSON
+  workflowAccess: [ID!]
+  scimGroupId: String
+}
+
+"""The top-level Ironclad tenant organization."""
+type Organization {
+  id: ID!
+  name: String!
+  domain: String
+  region: String
+  users: [User!]
+  teams: [Team!]
+  repository: Repository
+  createdAt: DateTime!
+}
+
+# ─── Auth Types ───────────────────────────────────────────────────────────────
+
+"""An API key for authenticating to the Ironclad Public API."""
+type APIKey {
+  id: ID!
+  name: String!
+  prefix: String!
+  scopes: [String!]
+  createdAt: DateTime!
+  expiresAt: DateTime
+  createdBy: User
+  lastUsedAt: DateTime
+}
+
+"""An OAuth 2.0 bearer token issued by the Ironclad OAuth server."""
+type Token {
+  accessToken: String!
+  tokenType: String!
+  expiresIn: Int!
+  scope: String
+  refreshToken: String
+  issuedAt: DateTime!
+}
+
+# ─── Webhook Types ────────────────────────────────────────────────────────────
+
+"""
+A webhook subscription that delivers event notifications to an external URL
+when Ironclad workflow, record, or entity events occur.
+"""
+type Webhook {
+  id: ID!
+  targetUrl: URL!
+  events: [WebhookEvent!]!
+  active: Boolean!
+  secret: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdBy: User
+  lastDeliveredAt: DateTime
+  failureCount: Int
+}
+
+"""A single webhook event payload delivered to a registered webhook URL."""
+type WebhookEvent {
+  id: ID!
+  webhookId: ID!
+  event: WebhookEvent!
+  payload: JSON!
+  deliveredAt: DateTime
+  statusCode: Int
+  attempts: Int
+  nextRetryAt: DateTime
+}
+
+# ─── Input Types ─────────────────────────────────────────────────────────────
+
+"""Input for launching a new workflow from a template."""
+input LaunchWorkflowInput {
+  workflowTypeId: ID!
+  metadata: JSON
+  documents: [ID!]
+  parties: [ContractPartyInput!]
+  signers: [SignerInput!]
+  async: Boolean
+}
+
+"""Input for a contract party."""
+input ContractPartyInput {
+  name: String!
+  role: PartyRole!
+  email: String
+  entityId: ID
+}
+
+"""Input for adding a signer to a signature packet."""
+input SignerInput {
+  name: String!
+  email: String!
+  role: String
+  order: Int
+  authMethod: String
+}
+
+"""Input for creating a new contract record."""
+input CreateContractInput {
+  name: String!
+  type: ContractType
+  metadata: JSON
+  documents: [ID!]
+  counterpartyId: ID
+  folderId: ID
+  executedAt: DateTime
+}
+
+"""Input for updating an existing contract record."""
+input UpdateContractInput {
+  name: String
+  status: ContractStatus
+  metadata: JSON
+  folderId: ID
+}
+
+"""Input for a metadata field value update."""
+input MetadataValueInput {
+  fieldKey: String!
+  value: JSON!
+}
+
+"""Input for registering a new webhook."""
+input CreateWebhookInput {
+  targetUrl: URL!
+  events: [WebhookEvent!]!
+  secret: String
+}
+
+"""Input for updating an existing webhook."""
+input UpdateWebhookInput {
+  targetUrl: URL
+  events: [WebhookEvent!]
+  active: Boolean
+  secret: String
+}
+
+# ─── Pagination ───────────────────────────────────────────────────────────────
+
+"""Pagination info for list responses."""
+type PageInfo {
+  total: Int!
+  limit: Int!
+  offset: Int!
+  hasNextPage: Boolean!
+}
+
+"""Paginated list of workflows."""
+type WorkflowConnection {
+  nodes: [Workflow!]!
+  pageInfo: PageInfo!
+}
+
+"""Paginated list of contracts."""
+type ContractConnection {
+  nodes: [Contract!]!
+  pageInfo: PageInfo!
+}
+
+"""Paginated list of users."""
+type UserConnection {
+  nodes: [User!]!
+  pageInfo: PageInfo!
+}
+
+# ─── Root Types ───────────────────────────────────────────────────────────────
+
+type Query {
+  """Fetch a single workflow by ID."""
+  workflow(id: ID!): Workflow
+
+  """List workflows with optional filters."""
+  workflows(
+    status: WorkflowStatus
+    templateId: ID
+    counterpartyId: ID
+    limit: Int
+    offset: Int
+  ): WorkflowConnection!
+
+  """List available workflow types (templates / launch schemas)."""
+  workflowTypes(limit: Int, offset: Int): [WorkflowType!]!
+
+  """Fetch a specific workflow type by ID."""
+  workflowType(id: ID!): WorkflowType
+
+  """Fetch a document attached to a workflow."""
+  document(id: ID!, workflowId: ID!): Document
+
+  """Fetch a contract record from the repository."""
+  contract(id: ID!): Contract
+
+  """List contract records with optional filters."""
+  contracts(
+    type: ContractType
+    status: ContractStatus
+    counterpartyId: ID
+    folderId: ID
+    limit: Int
+    offset: Int
+  ): ContractConnection!
+
+  """Fetch a counterparty entity by ID."""
+  counterparty(id: ID!): Counterparty
+
+  """List counterparty entities."""
+  counterparties(limit: Int, offset: Int): [Counterparty!]!
+
+  """Search the contract repository using full-text or conversational query."""
+  searchContracts(query: String!, filters: JSON, limit: Int, offset: Int): SearchResults!
+
+  """Fetch a user by ID."""
+  user(id: ID!): User
+
+  """List users with optional filters."""
+  users(teamId: ID, role: UserRole, limit: Int, offset: Int): UserConnection!
+
+  """Fetch a team by ID."""
+  team(id: ID!): Team
+
+  """Fetch all teams in the organization."""
+  teams(limit: Int, offset: Int): [Team!]!
+
+  """Fetch the current organization tenant."""
+  organization: Organization
+
+  """Fetch a webhook subscription by ID."""
+  webhook(id: ID!): Webhook
+
+  """List webhook subscriptions."""
+  webhooks(limit: Int, offset: Int): [Webhook!]!
+
+  """Fetch an obligation by ID."""
+  obligation(id: ID!): Obligation
+
+  """List obligations for a contract."""
+  obligations(contractId: ID!, limit: Int, offset: Int): [Obligation!]!
+
+  """Fetch a repository folder by ID."""
+  repositoryFolder(id: ID!): RepositoryFolder
+
+  """List top-level repository folders."""
+  repositoryFolders: [RepositoryFolder!]!
+}
+
+type Mutation {
+  """Launch a new workflow from a template."""
+  launchWorkflow(input: LaunchWorkflowInput!): Workflow!
+
+  """Update metadata fields on an in-progress workflow."""
+  updateWorkflowMetadata(id: ID!, metadata: [MetadataValueInput!]!): Workflow!
+
+  """Cancel an in-progress workflow."""
+  cancelWorkflow(id: ID!, reason: String): Workflow!
+
+  """Pause a workflow at its current step."""
+  pauseWorkflow(id: ID!, comment: String): Workflow!
+
+  """Resume a paused workflow."""
+  resumeWorkflow(id: ID!, comment: String): Workflow!
+
+  """Add a comment to a workflow."""
+  addComment(workflowId: ID!, body: String!): ReviewComment!
+
+  """Approve the current approval step on a workflow."""
+  approveWorkflow(id: ID!, roleId: ID!, comment: String): Approval!
+
+  """Send the workflow signature packet to signers."""
+  sendForSignature(workflowId: ID!, scheduledAt: DateTime): Workflow!
+
+  """Add a signer to a workflow's signature packet."""
+  addSigner(workflowId: ID!, signer: SignerInput!): Signer!
+
+  """Create a new contract record in the repository."""
+  createContract(input: CreateContractInput!): Contract!
+
+  """Update an existing contract record."""
+  updateContract(id: ID!, input: UpdateContractInput!): Contract!
+
+  """Register a new webhook subscription."""
+  createWebhook(input: CreateWebhookInput!): Webhook!
+
+  """Update an existing webhook subscription."""
+  updateWebhook(id: ID!, input: UpdateWebhookInput!): Webhook!
+
+  """Delete a webhook subscription."""
+  deleteWebhook(id: ID!): Boolean!
+}
+
+type Subscription {
+  """Subscribe to status changes for a specific workflow."""
+  workflowStatusChanged(id: ID!): Workflow!
+
+  """Subscribe to new webhook events as they are delivered."""
+  webhookEventDelivered(webhookId: ID!): WebhookEvent!
+
+  """Subscribe to approval requests for the current user."""
+  approvalRequested: Approval!
+
+  """Subscribe to signature requests for the current user."""
+  signatureRequested: Signer!
+}
