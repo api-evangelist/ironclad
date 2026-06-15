@@ -1,0 +1,966 @@
+{
+  "info": {
+    "_postman_id": "cddf8fa7-3b8b-4aec-95a5-149ddf1cc448",
+    "name": "Ironclad OAuth 2.0 API",
+    "description": "Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).\n\nContact Support:\n Name: Ironclad Support\n Email: support@ironcladapp.com",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-06-05T15:10:11.000Z",
+    "updatedAt": "2026-06-05T15:10:11.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-cddf8fa7-3b8b-4aec-95a5-149ddf1cc448"
+  },
+  "item": [
+    {
+      "name": "authorize",
+      "item": [
+        {
+          "name": "Initiate an Authorization Transaction",
+          "id": "d24cf0a4-6955-4130-92df-009840863e26",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/authorize?response_type=code&client_id=<string>&redirect_uri=<string>&scope=<string>&state=<string>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authorize"
+              ],
+              "query": [
+                {
+                  "description": "(Required) The expected response type for the request. Must be set to 'code' for the Authorization Code grant.",
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "description": "(Required) The client ID of the client application issued at registration.",
+                  "key": "client_id",
+                  "value": "<string>"
+                },
+                {
+                  "description": "(Required) The client applications redirect URI. Must be registered on the client application and consistent throughout the authorization transaction.",
+                  "key": "redirect_uri",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Specifies the level of access that your client application is requesting. It should be a space-separated string of Ironclad resource scopes that can be found on the client application registration page. The scopes requested must be equal to or a subset of the client application\u2019s registered scopes.",
+                  "key": "scope",
+                  "value": "<string>"
+                },
+                {
+                  "description": "An opaque value used by the client application to maintain state between the request and callback. The authorization server includes this value when redirecting the user back to the client application.",
+                  "key": "state",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "description": "This endpoint is used to request authorization from a user to access their Ironclad data on their behalf. This is the initial request of an Authorization Code grant flow. The client application generally initiates the authorization flow, where a user will be redirected to Ironclad to log in and grant the requested permissions. The user is then redirected back to the client application redirect URI with an authorization code. See endpoint [specification](https://datatracker.ietf.org/doc/html/rfc6749#section-3.1)."
+          },
+          "response": [
+            {
+              "id": "22c8521e-deed-40e2-94f3-5988274e7999",
+              "name": "If the request is successful, the user will be directed to Ironclad to log in and grant permissions. Then the user will be redirected back to the client application redirect URI with an authorization code. If the user denies the request, they will be redi",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/authorize?response_type=code&client_id=<string>&redirect_uri=<string>&scope=<string>&state=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "authorize"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The expected response type for the request. Must be set to 'code' for the Authorization Code grant.",
+                      "key": "response_type",
+                      "value": "code"
+                    },
+                    {
+                      "description": "(Required) The client ID of the client application issued at registration.",
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "(Required) The client applications redirect URI. Must be registered on the client application and consistent throughout the authorization transaction.",
+                      "key": "redirect_uri",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Specifies the level of access that your client application is requesting. It should be a space-separated string of Ironclad resource scopes that can be found on the client application registration page. The scopes requested must be equal to or a subset of the client application\u2019s registered scopes.",
+                      "key": "scope",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "An opaque value used by the client application to maintain state between the request and callback. The authorization server includes this value when redirecting the user back to the client application.",
+                      "key": "state",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Found",
+              "code": 302,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "disabled": false,
+                  "description": {
+                    "content": "",
+                    "type": "text/plain"
+                  },
+                  "key": "Location",
+                  "value": "<string>"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": null,
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-22c8521e-deed-40e2-94f3-5988274e7999"
+            },
+            {
+              "id": "16f783e0-550a-472e-9526-85ae78ed2f0d",
+              "name": "If the request is missing required parameters or has invalid parameters, the client will receive an 'invalid_request' response.",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/authorize?response_type=code&client_id=<string>&redirect_uri=<string>&scope=<string>&state=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "authorize"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The expected response type for the request. Must be set to 'code' for the Authorization Code grant.",
+                      "key": "response_type",
+                      "value": "code"
+                    },
+                    {
+                      "description": "(Required) The client ID of the client application issued at registration.",
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "(Required) The client applications redirect URI. Must be registered on the client application and consistent throughout the authorization transaction.",
+                      "key": "redirect_uri",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Specifies the level of access that your client application is requesting. It should be a space-separated string of Ironclad resource scopes that can be found on the client application registration page. The scopes requested must be equal to or a subset of the client application\u2019s registered scopes.",
+                      "key": "scope",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "An opaque value used by the client application to maintain state between the request and callback. The authorization server includes this value when redirecting the user back to the client application.",
+                      "key": "state",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"error\": \"<string>\",\n  \"error_description\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-16f783e0-550a-472e-9526-85ae78ed2f0d"
+            },
+            {
+              "id": "05e41c23-e255-4f85-8e43-2d02c4296799",
+              "name": "If the client application is not authorized to use a specific grant type, the client will receive an 'unauthorized_client' response.",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/authorize?response_type=code&client_id=<string>&redirect_uri=<string>&scope=<string>&state=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "authorize"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The expected response type for the request. Must be set to 'code' for the Authorization Code grant.",
+                      "key": "response_type",
+                      "value": "code"
+                    },
+                    {
+                      "description": "(Required) The client ID of the client application issued at registration.",
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "(Required) The client applications redirect URI. Must be registered on the client application and consistent throughout the authorization transaction.",
+                      "key": "redirect_uri",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Specifies the level of access that your client application is requesting. It should be a space-separated string of Ironclad resource scopes that can be found on the client application registration page. The scopes requested must be equal to or a subset of the client application\u2019s registered scopes.",
+                      "key": "scope",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "An opaque value used by the client application to maintain state between the request and callback. The authorization server includes this value when redirecting the user back to the client application.",
+                      "key": "state",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"error\": \"<string>\",\n  \"error_description\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-05e41c23-e255-4f85-8e43-2d02c4296799"
+            }
+          ],
+          "createdAt": "2026-06-05T15:10:11.000Z",
+          "updatedAt": "2026-06-05T15:10:11.000Z",
+          "uid": "35240-d24cf0a4-6955-4130-92df-009840863e26"
+        }
+      ],
+      "id": "459d6368-d1f6-43a4-ab20-b10e8597dac0",
+      "createdAt": "2026-06-05T15:10:11.000Z",
+      "updatedAt": "2026-06-05T15:10:11.000Z",
+      "uid": "35240-459d6368-d1f6-43a4-ab20-b10e8597dac0"
+    },
+    {
+      "name": "token",
+      "item": [
+        {
+          "name": "Request a Token",
+          "id": "226a151f-7f11-478f-913b-a1cb2a128111",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"<string>\",\n  \"redirect_uri\": \"<string>\",\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "token"
+              ]
+            },
+            "description": "This endpoint is used to request a token from the authorization server. If requesting an initial token in the Authorization Code grant, an authorization code, client ID, and client secret must be provided. If requesting to refresh an existing token in the Authorization Code grant, a refresh token, client ID, and client secret must be provided. If requesting a token via the Client Credentials grant, a client ID and secret must be provided. See endpoint [specification](https://datatracker.ietf.org/doc/html/rfc6749#section-3.2)."
+          },
+          "response": [
+            {
+              "id": "1d9784aa-0443-4e80-ba78-0501b4ab5b2e",
+              "name": "A successful response will return the relevant token details.",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"<string>\",\n  \"redirect_uri\": \"<string>\",\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/token",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "token"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"token_type\": \"<string>\",\n  \"access_token\": \"<string>\",\n  \"refresh_token\": \"<string>\",\n  \"expires_in\": \"<integer>\",\n  \"scope\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-1d9784aa-0443-4e80-ba78-0501b4ab5b2e"
+            },
+            {
+              "id": "eb9e7f00-b534-4d86-a980-83c5517efa48",
+              "name": "If the request is missing required parameters or has invalid parameters, the client will receive either an 'invalid_request' or 'invalid_scope' response.",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"<string>\",\n  \"redirect_uri\": \"<string>\",\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/token",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "token"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"error\": \"<string>\",\n  \"error_description\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-eb9e7f00-b534-4d86-a980-83c5517efa48"
+            },
+            {
+              "id": "dd6f3752-9fea-4ade-93f0-35eeb7bc65de",
+              "name": "If the client associated with the initial authorization request does not match the client requesting the token or if the client associated with a token does not match the client requesting a token refresh, the client will receive an 'invalid_client' respo",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"<string>\",\n  \"redirect_uri\": \"<string>\",\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/token",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "token"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"error\": \"<string>\",\n  \"error_description\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-dd6f3752-9fea-4ade-93f0-35eeb7bc65de"
+            },
+            {
+              "id": "c9fa2f3c-5147-4282-8be9-8e0e1e7a2e26",
+              "name": "If the client is not authorized to use a particular grant, the client will receive an 'unauthorized_client' response. If the request includes an invalid authorization code, an invalid refresh token, or an invalid redirect URI, the client will receive an '",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"<string>\",\n  \"redirect_uri\": \"<string>\",\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/token",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "token"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"error\": \"<string>\",\n  \"error_description\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-c9fa2f3c-5147-4282-8be9-8e0e1e7a2e26"
+            }
+          ],
+          "createdAt": "2026-06-05T15:10:11.000Z",
+          "updatedAt": "2026-06-05T15:10:11.000Z",
+          "uid": "35240-226a151f-7f11-478f-913b-a1cb2a128111"
+        }
+      ],
+      "id": "6e7d48db-fe93-4e81-b0ab-487fffd60612",
+      "createdAt": "2026-06-05T15:10:11.000Z",
+      "updatedAt": "2026-06-05T15:10:11.000Z",
+      "uid": "35240-6e7d48db-fe93-4e81-b0ab-487fffd60612"
+    },
+    {
+      "name": "company-info",
+      "item": [
+        {
+          "name": "Retrieve Company Info",
+          "id": "4a5d0418-15f8-4003-9120-c1b129f65f42",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/company-info",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "company-info"
+              ]
+            },
+            "description": "After a client application has obtained an access token, it can make a request to the /company-info endpoint to get company-related information and entitlements associated with the token."
+          },
+          "response": [
+            {
+              "id": "327a8c7e-cc84-4d6c-a241-f7bcedabfa66",
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "<string>"
+                  },
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/company-info",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "company-info"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"companyId\": \"<string>\",\n  \"companyName\": \"<string>\",\n  \"companyDisplayName\": \"<string>\",\n  \"entitlements\": {\n    \"velit0\": {\n      \"name\": \"<string>\",\n      \"description\": \"<string>\",\n      \"type\": \"boolean\",\n      \"value\": \"<boolean>\"\n    }\n  }\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-327a8c7e-cc84-4d6c-a241-f7bcedabfa66"
+            },
+            {
+              "id": "07d40945-71bd-40bd-b93e-66d9241bbb2e",
+              "name": "401",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "<string>"
+                  },
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/company-info",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "company-info"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<string>\",\n  \"message\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-07d40945-71bd-40bd-b93e-66d9241bbb2e"
+            },
+            {
+              "id": "001b09b2-ea3c-4566-a3c9-5673148a1557",
+              "name": "The token is valid but does not have access to the requested company. This can occur when the company associated with the token is inactive or cannot be resolved.",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "<string>"
+                  },
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/company-info",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "company-info"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-001b09b2-ea3c-4566-a3c9-5673148a1557"
+            },
+            {
+              "id": "309043c5-5c52-47e2-b8b5-832b50273b6a",
+              "name": "404",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "<string>"
+                  },
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/company-info",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "company-info"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-309043c5-5c52-47e2-b8b5-832b50273b6a"
+            }
+          ],
+          "createdAt": "2026-06-05T15:10:11.000Z",
+          "updatedAt": "2026-06-05T15:10:11.000Z",
+          "uid": "35240-4a5d0418-15f8-4003-9120-c1b129f65f42"
+        }
+      ],
+      "id": "8c2ee83a-d615-48bf-88f4-d4e3f3cd412d",
+      "createdAt": "2026-06-05T15:10:11.000Z",
+      "updatedAt": "2026-06-05T15:10:11.000Z",
+      "uid": "35240-8c2ee83a-d615-48bf-88f4-d4e3f3cd412d"
+    },
+    {
+      "name": "userinfo",
+      "item": [
+        {
+          "name": "Retrieve Token User Info",
+          "id": "8380e444-1aad-4342-a7df-6b5090cecd1e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/userinfo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "userinfo"
+              ]
+            },
+            "description": "After a client application has obtained an access token, it can make a request to the /userinfo endpoint to get user-related information. The data returned include the user's ID, email, username, and other profile details along with the scopes granted to the token."
+          },
+          "response": [
+            {
+              "id": "4d46815c-9286-4b2e-a1fe-ff81c7eaca69",
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "<string>"
+                  },
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/userinfo",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "userinfo"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"sub\": \"<string>\",\n  \"id\": \"<string>\",\n  \"email\": \"<string>\",\n  \"username\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"title\": \"<string>\",\n  \"companyId\": \"<string>\",\n  \"companyName\": \"<string>\",\n  \"scopes\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-4d46815c-9286-4b2e-a1fe-ff81c7eaca69"
+            },
+            {
+              "id": "72b5c785-b2e7-44aa-91ed-79d8389cd845",
+              "name": "401",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "<string>"
+                  },
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/userinfo",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "userinfo"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<string>\",\n  \"message\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-72b5c785-b2e7-44aa-91ed-79d8389cd845"
+            },
+            {
+              "id": "fc3982d7-c8c1-4156-879d-b8826c69bfc0",
+              "name": "404",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "<string>"
+                  },
+                  {
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/userinfo",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "userinfo"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<string>\"\n}",
+              "createdAt": "2026-06-05T15:10:11.000Z",
+              "updatedAt": "2026-06-05T15:10:11.000Z",
+              "uid": "35240-fc3982d7-c8c1-4156-879d-b8826c69bfc0"
+            }
+          ],
+          "createdAt": "2026-06-05T15:10:11.000Z",
+          "updatedAt": "2026-06-05T15:10:11.000Z",
+          "uid": "35240-8380e444-1aad-4342-a7df-6b5090cecd1e"
+        }
+      ],
+      "id": "4f88598a-7191-456e-ba6f-6a77675b4e3e",
+      "createdAt": "2026-06-05T15:10:11.000Z",
+      "updatedAt": "2026-06-05T15:10:11.000Z",
+      "uid": "35240-4f88598a-7191-456e-ba6f-6a77675b4e3e"
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://na1.ironcladapp.com/oauth"
+    }
+  ]
+}
