@@ -1,0 +1,431 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/ironclad-public-api-openapi.yml
+schemes:
+- name: OAuth2
+  source: openapi/ironclad-public-api-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://na1.ironcladapp.com/oauth/authorize
+    tokenUrl: https://na1.ironcladapp.com/oauth/token
+  - flow: clientCredentials
+    tokenUrl: https://na1.ironcladapp.com/oauth/token
+scopes:
+- scope: public.entities.createEntities
+  description: Create Entities
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.entities.deleteEntities
+  description: Delete Entities
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.entities.readEntities
+  description: Read Entities
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.entities.readRelationshipTypes
+  description: Read Relationship Types
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.entities.updateEntities
+  description: Update Entities
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.export.createReports
+  description: Create Reports
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.export.readReports
+  description: Read Reports
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.obligations.createObligations
+  description: Create Obligations
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.obligations.deleteObligations
+  description: Delete Obligations
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.obligations.readObligations
+  description: Read Obligations
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.obligations.updateObligations
+  description: Update Obligations
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.applyContractAction
+  description: Apply Contract Actions
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.createAttachments
+  description: Create Record Attachments
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.createComments
+  description: Create Workflow Comments
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.createRecords
+  description: Create Records
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.createSmartImportRecords
+  description: Create Records via Smart Import
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.deleteAttachments
+  description: Delete Record Attachments
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.deleteRecords
+  description: Delete Records
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.readAttachments
+  description: Read Record Attachments
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.readRecords
+  description: Read Records
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.readSchemas
+  description: Read Record Schemas
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.readSmartImportRecords
+  description: Read Record Import Details from Smart Import
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.records.updateRecords
+  description: Update Records
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.search.conversational
+  description: Run Conversational agent Search
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.webhooks.createWebhooks
+  description: Create Webhooks
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.webhooks.deleteWebhooks
+  description: Delete Webhooks
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.webhooks.readWebhooks
+  description: Read Webhooks
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.webhooks.updateWebhooks
+  description: Update Webhooks
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.cancel
+  description: Cancel Workflows
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.cancelSignatureRequests
+  description: Cancel Signature Requests
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.createComments
+  description: Create Workflow Comments
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.createDocuments
+  description: Create Workflow Documents
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.createEmbeddableSignerUrls
+  description: Create Embeddable Signature Request Recipient URLs
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.createSignatureRecipientUrls
+  description: Create Signature Request Recipient URLs
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.createWorkflows
+  description: Create Workflows
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.deleteScheduledSignatureRequest
+  description: Delete Scheduled Signature Request
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.deleteSigners
+  description: Delete Signers
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.pauseAndResume
+  description: Resume and Pause Workflows
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readApprovals
+  description: Read Workflow Approvals
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readComments
+  description: Read Workflow Comments
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readDocuments
+  description: Read Workflow Documents
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readEmailCommunications
+  description: Read Workflow Email Communications
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readParticipants
+  description: Read Workflow Participants
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readRoleAssignees
+  description: Read Workflow Role Eligible Assignees
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readSchemas
+  description: Read Workflow Schemas
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readSignStatus
+  description: Read Sign Status
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readSignatures
+  description: Read Workflow Signatures
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readTurnHistory
+  description: Read Workflow Turn History
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.readWorkflows
+  description: Read Workflows
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.remindSigners
+  description: Remind Signers
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.revertToReview
+  description: Revert Workflows to Review
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.scheduleSendSignatureRequest
+  description: Schedule Send Signature Request
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.sendSignatureRequests
+  description: Send Signature Requests
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.updateApprovals
+  description: Update Workflow Approvals
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.updateRoleAssignment
+  description: Update Workflow Role Assignment
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.updateScheduledSignatureRequest
+  description: Update Scheduled Signature Request
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.updateSignaturePacket
+  description: Update Signature Packet
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.updateSigners
+  description: Update Signers
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.updateWorkflows
+  description: Update Workflows
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+- scope: public.workflows.uploadSignedDocuments
+  description: Upload Signed Workflow Documents
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/ironclad-public-api-openapi.yml

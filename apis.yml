@@ -158,6 +158,8 @@ kind: contract
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 access: 3rd-Party
 common:
+- type: OAuthScopes
+  url: scopes/ironclad-scopes.yml
 - type: PostmanWorkspace
   url: https://www.postman.com/kinlaneapi/ironclad/overview
 - type: Arazzo
