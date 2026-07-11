@@ -1,0 +1,32 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/ironclad-public-api-openapi.yml, openapi/ironclad-scim-api-openapi.yml
+summary:
+  types:
+  - apiKey
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+  - clientCredentials
+schemes:
+- name: sec0
+  type: apiKey
+  in: header
+  parameter: Authorization
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
+  - openapi/ironclad-scim-api-openapi.yml
+- name: OAuth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://na1.ironcladapp.com/oauth/authorize
+    tokenUrl: https://na1.ironcladapp.com/oauth/token
+    scopes: 60
+  - flow: clientCredentials
+    tokenUrl: https://na1.ironcladapp.com/oauth/token
+    scopes: 58
+  sources:
+  - openapi/ironclad-public-api-openapi.yml
