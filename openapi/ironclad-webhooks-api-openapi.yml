@@ -1,0 +1,433 @@
+openapi: 3.1.0
+info:
+  title: Ironclad OAuth 2.0 Authorization Webhooks API
+  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
+  version: '1'
+  contact:
+    name: Ironclad Support
+    email: support@ironcladapp.com
+servers:
+- url: https://na1.ironcladapp.com/oauth
+  description: Production server
+- url: https://eu1.ironcladapp.com/oauth
+  description: EU Production server
+- url: https://demo.ironcladapp.com/oauth
+  description: Demo server
+tags:
+- name: Webhooks
+  description: Documentation on Ironclad Webhooks.
+paths:
+  /webhooks:
+    post:
+      summary: Create a Webhook
+      description: "Creates a webhook for the specified events. Send separate requests if you need to create webhooks for multiple target URLs. Each target URL may only have one active registration. \n\n**OAuth Scope required:** `public.webhooks.createWebhooks`"
+      operationId: create-a-webhook
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                events:
+                  type: array
+                  description: 'The event type(s) to trigger the webhook. Note: you can use `*` to receive events for all events, although we don''t recommend this path, especially for environments with higher volume.'
+                  items:
+                    $ref: '#/components/schemas/WebhookEvent'
+                  minItems: 1
+                targetURL:
+                  type: string
+                  format: https-url
+                  description: The URL to send the webhook event payload to. It must be an HTTPS url.
+                status:
+                  type: string
+                  enum:
+                  - enabled
+                  - disabled
+                  default: enabled
+                  description: The status of the webhook. If the status is `disabled`, the webhook will not be triggered.
+              required:
+              - events
+              - targetURL
+      security:
+      - sec0: []
+        OAuth2:
+        - public.webhooks.createWebhooks
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookModel'
+        '400':
+          $ref: '#/components/responses/WebhookCreateResponse400'
+      tags:
+      - Webhooks
+    get:
+      summary: List All Webhooks
+      description: "View all webhooks associated with a specific company with filtering available via query parameters. \n\n**OAuth Scope required:** `public.webhooks.readWebhooks`"
+      operationId: list-all-webhooks
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      - $ref: '#/components/parameters/QueryPageNumber'
+      - $ref: '#/components/parameters/QueryPageSize'
+      security:
+      - sec0: []
+        OAuth2:
+        - public.webhooks.readWebhooks
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - page
+                - pageSize
+                - list
+                properties:
+                  page:
+                    type: integer
+                    example: 0
+                  pageSize:
+                    type: integer
+                    example: 20
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WebhookModel'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      tags:
+      - Webhooks
+  /webhooks/{id}:
+    get:
+      summary: Retrieve a Webhook
+      description: "View the data associated with a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.readWebhooks`"
+      operationId: retrieve-a-webhook
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      - $ref: '#/components/parameters/WebhookId'
+      security:
+      - sec0: []
+        OAuth2:
+        - public.webhooks.readWebhooks
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookModel'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      tags:
+      - Webhooks
+    patch:
+      summary: Update a Webhook
+      description: "Update the data associated with a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.updateWebhooks`"
+      operationId: update-a-webhook
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      - $ref: '#/components/parameters/WebhookId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                events:
+                  type: array
+                  description: The type of events that will trigger a notification to the target URL.
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/WebhookEvent'
+                targetURL:
+                  type: string
+                  description: The URL of where the notification gets sent.
+                  format: https-url
+                status:
+                  type: string
+                  enum:
+                  - enabled
+                  - disabled
+                  description: The status of the webhook. If the status is `disabled`, the webhook will not be triggered.
+      security:
+      - sec0: []
+        OAuth2:
+        - public.webhooks.updateWebhooks
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookModel'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      tags:
+      - Webhooks
+    delete:
+      summary: Delete a Webhook
+      description: "Delete a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.deleteWebhooks`"
+      operationId: delete-a-webhook
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      - $ref: '#/components/parameters/WebhookId'
+      security:
+      - sec0: []
+        OAuth2:
+        - public.webhooks.deleteWebhooks
+      responses:
+        '204':
+          description: '204'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      tags:
+      - Webhooks
+  /webhooks/verification-key:
+    get:
+      summary: Retrieve Webhook Verification Key
+      description: View the verification key for webhook security implementations
+      operationId: retrieve-webhook-verification-key
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      security:
+      - sec0: []
+        OAuth2: []
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: PEM-FILE
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: {}
+              schema:
+                type: object
+                properties: {}
+      tags:
+      - Webhooks
+components:
+  schemas:
+    WebhookInvalidEventTypeBadRequestResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: INVALID_PARAM
+        message:
+          type: string
+          example: invalid event type; *, workflow_launched, workflow_updated, workflow_cancelled, workflow_completed, workflow_approval_status_changed, workflow_attribute_updated, workflow_changed_turn, workflow_comment_reaction_added, workflow_comment_reaction_removed, workflow_comment_added, workflow_comment_removed, workflow_comment_updated, workflow_counterparty_invite_sent, workflow_counterparty_invite_revoked, workflow_documents_added, workflow_documents_removed, workflow_documents_updated, workflow_documents_renamed, workflow_document_edited, workflow_paused, workflow_resumed, workflow_signature_packet_sent, workflow_signature_packet_uploaded, or workflow_signature_packet_cancelled, workflow_signer_added, workflow_signer_removed, workflow_signer_reassigned are acceptable event types
+        param:
+          type: string
+          example: events
+    WebhookEvent:
+      type: string
+      description: Events that can be subscribed to using a webhook.
+      example: workflow_launched
+      enum:
+      - '*'
+      - workflow_launched
+      - workflow_updated
+      - workflow_cancelled
+      - workflow_completed
+      - workflow_approval_status_changed
+      - workflow_attribute_updated
+      - workflow_comment_added
+      - workflow_comment_removed
+      - workflow_comment_updated
+      - workflow_comment_reaction_added
+      - workflow_comment_reaction_removed
+      - workflow_counterparty_invite_sent
+      - workflow_counterparty_invite_revoked
+      - workflow_documents_added
+      - workflow_documents_removed
+      - workflow_documents_updated
+      - workflow_documents_renamed
+      - workflow_document_edited
+      - workflow_changed_turn
+      - workflow_paused
+      - workflow_resumed
+      - workflow_signature_packet_cancelled
+      - workflow_signature_packet_document_moved
+      - workflow_signature_packet_fully_signed
+      - workflow_signature_packet_sent
+      - workflow_signature_packet_signatures_collected
+      - workflow_signature_packet_signer_first_viewed
+      - workflow_signature_packet_signer_viewed
+      - workflow_signature_packet_uploaded
+      - workflow_signer_added
+      - workflow_signer_removed
+      - workflow_signer_reassigned
+      - workflow_step_updated
+      - workflow_roles_assigned
+      - record_contract_status_changed
+    WebhookModel:
+      description: Webhook object describing the subscribed events and target URL to be called.
+      type: object
+      required:
+      - id
+      - events
+      - targetURL
+      - companyId
+      - status
+      - consecutiveFailureCount
+      properties:
+        id:
+          description: Unique ID of the webhook
+          type: string
+          example: 5928719b30182d3700364a74
+        events:
+          description: Array of events to which webhook is subscribed to.
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+        targetURL:
+          description: Target URL to which the webhook is called.
+          type: string
+          format: https-url
+          example: https://develop.ironcladapp.com
+        companyId:
+          description: Unique ID of the Ironclad company instance to which the webhook belongs to.
+          type: string
+          example: 5928719b30182d3700364a74
+        status:
+          description: The status of the webhook. If the status is `disabled`, the webhook will not be triggered.
+          type: string
+          enum:
+          - enabled
+          - disabled
+          - disabledBySystem
+          example: enabled
+        statusLastUpdatedAt:
+          description: The timestamp of the most recent status change in ISO 8601 format.
+          type: string
+          format: date-time
+          example: '2025-01-17T17:51:49.008Z'
+        statusLastUpdatedBy:
+          description: The user or system ID that made the most recent status change.
+          type: string
+          example: system
+        consecutiveFailureCount:
+          description: The number of consecutive failed deliveries of the webhook. After a certain number of consecutive failures over a certain period of time, the webhook will be disabled. See [more](https://developer.ironcladapp.com/reference/webhook-deactivation).
+          type: number
+          example: 0
+        firstConsecutiveFailure:
+          description: The timestamp of the first consecutive failure of the webhook in ISO 8601 format.
+          type: string
+          format: date-time
+          example: '2025-01-17T17:51:49.008Z'
+    WebhookTargetURLExistsBadRequestResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - INVALID_PARAM
+        message:
+          type: string
+          example: webhook already exists for event workflow_completed and target [SOME_EXISTING_TARGET_URL]
+        param:
+          type: string
+          example: tagetURL
+  parameters:
+    QueryPageSize:
+      name: pageSize
+      in: query
+      description: A limit of the number of results to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+    QueryPageNumber:
+      name: page
+      in: query
+      description: The page number used when paginating through a list of results.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 100000000
+    WebhookId:
+      name: id
+      in: path
+      description: The unique identifier of the webhook
+      schema:
+        type: string
+      required: true
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+  responses:
+    WebhookCreateResponse400:
+      description: Bad request error when creating webhook.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/WebhookInvalidEventTypeBadRequestResponse'
+            - $ref: '#/components/schemas/WebhookTargetURLExistsBadRequestResponse'
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-languages:
+  - curl
+  - node
+  - ruby
+  - javascript
+  - python

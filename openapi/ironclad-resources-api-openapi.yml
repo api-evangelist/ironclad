@@ -1,0 +1,258 @@
+openapi: 3.1.0
+info:
+  title: Ironclad OAuth 2.0 Authorization Resources API
+  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
+  version: '1'
+  contact:
+    name: Ironclad Support
+    email: support@ironcladapp.com
+servers:
+- url: https://na1.ironcladapp.com/oauth
+  description: Production server
+- url: https://eu1.ironcladapp.com/oauth
+  description: EU Production server
+- url: https://demo.ironcladapp.com/oauth
+  description: Demo server
+tags:
+- name: Resources
+  description: Resource access endpoints for retrieving user information and token details.
+paths:
+  /company-info:
+    get:
+      summary: Retrieve Company Info
+      description: After a client application has obtained an access token, it can make a request to the /company-info endpoint to get company-related information and entitlements associated with the token.
+      operationId: oauth-company-info
+      tags:
+      - Resources
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  companyId:
+                    type: string
+                    description: The unique identifier of the company associated with the token.
+                    example: 6013609108b8f070cee94fc1
+                  companyName:
+                    type: string
+                    description: The internal name of the company.
+                    example: Example Company Inc.
+                  companyDisplayName:
+                    type: string
+                    description: The display name of the company shown in the Ironclad UI.
+                    example: Example Company
+                  entitlements:
+                    type: object
+                    description: A map of entitlement keys to their configuration and current value. Each value describes an entitlement and whether it is enabled.
+                    additionalProperties:
+                      type: object
+                      description: An entitlement entry.
+                      properties:
+                        name:
+                          type: string
+                          description: The display name of the entitlement.
+                        description:
+                          type: string
+                          description: A human-readable description of the entitlement.
+                        type:
+                          type: string
+                          description: The data type of the entitlement value.
+                          enum:
+                          - boolean
+                        value:
+                          type: boolean
+                          description: Whether the entitlement is enabled for the company.
+                      required:
+                      - name
+                      - description
+                      - type
+                      - value
+                    example:
+                      jurist:
+                        name: Jurist
+                        description: Ironclad AI Assistant
+                        type: boolean
+                        value: true
+                required:
+                - companyId
+                - companyName
+                - companyDisplayName
+                - entitlements
+        '401':
+          description: '401'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/InvalidTokenError'
+                - $ref: '#/components/schemas/RevokedTokenError'
+                - $ref: '#/components/schemas/ExpiredTokenError'
+        '403':
+          description: The token is valid but does not have access to the requested company. This can occur when the company associated with the token is inactive or cannot be resolved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: FORBIDDEN
+        '404':
+          description: '404'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: NOT_FOUND
+  /userinfo:
+    get:
+      summary: Retrieve Token User Info
+      description: After a client application has obtained an access token, it can make a request to the /userinfo endpoint to get user-related information. The data returned include the user's ID, email, username, and other profile details along with the scopes granted to the token.
+      operationId: oauth-userinfo
+      tags:
+      - Resources
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sub:
+                    type: string
+                    description: Subject identifier as defined by the OIDC specification. Equal to the user's Ironclad ID.
+                    example: 63d415e0dd0d828c3a878548
+                  id:
+                    type: string
+                    example: 63d415e0dd0d828c3a878548
+                  email:
+                    type: string
+                    example: user@example.com
+                  username:
+                    type: string
+                    example: username
+                  firstName:
+                    type: string
+                    example: John
+                  lastName:
+                    type: string
+                    example: Doe
+                  displayName:
+                    type: string
+                    example: John Doe
+                  title:
+                    type: string
+                    example: Software Engineer
+                  companyId:
+                    type: string
+                    example: 6013609108b8f070cee94fc1
+                  companyName:
+                    type: string
+                    example: Example Company
+                  scopes:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                    - public.records.readRecords
+                    - public.records.createRecords
+                required:
+                - sub
+                - id
+                - email
+                - username
+                - firstName
+                - lastName
+                - displayName
+                - title
+                - companyId
+                - companyName
+                - scopes
+        '401':
+          description: '401'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/InvalidTokenError'
+                - $ref: '#/components/schemas/RevokedTokenError'
+                - $ref: '#/components/schemas/ExpiredTokenError'
+        '404':
+          description: '404'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: NOT_FOUND
+components:
+  schemas:
+    InvalidTokenError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          example: invalid authentication token
+    ExpiredTokenError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          example: token has expired
+    RevokedTokenError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          example: token has been revoked
+  parameters:
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-languages:
+  - curl
+  - node
+  - ruby
+  - javascript
+  - python

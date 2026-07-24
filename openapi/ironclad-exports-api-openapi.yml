@@ -1,0 +1,243 @@
+openapi: 3.1.0
+info:
+  title: Ironclad OAuth 2.0 Authorization Exports API
+  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
+  version: '1'
+  contact:
+    name: Ironclad Support
+    email: support@ironcladapp.com
+servers:
+- url: https://na1.ironcladapp.com/oauth
+  description: Production server
+- url: https://eu1.ironcladapp.com/oauth
+  description: EU Production server
+- url: https://demo.ironcladapp.com/oauth
+  description: Demo server
+tags:
+- name: Exports
+  description: Documentation on Ironclad Data Exports.
+paths:
+  /exports:
+    post:
+      summary: Submit a request to generate a new data export
+      description: "Submit a request to generate a new data export. \n\n**OAuth Scope required:** `public.export.createReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+      operationId: export
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      security:
+      - sec0: []
+        OAuth2:
+        - public.export.createReports
+      requestBody:
+        $ref: '#/components/requestBodies/DataExportRequest'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobId:
+                    type: string
+                    example: 02e1343b-d024-4de0-a22e-a579282f05d9
+                  jobStatus:
+                    type: string
+                    enum:
+                    - pending
+                    - running
+                    - done
+                    - failed
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Could not retrieve job status. Please verify the job id and try again.
+      tags:
+      - Exports
+  /exports/{jobId}:
+    get:
+      summary: Check Data Export Job Status
+      description: "View the status of an export job using the job id returned during job creation. \n\n**OAuth Scope required:** `public.export.readReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+      operationId: export-job
+      parameters:
+      - name: jobId
+        in: path
+        description: The job id to be checked.
+        schema:
+          type: string
+        required: true
+      security:
+      - sec0: []
+        OAuth2:
+        - public.export.readReports
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobId:
+                    type: string
+                    example: 02e1343b-d024-4de0-a22e-a579282f05d9
+                  jobStatus:
+                    type: string
+                    enum:
+                    - pending
+                    - running
+                    - done
+                    - failed
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Could not retrieve job status. Please verify the job id and try again.
+      tags:
+      - Exports
+  /exports/{jobId}/download:
+    get:
+      summary: Download Data Export File
+      description: "Download completed file produced by the export job. \n\n**OAuth Scope required:** `public.export.readReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+      operationId: export-job-download
+      parameters:
+      - name: jobId
+        in: path
+        description: The job id to be checked.
+        schema:
+          type: string
+        required: true
+      security:
+      - sec0: []
+        OAuth2:
+        - public.export.readReports
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Could not retrieve job status. Please verify the job id and try again.
+      tags:
+      - Exports
+components:
+  requestBodies:
+    DataExportRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DataExportRequestModel'
+  schemas:
+    DataExportConfigWorkflowActivities:
+      title: Workflow activities export config
+      type: object
+      additionalProperties: false
+      properties:
+        metadataProperties:
+          type: array
+          items:
+            type: string
+            example: counterpartyName
+          description: Array of available custom metadata properties to include in export. Contact support for assistance on locating your custom metadata properties.
+        includeCommentDetail:
+          type: boolean
+          description: Include comment details in export.
+    DataExportRequestModel:
+      type: object
+      additionalProperties: false
+      properties:
+        exportType:
+          type: string
+          example: workflow_activities
+          enum:
+          - workflow_activities
+          - audit_log
+          description: 'string for record type. Example: `workflow_activities`'
+        startDate:
+          type: string
+          example: '2016-11-17T00:37:22.318Z'
+          description: 'Starting date (ISO8601 format) of data to be included in the export. Example: `2016-11-17T00:37:22.318Z`'
+        endDate:
+          type: string
+          example: '2016-11-17T00:37:22.318Z'
+          description: 'Starting date (ISO8601 format) of data to be included in the export. Example: `2016-11-17T00:37:22.318Z`'
+        exportFormat:
+          type: string
+          example: CSV
+          enum:
+          - CSV
+          - JSON
+          description: File format for the export. CSV is the default.
+        signedUrlEnabled:
+          type: boolean
+          description: An optional boolean value to enable a signed url for downloading the exported file. If not provided, defaults to false.
+        exportConfigs:
+          description: 'Each `exportType` may have additional export configurations specific to this type of export. Use one of the following `exportConfigs` schemas:'
+          oneOf:
+          - $ref: '#/components/schemas/DataExportConfigWorkflowActivities'
+          - $ref: '#/components/schemas/DataExportConfigAuditLog'
+      required:
+      - exportType
+    DataExportConfigAuditLog:
+      title: Audit log export config
+      type: object
+      additionalProperties: false
+      properties:
+        eventCategories:
+          type: array
+          items:
+            type: string
+            enum:
+            - user_entitlement
+            - integration_errors
+          example:
+          - user_entitlement
+          - integration_errors
+          description: Array of categories of audit log events to include in the export.
+  parameters:
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-languages:
+  - curl
+  - node
+  - ruby
+  - javascript
+  - python

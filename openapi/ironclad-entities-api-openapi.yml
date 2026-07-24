@@ -1,0 +1,1094 @@
+openapi: 3.1.0
+info:
+  title: Ironclad OAuth 2.0 Authorization Entities API
+  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
+  version: '1'
+  contact:
+    name: Ironclad Support
+    email: support@ironcladapp.com
+servers:
+- url: https://na1.ironcladapp.com/oauth
+  description: Production server
+- url: https://eu1.ironcladapp.com/oauth
+  description: EU Production server
+- url: https://demo.ironcladapp.com/oauth
+  description: Demo server
+tags:
+- name: Entities
+  description: Documentation on Ironclad Entities.
+paths:
+  /entities/relationship-types:
+    get:
+      summary: Get All Entity Relationship Types
+      description: "Returns all entity relationship types.  For more information, see [Entity Relationship Types](https://support.ironcladapp.com/hc/en-us/articles/28005038398231-Create-Manage-Relationship-Types-and-Entity-Properties). \n\n**OAuth Scope required:** `public.entities.readRelationshipTypes`"
+      operationId: get-all-entity-relationship-types
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      security:
+      - sec0: []
+        OAuth2:
+        - public.entities.readRelationshipTypes
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The unique identifier of the record
+                      example: 22e2ff72-56a1-4711-a4ca-41328d311e9f
+                    name:
+                      type: string
+                      description: The unique identifier of the relationship type
+                      example: customer
+                    displayName:
+                      type: string
+                      description: The display name of the relationship type
+                      example: Customer or Custom Vendor
+                    description:
+                      type: string
+                      description: The description of the relationship type
+                      example: A customer is a business that purchases products or services from a business.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError401'
+        '403':
+          $ref: '#/components/responses/ForbiddenError403'
+        '404':
+          $ref: '#/components/responses/NotFoundError404'
+      tags:
+      - Entities
+  /entities:
+    get:
+      summary: List All Entities
+      description: "View all entities in the company, with filtering available via query parameters. \n\n**OAuth Scope required:** `public.entities.readEntities`"
+      operationId: list-all-entities
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      - $ref: '#/components/parameters/QueryPageNumber'
+      - $ref: '#/components/parameters/QueryPageSize'
+      - $ref: '#/components/parameters/EntityFilter'
+      - name: sortField
+        in: query
+        description: The field to sort Entities. Only one field is supported in the sort operation. Default is `name`.
+        schema:
+          type: string
+          enum:
+          - name
+          - lastUpdated
+      - name: sortDirection
+        in: query
+        description: The direction the entities are sorted by in correlation with the `sortField`. Default is `DESC`.
+        schema:
+          type: string
+          enum:
+          - ASC
+          - DESC
+      security:
+      - sec0: []
+        OAuth2:
+        - public.entities.readEntities
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 0
+                    default: 0
+                  pageSize:
+                    type: integer
+                    example: 20
+                    default: 20
+                    maximum: 100
+                  count:
+                    type: integer
+                    example: 1
+                    maximum: 100
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityModel'
+        '400':
+          $ref: '#/components/responses/BadRequestError400'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError401'
+        '403':
+          $ref: '#/components/responses/ForbiddenError403'
+        '404':
+          $ref: '#/components/responses/NotFoundError404'
+      tags:
+      - Entities
+    post:
+      summary: Create an Entity
+      description: "Create a new entity. More details on creating an entity can be found in the [Entity Overview](https://support.ironcladapp.com/hc/en-us/articles/28004816859543-Create-and-Manage-Entities) article. \n\n**OAuth Scope required:** `public.entities.createEntities`"
+      operationId: create-an-entity
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: The name of the Entity.
+                  minLength: 1
+                relationshipTypeKey:
+                  $ref: '#/components/schemas/RelationshipTypeKey'
+                status:
+                  description: The status of the entity
+                  type: string
+                  enum:
+                  - ACTIVE
+                  - INACTIVE
+                  default: ACTIVE
+                properties:
+                  type: object
+                  description: A key:value map of properties to add. The two below are examples. More details on the properties can be found in the [Entity Properties](https://support.ironcladapp.com/hc/en-us/articles/28005038398231-Create-Manage-Relationship-Types-and-Entity-Properties) article.
+                  additionalProperties:
+                    $ref: '#/components/schemas/RecordPropertyType'
+                parent:
+                  type: object
+                  description: Object containing Record IDs or Ironclad IDs to be set as the parent of the current record.
+                  properties:
+                    recordId:
+                      type: string
+                      description: For post entity
+                      example: 123e4567-e89b-12d3-a456-426614174001
+                  required:
+                  - recordId
+            examples:
+              Request Example:
+                value:
+                  name: Ironclad Inc.
+                  relationshipTypeKey:
+                  - customer
+                  properties:
+                    entity_externalID:
+                      type: string
+                      value: '1234567890'
+                    entity_businessType:
+                      type: string
+                      value: company
+                  parent:
+                    recordId: 123e4567-e89b-12d3-a456-426614174001
+              Remove parent example:
+                value:
+                  name: Ironclad Inc.
+                  removeParent: true
+      security:
+      - sec0: []
+        OAuth2:
+        - public.entities.createEntities
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityModel'
+        '400':
+          $ref: '#/components/responses/BadRequestError400'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError401'
+        '403':
+          $ref: '#/components/responses/ForbiddenError403'
+        '404':
+          $ref: '#/components/responses/NotFoundError404'
+      tags:
+      - Entities
+  /entities/{id}:
+    get:
+      summary: Retrieve an Entity
+      description: "View a specific entity and its associated data. \n\n**OAuth Scope required:** `public.entities.readEntities`"
+      operationId: retrieve-an-entity
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      - name: id
+        in: path
+        description: The ID or Ironclad ID of the Entity to fetch.
+        schema:
+          type: string
+        required: true
+      security:
+      - sec0: []
+        OAuth2:
+        - public.entities.readEntities
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityModel'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: MISSING_PARAM
+                  message:
+                    type: string
+                    example: reason why something has gone wrong
+                  param:
+                    type: string
+                    example: parameter identifier
+        '401':
+          $ref: '#/components/responses/UnauthorizedError401'
+        '403':
+          $ref: '#/components/responses/ForbiddenError403'
+        '404':
+          $ref: '#/components/responses/NotFoundError404'
+      tags:
+      - Entities
+    patch:
+      summary: Update an Entity
+      description: "Update an entity's name, relationship type, and properties. More details on managing an entity can be found in the [Entity Overview](https://support.ironcladapp.com/hc/en-us/articles/28004816859543-Create-and-Manage-Entities) article. \n\n**OAuth Scope required:** `public.entities.updateEntities`"
+      operationId: update-an-entity
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      - name: id
+        in: path
+        description: The ID or Ironclad ID of the Entity to update.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the Entity.
+                  minLength: 1
+                relationshipTypeKey:
+                  $ref: '#/components/schemas/RelationshipTypeKey'
+                status:
+                  description: The status of the entity
+                  type: string
+                  enum:
+                  - ACTIVE
+                  - INACTIVE
+                addProperties:
+                  type: object
+                  description: A key:value map of properties to add. More details on the properties can be found in the [Entity Properties](https://support.ironcladapp.com/hc/en-us/articles/28005038398231-Create-Manage-Relationship-Types-and-Entity-Properties) article.
+                  additionalProperties:
+                    $ref: '#/components/schemas/RecordPropertyType'
+                removeProperties:
+                  type: array
+                  description: List of entity property ids to be removed from the entity record if they exist.
+                  items:
+                    type: string
+                    example: entity_externalID
+                setParent:
+                  type: object
+                  description: Object containing Record ID or Ironclad ID to be set as the parent of the current entity.
+                  required:
+                  - recordId
+                  properties:
+                    recordId:
+                      type: string
+                      example: 123e4567-e89b-12d3-a456-426614174001
+                removeParent:
+                  type: boolean
+                  description: Boolean flag to indicate if the parent id should be removed for the current entity.
+                  example: false
+            examples:
+              Request Example:
+                value:
+                  name: Ironclad Inc.
+                  relationshipTypeKey:
+                  - customer
+                  addProperties:
+                    entity_externalID:
+                      type: string
+                      value: '1234567890'
+                    entity_businessType:
+                      type: string
+                      value: company
+                  removeProperties:
+                  - entity_alternativeNames
+                  setParent:
+                    recordId: 123e4567-e89b-12d3-a456-426614174001
+              Remove parent example:
+                value:
+                  removeParent: true
+      security:
+      - sec0: []
+        OAuth2:
+        - public.entities.updateEntities
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityModel'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: MISSING_PARAM
+                  message:
+                    type: string
+                    example: reason why something has gone wrong
+                  param:
+                    type: string
+                    example: parameter identifier
+        '401':
+          $ref: '#/components/responses/UnauthorizedError401'
+        '403':
+          $ref: '#/components/responses/ForbiddenError403'
+        '404':
+          $ref: '#/components/responses/NotFoundError404'
+      tags:
+      - Entities
+    delete:
+      summary: Delete an Entity
+      description: "Delete an existing entity. \n\n**OAuth Scope required:** `public.entities.deleteEntities`"
+      operationId: delete-an-entity
+      parameters:
+      - $ref: '#/components/parameters/XAsUserEmail'
+      - $ref: '#/components/parameters/XAsUserId'
+      - name: id
+        in: path
+        description: The ID or Ironclad ID of the Entity to delete.
+        schema:
+          type: string
+        required: true
+      security:
+      - sec0: []
+        OAuth2:
+        - public.entities.deleteEntities
+      responses:
+        '204':
+          description: '204'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '404':
+          description: '404'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      tags:
+      - Entities
+components:
+  schemas:
+    ClauseLanguagePositionPlaybook:
+      title: Clause Language Position Playbook
+      type: object
+      description: A playbook clause language position
+      required:
+      - type
+      - name
+      - preferred
+      properties:
+        type:
+          type: string
+          description: The source type of the playbook clause
+          enum:
+          - playbook
+          example: playbook
+        name:
+          type: string
+          description: The name of the playbook clause
+          example: Standard
+        preferred:
+          type: boolean
+          description: Whether the playbook clause is the preferred language
+          example: true
+    RecordPropertyArray:
+      title: Record Property Array
+      type: object
+      description: An array-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - array
+          example: array
+        value:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          example:
+          - red
+          - blue
+    RecordPropertyPlaybookClause:
+      type: object
+      description: A playbook-based clause-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - playbookClause
+          example: playbookClause
+        value:
+          type: string
+          description: The playbook clause name
+          example: Standard
+    EntityModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the entity
+          example: 123e4567-e89b-12d3-a456-426614174000
+        ironcladId:
+          type: string
+          description: The unique Ironclad identifier of the entity
+          example: ENTITY-1
+        name:
+          type: string
+          description: The name of the entity
+          example: Ironclad, Inc.
+        status:
+          type: string
+          description: The status of the entity
+          example: active
+        lastUpdated:
+          type: string
+          description: The last updated date of the entity
+          example: '2021-01-01T00:00:00Z'
+        properties:
+          $ref: '#/components/schemas/RecordProperties'
+        namedTypeIds:
+          type: array
+          description: The unique identifiers of the relationship types associated with the entity
+          items:
+            type: string
+            example: 43d3e321-e89b-12d3-a456-426614174000
+        parentId:
+          type: string
+          description: The unique identifier of the parent entity
+          example: 123e4567-e89b-12d3-a456-426614174001
+      required:
+      - id
+      - ironcladId
+      - name
+      - status
+      - lastUpdated
+      - properties
+    RecordPropertyBoolean:
+      title: Record Property Boolean
+      type: object
+      description: A true/false boolean-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - boolean
+          example: boolean
+        value:
+          type: boolean
+          description: The boolean value of the property
+          example: true
+        originalValue:
+          type: boolean
+          description: The original value of the property before amendment (only present when property is amended)
+          example: false
+    RecordPropertyReference:
+      type: object
+      description: A reference-type record property that points to another record
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - reference
+          example: reference
+        value:
+          type: object
+          description: The reference value of the property
+          required:
+          - recordId
+          properties:
+            recordId:
+              type: string
+              description: The unique identifier of the referenced record
+              example: REC12345
+            subTypeId:
+              type: string
+              description: Optional sub-type identifier for the referenced record
+              example: contract
+            namedTypeIds:
+              type: array
+              description: The unique identifiers of the relationship types associated with the entity
+              items:
+                type: string
+                example: 43d3e321-e89b-12d3-a456-426614174000
+            readableId:
+              type: string
+              description: The unique identifier of the referenced record
+              example: ENTITY-1
+            attributes:
+              $ref: '#/components/schemas/EntityProperties'
+        originalValue:
+          type: object
+          description: The original reference value before amendment (only present when property is amended)
+          required:
+          - recordId
+          properties:
+            recordId:
+              type: string
+              description: The unique identifier of the original referenced record
+              example: REC67890
+            subTypeId:
+              type: string
+              description: Optional sub-type identifier for the original referenced record
+              example: agreement
+            namedTypeIds:
+              type: array
+              description: The unique identifiers of the relationship types associated with the original entity
+              items:
+                type: string
+                example: 43d3e321-e89b-12d3-a456-426614174000
+            readableId:
+              type: string
+              description: The unique identifier of the original referenced record
+              example: ENTITY-2
+            attributes:
+              $ref: '#/components/schemas/EntityProperties'
+    RecordPropertyAddress:
+      type: object
+      description: An address-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - address
+          example: address
+        value:
+          type: object
+          description: The address
+          example:
+            lines:
+            - 123 Main St.
+            locality: Los Angeles
+            region: CA
+            postcode: '90001'
+          properties:
+            lines:
+              type: array
+              maxLength: 4
+              items:
+                type: string
+              description: Address Lines (Street, Apt., etc.)
+            locality:
+              type: string
+              description: Locality (City, Town, etc)
+            country:
+              type: string
+              description: Country
+            region:
+              type: string
+              description: Region (State, Province, etc)
+            postcode:
+              type: string
+              description: Postcode (ZIP code, etc)
+            raw:
+              type: string
+              description: A raw address string, useful when address is not stored in a structured way
+        originalValue:
+          type: object
+          description: The original address before amendment (only present when property is amended)
+          example:
+            lines:
+            - 456 Old St.
+            locality: San Francisco
+            region: CA
+            postcode: '94102'
+          properties:
+            lines:
+              type: array
+              maxLength: 4
+              items:
+                type: string
+              description: Original Address Lines (Street, Apt., etc.)
+            locality:
+              type: string
+              description: Original Locality (City, Town, etc)
+            country:
+              type: string
+              description: Original Country
+            region:
+              type: string
+              description: Original Region (State, Province, etc)
+            postcode:
+              type: string
+              description: Original Postcode (ZIP code, etc)
+            raw:
+              type: string
+              description: A raw original address string, useful when address is not stored in a structured way
+    RecordProperties:
+      type: object
+      description: The record properties associated with the record
+      additionalProperties:
+        $ref: '#/components/schemas/RecordPropertyType'
+    RecordPropertyDate:
+      title: Record Property Date
+      type: object
+      description: A date-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - date
+          example: date
+        value:
+          type: string
+          description: The date value of the property in ISO8601 format
+          format: date-time
+          example: '1992-10-04T09:31:00Z'
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          format: date-time
+          example: '1990-01-01T00:00:00Z'
+    RecordPropertyClause:
+      type: object
+      description: A clause-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - clause
+          example: clause
+        value:
+          type: object
+          description: The clause value of the property
+          required:
+          - source
+          properties:
+            source:
+              type: string
+              description: The source of the clause property
+              enum:
+              - ai
+              - manual
+              example: ai
+            clauseType:
+              type: string
+              description: The string key denoting which type of clause used
+              example: remedies
+            clauseText:
+              type: string
+              description: The actual paragraph text used
+              example: This agreement is governed by the laws of the State of California.
+            documentId:
+              type: string
+              description: The unique identifier of the document that contains the clause
+              example: signedCopy
+            languagePosition:
+              type: object
+              description: The position of the clause in the document
+              oneOf:
+              - $ref: '#/components/schemas/ClauseLanguagePositionCustom'
+              - $ref: '#/components/schemas/ClauseLanguagePositionPlaybook'
+            documentLocation:
+              type: object
+              description: The autoML style formatted location of the clause in the document
+              required:
+              - startOffset
+              - endOffset
+              - boundingPoly
+              properties:
+                startOffset:
+                  type: integer
+                  description: The position in the document where the clause begins
+                  example: 0
+                endOffset:
+                  type: integer
+                  description: The position in the document where the clause ends
+                  example: 0
+                boundingPoly:
+                  type: array
+                  description: The bounding polygon of the clause in the document
+                  items:
+                    type: object
+                    required:
+                    - x
+                    - y
+                    properties:
+                      x:
+                        type: integer
+                        description: The x coordinate of the bounding polygon
+                        example: 0
+                      y:
+                        type: integer
+                        description: The y coordinate of the bounding polygon
+                        example: 0
+                pageNumber:
+                  type: integer
+                  description: The page number of the clause in the document
+                  example: 1
+    ClauseLanguagePositionCustom:
+      title: Clause Language Position Custom
+      type: object
+      description: A custom clause language position
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The source type of the custom clause
+          enum:
+          - custom
+          example: custom
+    RecordPropertyType:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/RecordPropertyString'
+      - $ref: '#/components/schemas/RecordPropertyNumber'
+      - $ref: '#/components/schemas/RecordPropertyBoolean'
+      - $ref: '#/components/schemas/RecordPropertyDate'
+      - $ref: '#/components/schemas/RecordPropertyDuration'
+      - $ref: '#/components/schemas/RecordPropertyEmail'
+      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
+      - $ref: '#/components/schemas/RecordPropertyClause'
+      - $ref: '#/components/schemas/RecordPropertyPlaybookClause'
+      - $ref: '#/components/schemas/RecordPropertyAddress'
+      - $ref: '#/components/schemas/RecordPropertyArray'
+      - $ref: '#/components/schemas/RecordPropertyReference'
+    RecordPropertyDuration:
+      title: Record Property Duration
+      type: object
+      description: A duration-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - duration
+          example: duration
+        value:
+          type: string
+          description: The duration value of the property in ISO8601 format
+          example: P10Y3M2W1D
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          example: P5Y1M1W
+    RelationshipTypeKey:
+      description: The key of the relationship type to be added to the entity. The key must match a valid relationship type in the company settings. The key is displayed on the relationship types page in Data Manager and is always a single word without spaces that starts with a lowercase. For now, only one relationship type can be added or updated per entity. More info on relationship types can be found in the [Entity Relationship Types](https://support.ironcladapp.com/hc/en-us/articles/28005038398231-Create-Manage-Relationship-Types-and-Entity-Properties) article.
+      type: array
+      items:
+        type: string
+      minLength: 1
+    RecordPropertyNumber:
+      title: Record Property Number
+      type: object
+      description: A number-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - number
+          example: number
+        value:
+          type: integer
+          description: The number value of the property
+          example: 123
+        originalValue:
+          type: integer
+          description: The original value of the property before amendment (only present when property is amended)
+          example: 100
+    RecordPropertyEmail:
+      title: Record Property Email
+      type: object
+      description: An email-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - email
+          example: email
+        value:
+          type: string
+          format: email
+          description: The email value of the property
+          example: ironclad@example.com
+        originalValue:
+          type: string
+          format: email
+          description: The original value of the property before amendment (only present when property is amended)
+          example: original@example.com
+    RecordPropertyMonetaryAmount:
+      title: Record Property Monetary Amount
+      type: object
+      description: A monetary amount-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - monetary_amount
+          example: monetary_amount
+        value:
+          type: object
+          description: The monetary amount value of the property
+          required:
+          - amount
+          - currency
+          properties:
+            currency:
+              type: string
+              description: The currency of the monetary value in ISO 4217 format
+              example: USD
+            amount:
+              type: number
+              description: The amount of the monetary value
+              example: 100000
+        originalValue:
+          type: object
+          description: The original value of the property before amendment (only present when property is amended)
+          required:
+          - amount
+          - currency
+          properties:
+            currency:
+              type: string
+              description: The currency of the original monetary value in ISO 4217 format
+              example: USD
+            amount:
+              type: number
+              description: The original amount of the monetary value
+              example: 50000
+    EntityPropertyType:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/RecordPropertyString'
+      - $ref: '#/components/schemas/RecordPropertyNumber'
+      - $ref: '#/components/schemas/RecordPropertyBoolean'
+      - $ref: '#/components/schemas/RecordPropertyDate'
+      - $ref: '#/components/schemas/RecordPropertyDuration'
+      - $ref: '#/components/schemas/RecordPropertyEmail'
+      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
+      - $ref: '#/components/schemas/RecordPropertyAddress'
+    EntityProperties:
+      type: object
+      description: The entity properties associated with the entity
+      additionalProperties:
+        $ref: '#/components/schemas/EntityPropertyType'
+    RecordPropertyString:
+      title: Record Property String
+      type: object
+      description: A text-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - string
+          example: string
+        value:
+          type: string
+          description: The string value of the property
+          example: Foobar
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          example: Original Value
+  responses:
+    BadRequestError400:
+      description: '400'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: MISSING_PARAM
+              message:
+                type: string
+                example: reason why something has gone wrong
+              param:
+                type: string
+                example: parameter identifier
+    NotFoundError404:
+      description: '404'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: NOT_FOUND
+              message:
+                type: string
+                example: not found
+    UnauthorizedError401:
+      description: '401'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                enum:
+                - UNAUTHORIZED
+                example: UNAUTHORIZED
+              message:
+                type: string
+                example: invalid authentication token
+          examples:
+            invalidToken:
+              value:
+                code: UNAUTHORIZED
+                message: invalid authentication token
+            revokedToken:
+              value:
+                code: UNAUTHORIZED
+                message: token has been revoked
+            expiredToken:
+              value:
+                code: UNAUTHORIZED
+                message: token has expired
+    ForbiddenError403:
+      description: '403'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FORBIDDEN
+              message:
+                type: string
+                example: access forbidden
+  parameters:
+    QueryPageSize:
+      name: pageSize
+      in: query
+      description: A limit of the number of results to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+    QueryPageNumber:
+      name: page
+      in: query
+      description: The page number used when paginating through a list of results.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 100000000
+    EntityFilter:
+      name: filter
+      in: query
+      description: "Filter entities using a formula. The entity property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nEntity properties can be identified using the [Get All Entity Relationship Types](https://developer.ironcladapp.com/reference/get-all-entity-relationship-types) endpoint.\n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
+      schema:
+        type: string
+      example: Equals([entity_externalID], '1234567890')
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-languages:
+  - curl
+  - node
+  - ruby
+  - javascript
+  - python

@@ -1,0 +1,165 @@
+openapi: 3.1.0
+info:
+  title: Ironclad OAuth 2.0 Authorization Search API
+  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
+  version: '1'
+  contact:
+    name: Ironclad Support
+    email: support@ironcladapp.com
+servers:
+- url: https://na1.ironcladapp.com/oauth
+  description: Production server
+- url: https://eu1.ironcladapp.com/oauth
+  description: EU Production server
+- url: https://demo.ironcladapp.com/oauth
+  description: Demo server
+tags:
+- name: Search
+  description: Documentation on Ironclad Search.
+paths:
+  /search/conversational:
+    post:
+      summary: Run Conversational Search
+      description: 'Ask a natural language question and get an AI-generated response grounded in your contracts and records.
+
+
+        **OAuth Scopes required:** `public.search.conversational`, `public.records.readRecords`, `public.workflows.readWorkflows`'
+      operationId: run-conversational-search
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+              properties:
+                query:
+                  type: string
+                  description: The natural language question to ask
+                  example: Which contracts are expiring in the next 30 days?
+                modelTier:
+                  type: string
+                  enum:
+                  - ultrafast
+                  - fast
+                  - standard
+                  - powerful
+                  description: Controls the model used. Defaults to 'fast'. Use 'ultrafast' for the lightest/quickest model, 'standard' or 'powerful' for more capable models on complex queries.
+                  example: fast
+                userTimezone:
+                  type: string
+                  description: The user's IANA timezone (e.g. "America/New_York", "Asia/Kolkata"). Used to correctly interpret relative time expressions like "last month" or "this week". If not provided, falls back to the timezone in the user's company profile, then UTC.
+                  example: America/New_York
+      security:
+      - sec0: []
+        OAuth2:
+        - public.search.conversational
+        - public.records.readRecords
+        - public.workflows.readWorkflows
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - result
+                - records
+                properties:
+                  result:
+                    type: string
+                    description: The agent's prose response
+                  records:
+                    type: object
+                    description: Map of record ID to record details for all records surfaced by the agent
+                    additionalProperties:
+                      $ref: '#/components/schemas/ConversationalSearchRecord'
+        '400':
+          $ref: '#/components/responses/BadRequestError400'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError401'
+        '403':
+          $ref: '#/components/responses/ForbiddenError403'
+      tags:
+      - Search
+components:
+  responses:
+    ForbiddenError403:
+      description: '403'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FORBIDDEN
+              message:
+                type: string
+                example: access forbidden
+    BadRequestError400:
+      description: '400'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: MISSING_PARAM
+              message:
+                type: string
+                example: reason why something has gone wrong
+              param:
+                type: string
+                example: parameter identifier
+    UnauthorizedError401:
+      description: '401'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                enum:
+                - UNAUTHORIZED
+                example: UNAUTHORIZED
+              message:
+                type: string
+                example: invalid authentication token
+          examples:
+            invalidToken:
+              value:
+                code: UNAUTHORIZED
+                message: invalid authentication token
+            revokedToken:
+              value:
+                code: UNAUTHORIZED
+                message: token has been revoked
+            expiredToken:
+              value:
+                code: UNAUTHORIZED
+                message: token has expired
+  schemas:
+    ConversationalSearchRecord:
+      title: Conversational Search Record
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          nullable: true
+          description: Dashboard URL for this record, or null if unavailable
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-languages:
+  - curl
+  - node
+  - ruby
+  - javascript
+  - python
