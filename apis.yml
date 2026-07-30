@@ -1,108 +1,6 @@
 aid: ironclad
 url: https://raw.githubusercontent.com/api-evangelist/ironclad/refs/heads/main/apis.yml
 apis:
-- aid: ironclad:ironclad-public-api
-  name: Ironclad Public API
-  tags:
-  - Contracts
-  - Contract Lifecycle Management
-  - CLM
-  - Workflows
-  - Records
-  - Entities
-  - Obligations
-  - Webhooks
-  - Exports
-  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
-  baseURL: https://na1.ironcladapp.com/public/api/v1
-  properties:
-  - url: https://developer.ironcladapp.com/reference/getting-started-api
-    type: Documentation
-  - url: https://developer.ironcladapp.com/reference/authenticate-a-request
-    type: Authentication
-  - url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
-    type: RateLimits
-  - url: openapi/ironclad-public-api-openapi.yml
-    type: OpenAPI
-  - url: json-schema/ironclad-workflow-schema.json
-    type: JSONSchema
-  - url: json-schema/ironclad-record-schema.json
-    type: JSONSchema
-  - url: json-schema/ironclad-entity-schema.json
-    type: JSONSchema
-  - url: json-schema/ironclad-webhook-schema.json
-    type: JSONSchema
-  - url: json-ld/ironclad-context.jsonld
-    type: JSONLD
-  - url: examples/ironclad-launch-workflow-example.json
-    type: Examples
-  - url: examples/ironclad-create-record-example.json
-    type: Examples
-  - url: examples/ironclad-create-webhook-example.json
-    type: Examples
-  - url: examples/ironclad-conversational-search-example.json
-    type: Examples
-  - url: graphql/ironclad-graphql.md
-    type: GraphQL
-  description: The Ironclad Public API exposes contract lifecycle management primitives
-    — Workflows (contract authoring, approvals, signature packets, comments, signers),
-    Records (the executed contract repository with metadata, attachments, smart-import
-    predictions), Entities (counterparties and parties referenced across workflows
-    and records), Obligations (post-signature commitments derived from contracts),
-    Webhooks (event-driven integration into downstream systems), Exports (bulk data
-    warehouse pulls), and Conversational Search (Jurist-powered natural-language queries
-    over the contract repository). REST/JSON over HTTPS with OAuth 2.0 (Authorization
-    Code and Client Credentials) and bearer-token authentication; OpenAPI 3.1; regional
-    NA1, EU1, and demo servers.
-- aid: ironclad:ironclad-oauth-api
-  name: Ironclad OAuth 2.0 API
-  tags:
-  - OAuth
-  - Authentication
-  - Authorization
-  - Identity
-  humanURL: https://developer.ironcladapp.com/reference/authentication-api
-  baseURL: https://na1.ironcladapp.com/oauth
-  properties:
-  - url: https://developer.ironcladapp.com/reference/authentication-api
-    type: Documentation
-  - url: https://developer.ironcladapp.com/reference/authorization-code-grant
-    type: Documentation
-  - url: https://developer.ironcladapp.com/reference/client-credentials-grant
-    type: Documentation
-  - url: https://developer.ironcladapp.com/reference/register-oauth-client
-    type: Documentation
-  - url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
-    type: Documentation
-  - url: openapi/ironclad-oauth-20-api-openapi.yml
-    type: OpenAPI
-  description: OAuth 2.0 endpoints for delegated and machine-to-machine access to
-    the Ironclad Public API. Supports the Authorization Code grant (with PKCE for
-    public clients) and the Client Credentials grant for server-to-server integrations.
-    Exposes /authorize, /token, /userinfo, and /company-info; scopes follow the `public.{resource}.{action}`
-    convention (e.g., `public.workflows.readWorkflows`, `public.records.createRecords`).
-- aid: ironclad:ironclad-scim-api
-  name: Ironclad SCIM 2.0 API
-  tags:
-  - SCIM
-  - Identity
-  - User Provisioning
-  - Groups
-  - Directory
-  humanURL: https://developer.ironcladapp.com/reference/retrieve-all-users
-  baseURL: https://na1.ironcladapp.com/scim/v2
-  properties:
-  - url: https://developer.ironcladapp.com/reference/retrieve-all-users
-    type: Documentation
-  - url: openapi/ironclad-scim-api-openapi.yml
-    type: OpenAPI
-  - url: json-schema/ironclad-user-schema.json
-    type: JSONSchema
-  description: SCIM 2.0 endpoints for Just-in-Time and bulk provisioning of Ironclad
-    users and groups from an upstream identity provider (Okta, Azure AD, OneLogin,
-    etc.). Implements /Users, /Groups, and /Schemas with standard SCIM semantics —
-    list/get/create/replace/delete plus PATCH for partial updates and group-membership
-    edits. Enables SSO-aligned lifecycle management and role-based access.
 - aid: ironclad:ironclad-clickwrap-api
   name: Ironclad Clickwrap API
   tags:
@@ -121,13 +19,613 @@ apis:
     type: SDKs
   - url: https://clickwrap-developer.ironcladapp.com/docs/getting-your-access-token
     type: Authentication
-  description: The Ironclad Clickwrap (formerly PactSafe) API delivers programmatic
-    clickwrap and browsewrap acceptance tracking for online agreements — terms of
-    service, privacy policies, EULAs, and checkout-flow agreements. Comprises a JavaScript
-    library (PS.js) for rendering and capturing acceptance events, an Activity API
-    for sending acceptance/visit/displayed/agreed events server-side, and a REST API
-    for managing Sites, Groups, Contracts, and Signer records. Powers in-product acceptance
-    for SaaS sign-ups, checkout pages, mobile apps, and embedded forms.
+  description: >-
+    The Ironclad Clickwrap (formerly PactSafe) API delivers programmatic clickwrap and browsewrap acceptance
+    tracking for online agreements — terms of service, privacy policies, EULAs, and checkout-flow agreements.
+    Comprises a JavaScript library (PS.js) for rendering and capturing acceptance events, an Activity
+    API for sending acceptance/visit/displayed/agreed events server-side, and a REST API for managing
+    Sites, Groups, Contracts, and Signer records. Powers in-product acceptance for SaaS sign-ups, checkout
+    pages, mobile apps, and embedded forms.
+- aid: ironclad:ironclad-authorization-api
+  name: Ironclad Authorization API
+  description: OAuth 2.0 authorization endpoints for token management and user authentication.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Authorization
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-authorization-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-entities-api
+  name: Ironclad Entities API
+  description: Documentation on Ironclad Entities.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Entities
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-entities-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-exports-api
+  name: Ironclad Exports API
+  description: Documentation on Ironclad Data Exports.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Exports
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-exports-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-groups-api
+  name: Ironclad Groups API
+  description: Documentation on SCIM Groups.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-groups-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-obligations-api
+  name: Ironclad Obligations API
+  description: Documentation on Ironclad Obligations.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Obligations
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-obligations-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-records-api
+  name: Ironclad Records API
+  description: Documentation on Ironclad Records.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Records
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-records-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-resources-api
+  name: Ironclad Resources API
+  description: Resource access endpoints for retrieving user information and token details.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Resources
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-resources-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-schemas-api
+  name: Ironclad Schemas API
+  description: Documentation on SCIM Schemas.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Schemas
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-schemas-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-search-api
+  name: Ironclad Search API
+  description: Documentation on Ironclad Search.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-search-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-users-api
+  name: Ironclad Users API
+  description: Documentation on SCIM Users.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-users-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-webhooks-api
+  name: Ironclad Webhooks API
+  description: Documentation on Ironclad Webhooks.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
+- aid: ironclad:ironclad-workflows-api
+  name: Ironclad Workflows API
+  description: Documentation on Ironclad Workflows.
+  humanURL: https://developer.ironcladapp.com/reference/getting-started-api
+  baseURL: https://na1.ironcladapp.com/public/api/v1
+  tags:
+  - Workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/ironclad-workflows-api-openapi.yml
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/getting-started-api
+  - type: Authentication
+    url: https://developer.ironcladapp.com/reference/authenticate-a-request
+  - type: RateLimits
+    url: https://developer.ironcladapp.com/reference/clm-api-rate-limits
+  - type: JSONSchema
+    url: json-schema/ironclad-workflow-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-record-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-entity-schema.json
+  - type: JSONSchema
+    url: json-schema/ironclad-webhook-schema.json
+  - type: JSONLD
+    url: json-ld/ironclad-context.jsonld
+  - type: Examples
+    url: examples/ironclad-launch-workflow-example.json
+  - type: Examples
+    url: examples/ironclad-create-record-example.json
+  - type: Examples
+    url: examples/ironclad-create-webhook-example.json
+  - type: Examples
+    url: examples/ironclad-conversational-search-example.json
+  - type: GraphQL
+    url: graphql/ironclad-graphql.md
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authentication-api
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/authorization-code-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/client-credentials-grant
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/register-oauth-client
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/guidance-for-oauth-migration
+  - type: Documentation
+    url: https://developer.ironcladapp.com/reference/retrieve-all-users
+  - type: JSONSchema
+    url: json-schema/ironclad-user-schema.json
 name: Ironclad
 description: Ironclad is the enterprise contract lifecycle management (CLM) platform
   used by legal, sales, procurement, and finance teams to draft, negotiate, approve,
@@ -155,7 +653,20 @@ tags:
 - SCIM
 - Webhooks
 kind: contract
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/ironclad.png
 access: 3rd-Party
 common:
 - type: AgenticAccess
