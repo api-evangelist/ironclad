@@ -1,0 +1,36 @@
+{
+  "provider": "ironclad",
+  "sources": [
+    "ironclad-authorization-api-openapi.yml",
+    "ironclad-entities-api-openapi.yml",
+    "ironclad-exports-api-openapi.yml",
+    "ironclad-groups-api-openapi.yml",
+    "ironclad-obligations-api-openapi.yml",
+    "ironclad-records-api-openapi.yml",
+    "ironclad-resources-api-openapi.yml",
+    "ironclad-schemas-api-openapi.yml",
+    "ironclad-search-api-openapi.yml",
+    "ironclad-users-api-openapi.yml",
+    "ironclad-webhooks-api-openapi.yml",
+    "ironclad-workflows-api-openapi.yml"
+  ],
+  "outputs": [
+    "ironclad-authorization-api-openapi.yml",
+    "ironclad-entities-api-openapi.yml",
+    "ironclad-exports-api-openapi.yml",
+    "ironclad-groups-api-openapi.yml",
+    "ironclad-obligations-api-openapi.yml",
+    "ironclad-records-api-openapi.yml",
+    "ironclad-resources-api-openapi.yml",
+    "ironclad-schemas-api-openapi.yml",
+    "ironclad-search-api-openapi.yml",
+    "ironclad-users-api-openapi.yml",
+    "ironclad-webhooks-api-openapi.yml",
+    "ironclad-workflows-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
