@@ -1,0 +1,2072 @@
+{
+  "item": [
+    {
+      "id": "7c4785cd-e203-435c-a1d8-a7c610cd5d1d",
+      "name": "Users",
+      "description": {
+        "content": "Documentation on SCIM Users.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a4b3caf8-76c9-484d-bd25-be69a9fbd93b",
+          "name": "List all Users",
+          "request": {
+            "name": "List all Users",
+            "description": {
+              "content": "Documentation on listing Users via SCIM. \n\n**OAuth Scope required:** `scim.users.readUsers`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "Users"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "startIndex",
+                  "value": "1",
+                  "description": "The starting index for retrieving this resource. Resources are indexed based on when they were first added to Ironclad."
+                },
+                {
+                  "disabled": false,
+                  "key": "count",
+                  "value": "25",
+                  "description": "Specifies the maximum number of resources to return in a single page of results."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter",
+                  "value": "<string>",
+                  "description": "Filters for identifying subsets of users. Filters must comply with the SCIM protocol's convention. For more details, see SCIM [RFC 7644 Section 3.4.2.2](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2)."
+                },
+                {
+                  "disabled": false,
+                  "key": "excludedAttributes",
+                  "value": "<string>",
+                  "description": "A comma-separated list of attributes to exclude from the resources in the response."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "31f1e18a-b0f9-4d04-87a5-bf9ef54c2416",
+              "name": "200 OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "startIndex",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "25"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "userName eq \"alex.doe@example.com\""
+                    },
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:ListResponse\",\n    \"urn:ietf:params:scim:api:messages:2.0:ListResponse\"\n  ],\n  \"totalResults\": 2,\n  \"Resources\": [\n    {\n      \"schemas\": [\n        \"urn:ietf:params:scim:schemas:core:2.0:User\",\n        \"urn:ietf:params:scim:schemas:core:2.0:User\"\n      ],\n      \"id\": \"6660d37dec0eac3deffb680e\",\n      \"userName\": \"alex.doe@example.com\",\n      \"name\": {\n        \"givenName\": \"Alex\",\n        \"familyName\": \"Doe\"\n      },\n      \"title\": \"Vice President\",\n      \"emails\": [\n        {\n          \"value\": \"alex.doe@example.com\",\n          \"type\": \"work\",\n          \"primary\": true\n        },\n        {\n          \"value\": \"alex.doe@example.com\",\n          \"type\": \"work\",\n          \"primary\": true\n        }\n      ],\n      \"active\": true,\n      \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n        \"department\": \"Legal\"\n      },\n      \"urn:ietf:params:scim:schemas:extension:ironclad:2.0:User\": {\n        \"departmentHead\": \"jane.doe@test.com\",\n        \"provider\": \"local\",\n        \"allowProviderConversion\": false\n      },\n      \"meta\": {\n        \"resourceType\": \"User\",\n        \"created\": \"2025-03-26T18:33:48.336Z\",\n        \"lastModified\": \"2025-03-26T18:33:48.336Z\",\n        \"location\": \"https://na1.ironcladapp.com/scim/v2/Users/67e4488c605caf0d8aa2e5c6\"\n      }\n    },\n    {\n      \"schemas\": [\n        \"urn:ietf:params:scim:schemas:core:2.0:User\",\n        \"urn:ietf:params:scim:schemas:core:2.0:User\"\n      ],\n      \"id\": \"6660d37dec0eac3deffb680e\",\n      \"userName\": \"alex.doe@example.com\",\n      \"name\": {\n        \"givenName\": \"Alex\",\n        \"familyName\": \"Doe\"\n      },\n      \"title\": \"Vice President\",\n      \"emails\": [\n        {\n          \"value\": \"alex.doe@example.com\",\n          \"type\": \"work\",\n          \"primary\": true\n        },\n        {\n          \"value\": \"alex.doe@example.com\",\n          \"type\": \"work\",\n          \"primary\": true\n        }\n      ],\n      \"active\": true,\n      \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n        \"department\": \"Legal\"\n      },\n      \"urn:ietf:params:scim:schemas:extension:ironclad:2.0:User\": {\n        \"departmentHead\": \"jane.doe@test.com\",\n        \"provider\": \"local\",\n        \"allowProviderConversion\": false\n      },\n      \"meta\": {\n        \"resourceType\": \"User\",\n        \"created\": \"2025-03-26T18:33:48.336Z\",\n        \"lastModified\": \"2025-03-26T18:33:48.336Z\",\n        \"location\": \"https://na1.ironcladapp.com/scim/v2/Users/67e4488c605caf0d8aa2e5c6\"\n      }\n    }\n  ],\n  \"startIndex\": 1,\n  \"itemsPerPage\": 25\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "65ec7938-df73-4a3b-add6-7a3b92c7902a",
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "startIndex",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "25"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "userName eq \"alex.doe@example.com\""
+                    },
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schema\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"400\",\n  \"scimType\": \"invalidFilter\",\n  \"detail\": \"No matching schema for attribute: name,lastName\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2e9a8885-2b77-40f3-b766-76fe55b71656",
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "startIndex",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "25"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "userName eq \"alex.doe@example.com\""
+                    },
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"403\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "04c13599-ceb1-472c-a22f-b313bcebd78b",
+              "name": "500 Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "startIndex",
+                      "value": "1"
+                    },
+                    {
+                      "key": "count",
+                      "value": "25"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "userName eq \"alex.doe@example.com\""
+                    },
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"500\",\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "62e815ba-0aad-4904-ba59-87686ac6f044",
+          "name": "Create a User",
+          "request": {
+            "name": "Create a User",
+            "description": {
+              "content": "Documentation on creating a User via SCIM. \n\n**OAuth Scope required:** `scim.users.createUsers`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "Users"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "excludedAttributes",
+                  "value": "<string>",
+                  "description": "A comma-separated list of attributes to exclude from the resources in the response."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:schemas:core:2.0:User\"\n  ],\n  \"userName\": \"<string>\",\n  \"name\": {\n    \"givenName\": \"<string>\",\n    \"familyName\": \"<string>\"\n  },\n  \"title\": \"<string>\",\n  \"password\": \"<string>\",\n  \"active\": true,\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"department\": \"<string>\"\n  },\n  \"urn:ietf:params:scim:schemas:extension:ironclad:2.0:User\": {\n    \"departmentHead\": \"<email>\",\n    \"allowProviderConversion\": \"<boolean>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1a26fdea-a2bd-483d-91f4-c9ca8d207b62",
+              "name": "201 Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:schemas:core:2.0:User\",\n    \"urn:ietf:params:scim:schemas:core:2.0:User\"\n  ],\n  \"id\": \"6660d37dec0eac3deffb680e\",\n  \"userName\": \"alex.doe@example.com\",\n  \"name\": {\n    \"givenName\": \"Alex\",\n    \"familyName\": \"Doe\"\n  },\n  \"title\": \"Vice President\",\n  \"emails\": [\n    {\n      \"value\": \"alex.doe@example.com\",\n      \"type\": \"work\",\n      \"primary\": true\n    },\n    {\n      \"value\": \"alex.doe@example.com\",\n      \"type\": \"work\",\n      \"primary\": true\n    }\n  ],\n  \"active\": true,\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"department\": \"Legal\"\n  },\n  \"urn:ietf:params:scim:schemas:extension:ironclad:2.0:User\": {\n    \"departmentHead\": \"jane.doe@test.com\",\n    \"provider\": \"local\",\n    \"allowProviderConversion\": false\n  },\n  \"meta\": {\n    \"resourceType\": \"User\",\n    \"created\": \"2025-03-26T18:33:48.336Z\",\n    \"lastModified\": \"2025-03-26T18:33:48.336Z\",\n    \"location\": \"https://na1.ironcladapp.com/scim/v2/Users/67e4488c605caf0d8aa2e5c6\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eacdecaf-b1c5-423b-9aab-4f967794298e",
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"400\",\n  \"scimType\": \"invalidValue\",\n  \"detail\": \"Invalid value at name.givenName: 123\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0f20589d-b35b-4bd0-add9-b754dfd79a46",
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"403\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0e39a573-6871-46da-8934-c1078f3dba6e",
+              "name": "409 Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"409\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "86bd5b56-2c8c-41e2-a6aa-6cdcf9002937",
+              "name": "500 Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"500\",\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b280a037-72ae-4bb0-b5b3-b5a776513fa0",
+          "name": "Retrieve a User",
+          "request": {
+            "name": "Retrieve a User",
+            "description": {
+              "content": "Documentation on accessing User info via SCIM. \n\n**OAuth Scope required:** `scim.users.readUsers`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "Users",
+                ":userId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "excludedAttributes",
+                  "value": "<string>",
+                  "description": "A comma-separated list of attributes to exclude from the resources in the response."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userId",
+                  "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0498ef96-12b4-4814-ae6a-da378ff349a9",
+              "name": "200 OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:schemas:core:2.0:User\",\n    \"urn:ietf:params:scim:schemas:core:2.0:User\"\n  ],\n  \"id\": \"6660d37dec0eac3deffb680e\",\n  \"userName\": \"alex.doe@example.com\",\n  \"name\": {\n    \"givenName\": \"Alex\",\n    \"familyName\": \"Doe\"\n  },\n  \"title\": \"Vice President\",\n  \"emails\": [\n    {\n      \"value\": \"alex.doe@example.com\",\n      \"type\": \"work\",\n      \"primary\": true\n    },\n    {\n      \"value\": \"alex.doe@example.com\",\n      \"type\": \"work\",\n      \"primary\": true\n    }\n  ],\n  \"active\": true,\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"department\": \"Legal\"\n  },\n  \"urn:ietf:params:scim:schemas:extension:ironclad:2.0:User\": {\n    \"departmentHead\": \"jane.doe@test.com\",\n    \"provider\": \"local\",\n    \"allowProviderConversion\": false\n  },\n  \"meta\": {\n    \"resourceType\": \"User\",\n    \"created\": \"2025-03-26T18:33:48.336Z\",\n    \"lastModified\": \"2025-03-26T18:33:48.336Z\",\n    \"location\": \"https://na1.ironcladapp.com/scim/v2/Users/67e4488c605caf0d8aa2e5c6\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c0d12f2-782e-4b24-8f06-54f3a856bb67",
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"403\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "08cbad3b-3f6b-44cd-bad7-fd1d3be291d2",
+              "name": "404 Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"404\",\n  \"detail\": \"Resource 6643ce2e22daa40f80025aee not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f92c9537-6a1d-4f8b-af57-256a8a702d0c",
+              "name": "500 Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"500\",\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1709e85f-b63e-4b8b-94f1-1cf87fcea21a",
+          "name": "Update User Data",
+          "request": {
+            "name": "Update User Data",
+            "description": {
+              "content": "Documentation on updating a User via SCIM. \n\n**OAuth Scope required:** `scim.users.updateUsers`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "Users",
+                ":userId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "excludedAttributes",
+                  "value": "<string>",
+                  "description": "A comma-separated list of attributes to exclude from the resources in the response."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userId",
+                  "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:PatchOp\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "18daa296-cad5-47fa-af06-f22185761a06",
+              "name": "200 OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:PatchOp\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:schemas:core:2.0:User\",\n    \"urn:ietf:params:scim:schemas:core:2.0:User\"\n  ],\n  \"id\": \"6660d37dec0eac3deffb680e\",\n  \"userName\": \"alex.doe@example.com\",\n  \"name\": {\n    \"givenName\": \"Alex\",\n    \"familyName\": \"Doe\"\n  },\n  \"title\": \"Vice President\",\n  \"emails\": [\n    {\n      \"value\": \"alex.doe@example.com\",\n      \"type\": \"work\",\n      \"primary\": true\n    },\n    {\n      \"value\": \"alex.doe@example.com\",\n      \"type\": \"work\",\n      \"primary\": true\n    }\n  ],\n  \"active\": true,\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"department\": \"Legal\"\n  },\n  \"urn:ietf:params:scim:schemas:extension:ironclad:2.0:User\": {\n    \"departmentHead\": \"jane.doe@test.com\",\n    \"provider\": \"local\",\n    \"allowProviderConversion\": false\n  },\n  \"meta\": {\n    \"resourceType\": \"User\",\n    \"created\": \"2025-03-26T18:33:48.336Z\",\n    \"lastModified\": \"2025-03-26T18:33:48.336Z\",\n    \"location\": \"https://na1.ironcladapp.com/scim/v2/Users/67e4488c605caf0d8aa2e5c6\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ed7f3b6-e37f-4174-a85b-4e75f95fedbc",
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:PatchOp\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"400\",\n  \"scimType\": \"invalidValue\",\n  \"detail\": \"Invalid value at name.givenName: 123\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fb8a3432-5f9f-42b0-9584-286485210b15",
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:PatchOp\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"403\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b8e13b0c-a97a-48dd-ae09-519c423646f0",
+              "name": "404 Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:PatchOp\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"404\",\n  \"detail\": \"Resource 6643ce2e22daa40f80025aee not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "899196ca-138a-4fc6-937f-418c5bf42c15",
+              "name": "500 Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:PatchOp\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"<string>\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"500\",\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "12d2bf25-6f56-4eb3-9ec9-967b36f6bcd1",
+          "name": "Replace a User",
+          "request": {
+            "name": "Replace a User",
+            "description": {
+              "content": "Documentation on replacing a User via SCIM. \n\n**OAuth Scope required:** `scim.users.updateUsers`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "Users",
+                ":userId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "excludedAttributes",
+                  "value": "<string>",
+                  "description": "A comma-separated list of attributes to exclude from the resources in the response."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userId",
+                  "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:schemas:core:2.0:User\"\n  ],\n  \"userName\": \"<string>\",\n  \"name\": {\n    \"givenName\": \"<string>\",\n    \"familyName\": \"<string>\"\n  },\n  \"title\": \"<string>\",\n  \"password\": \"<string>\",\n  \"active\": true,\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"department\": \"<string>\"\n  },\n  \"urn:ietf:params:scim:schemas:extension:ironclad:2.0:User\": {\n    \"departmentHead\": \"<email>\",\n    \"allowProviderConversion\": \"<boolean>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ceea20ca-eac4-4c7e-b001-393fc04c9aa4",
+              "name": "200 OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:schemas:core:2.0:User\",\n    \"urn:ietf:params:scim:schemas:core:2.0:User\"\n  ],\n  \"id\": \"6660d37dec0eac3deffb680e\",\n  \"userName\": \"alex.doe@example.com\",\n  \"name\": {\n    \"givenName\": \"Alex\",\n    \"familyName\": \"Doe\"\n  },\n  \"title\": \"Vice President\",\n  \"emails\": [\n    {\n      \"value\": \"alex.doe@example.com\",\n      \"type\": \"work\",\n      \"primary\": true\n    },\n    {\n      \"value\": \"alex.doe@example.com\",\n      \"type\": \"work\",\n      \"primary\": true\n    }\n  ],\n  \"active\": true,\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"department\": \"Legal\"\n  },\n  \"urn:ietf:params:scim:schemas:extension:ironclad:2.0:User\": {\n    \"departmentHead\": \"jane.doe@test.com\",\n    \"provider\": \"local\",\n    \"allowProviderConversion\": false\n  },\n  \"meta\": {\n    \"resourceType\": \"User\",\n    \"created\": \"2025-03-26T18:33:48.336Z\",\n    \"lastModified\": \"2025-03-26T18:33:48.336Z\",\n    \"location\": \"https://na1.ironcladapp.com/scim/v2/Users/67e4488c605caf0d8aa2e5c6\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8b367e33-d18e-4a60-9202-74cc1d66a7ef",
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"400\",\n  \"scimType\": \"invalidValue\",\n  \"detail\": \"Invalid value at name.givenName: 123\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fca6dbce-a56c-4f94-a3cd-66c07376a4ba",
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"403\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ec81ac15-6f7a-4a00-b3c5-4c50afda0d88",
+              "name": "404 Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"404\",\n  \"detail\": \"Resource 6643ce2e22daa40f80025aee not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7e2ef85b-755a-439c-868f-544510077f46",
+              "name": "500 Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "excludedAttributes",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"500\",\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "26b0616e-f179-430a-a386-b412beefd378",
+          "name": "Delete a User",
+          "request": {
+            "name": "Delete a User",
+            "description": {
+              "content": "Delete a user on Ironclad. If the deletion is successful, all active workflows associated with the deleted user should be automatically reassigned to the default user within the admin group. To learn how to set a default user, see the [Manage Groups](https://support.ironcladapp.com/hc/en-us/articles/12286570480791-Manage-Groups) guide. \n\n**OAuth Scope required:** `scim.users.deleteUsers`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "Users",
+                ":userId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "userId",
+                  "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e43b687a-cf12-4b9a-bd09-b71f7db91bd8",
+              "name": "204 No Content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "22a0d5a8-394d-4263-b5b4-afcb0becb585",
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"403\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fcdca508-f13f-4c6e-b45b-9822678f7799",
+              "name": "404 Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"404\",\n  \"detail\": \"Resource 6643ce2e22daa40f80025aee not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0edcf0c2-0ccc-493a-a4b7-72217a8abd29",
+              "name": "500 Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Users",
+                    ":userId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "userId",
+                      "description": "(Required) A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schemas\": [\n    \"urn:ietf:params:scim:api:messages:2.0:Error\",\n    \"urn:ietf:params:scim:api:messages:2.0:Error\"\n  ],\n  \"status\": \"500\",\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://na1.ironcladapp.com/oauth",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "36b4c1f5-f6f9-437d-90bc-0660f972a3fa",
+    "name": "Ironclad OAuth 2.0 Authorization Users API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).\n\nContact Support:\n Name: Ironclad Support\n Email: support@ironcladapp.com",
+      "type": "text/plain"
+    }
+  }
+}

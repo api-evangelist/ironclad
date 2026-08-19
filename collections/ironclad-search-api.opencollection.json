@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Search API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Run Conversational Search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/search/conversational",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Ask a natural language question and get an AI-generated response grounded in your contracts and records.\n\n**OAuth Scopes required:** `public.search.conversational`, `public.records.readRecords`, `public.workflows.readWorkflows`"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

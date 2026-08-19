@@ -1,0 +1,190 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Webhooks API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/webhooks",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              }
+            ]
+          },
+          "docs": "View all webhooks associated with a specific company with filtering available via query parameters. \n\n**OAuth Scope required:** `public.webhooks.readWebhooks`"
+        },
+        {
+          "info": {
+            "name": "Create a Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/webhooks",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a webhook for the specified events. Send separate requests if you need to create webhooks for multiple target URLs. Each target URL may only have one active registration. \n\n**OAuth Scope required:** `public.webhooks.createWebhooks`"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/webhooks/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the webhook"
+              }
+            ]
+          },
+          "docs": "View the data associated with a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.readWebhooks`"
+        },
+        {
+          "info": {
+            "name": "Update a Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/webhooks/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the webhook"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the data associated with a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.updateWebhooks`"
+        },
+        {
+          "info": {
+            "name": "Delete a Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://na1.ironcladapp.com/oauth/webhooks/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the webhook"
+              }
+            ]
+          },
+          "docs": "Delete a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.deleteWebhooks`"
+        },
+        {
+          "info": {
+            "name": "Retrieve Webhook Verification Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/webhooks/verification-key",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "View the verification key for webhook security implementations"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

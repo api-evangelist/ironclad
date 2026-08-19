@@ -1,0 +1,81 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Exports API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Exports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Submit a request to generate a new data export",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/exports",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a request to generate a new data export. \n\n**OAuth Scope required:** `public.export.createReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+        },
+        {
+          "info": {
+            "name": "Check Data Export Job Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/exports/:jobId",
+            "params": [
+              {
+                "name": "jobId",
+                "value": "",
+                "type": "path",
+                "description": "The job id to be checked."
+              }
+            ]
+          },
+          "docs": "View the status of an export job using the job id returned during job creation. \n\n**OAuth Scope required:** `public.export.readReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+        },
+        {
+          "info": {
+            "name": "Download Data Export File",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/exports/:jobId/download",
+            "params": [
+              {
+                "name": "jobId",
+                "value": "",
+                "type": "path",
+                "description": "The job id to be checked."
+              }
+            ]
+          },
+          "docs": "Download completed file produced by the export job. \n\n**OAuth Scope required:** `public.export.readReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

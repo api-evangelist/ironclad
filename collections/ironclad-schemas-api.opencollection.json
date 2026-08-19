@@ -1,0 +1,68 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Schemas API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Schemas",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Schemas",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/Schemas",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Documentation on listing all Schemas via SCIM. \n\n**OAuth Scope required:** `scim.schemas.readSchemas`"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Schema",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/Schemas/:schemaId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "schemaId",
+                "value": "",
+                "type": "path",
+                "description": "A schema's unique id can be identified using the Retrieve all Schemas endpoint"
+              }
+            ]
+          },
+          "docs": "Documentation on retrieving a schema via SCIM. \n\n**OAuth Scope required:** `scim.schemas.readSchemas`"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,208 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Entities API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Entities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get All Entity Relationship Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/entities/relationship-types",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Returns all entity relationship types.  For more information, see [Entity Relationship Types](https://support.ironcladapp.com/hc/en-us/articles/28005038398231-Create-Manage-Relationship-Types-and-Entity-Properties). \n\n**OAuth Scope required:** `public.entities.readRelationshipTypes`"
+        },
+        {
+          "info": {
+            "name": "List All Entities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/entities",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              },
+              {
+                "name": "filter",
+                "value": "Equals([entity_externalID], '1234567890')",
+                "type": "query",
+                "description": "Filter entities using a formula. The entity property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nEntity properties can be identified using the [Get All Entity Relationship Types](https://developer.ironcladapp.com/reference/get-all-entity-relationship-types) endpoint.\n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
+              },
+              {
+                "name": "sortField",
+                "value": "",
+                "type": "query",
+                "description": "The field to sort Entities. Only one field is supported in the sort operation. Default is `name`."
+              },
+              {
+                "name": "sortDirection",
+                "value": "",
+                "type": "query",
+                "description": "The direction the entities are sorted by in correlation with the `sortField`. Default is `DESC`."
+              }
+            ]
+          },
+          "docs": "View all entities in the company, with filtering available via query parameters. \n\n**OAuth Scope required:** `public.entities.readEntities`"
+        },
+        {
+          "info": {
+            "name": "Create an Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/entities",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new entity. More details on creating an entity can be found in the [Entity Overview](https://support.ironcladapp.com/hc/en-us/articles/28004816859543-Create-and-Manage-Entities) article. \n\n**OAuth Scope required:** `public.entities.createEntities`"
+        },
+        {
+          "info": {
+            "name": "Retrieve an Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/entities/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Entity to fetch."
+              }
+            ]
+          },
+          "docs": "View a specific entity and its associated data. \n\n**OAuth Scope required:** `public.entities.readEntities`"
+        },
+        {
+          "info": {
+            "name": "Update an Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/entities/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Entity to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an entity's name, relationship type, and properties. More details on managing an entity can be found in the [Entity Overview](https://support.ironcladapp.com/hc/en-us/articles/28004816859543-Create-and-Manage-Entities) article. \n\n**OAuth Scope required:** `public.entities.updateEntities`"
+        },
+        {
+          "info": {
+            "name": "Delete an Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://na1.ironcladapp.com/oauth/entities/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Entity to delete."
+              }
+            ]
+          },
+          "docs": "Delete an existing entity. \n\n**OAuth Scope required:** `public.entities.deleteEntities`"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

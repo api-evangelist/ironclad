@@ -1,0 +1,450 @@
+{
+  "item": [
+    {
+      "id": "48440355-2439-48d1-83ce-ab693f29c217",
+      "name": "Exports",
+      "description": {
+        "content": "Documentation on Ironclad Data Exports.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "882ea6b3-2949-470b-a2e1-9649471c106e",
+          "name": "Submit a request to generate a new data export",
+          "request": {
+            "name": "Submit a request to generate a new data export",
+            "description": {
+              "content": "Submit a request to generate a new data export. \n\n**OAuth Scope required:** `public.export.createReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "exports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-email",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                "key": "x-as-user-id",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exportType\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"exportFormat\": \"<string>\",\n  \"signedUrlEnabled\": \"<boolean>\",\n  \"exportConfigs\": {\n    \"metadataProperties\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"includeCommentDetail\": \"<boolean>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ffb396ae-68bb-429c-9142-bdd128ecdbfa",
+              "name": "200",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "exports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jobId\": \"02e1343b-d024-4de0-a22e-a579282f05d9\",\n  \"jobStatus\": \"running\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f5f823c8-86f4-40d2-818f-8119bbe6dd3b",
+              "name": "400",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "exports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-email",
+                    "value": "jane.doe@test.com"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).",
+                    "key": "x-as-user-id",
+                    "value": "5f0375c4cdc1927a3c5edcd3"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Could not retrieve job status. Please verify the job id and try again.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b4499819-9421-4dd4-8b31-0b43904c5672",
+          "name": "Check Data Export Job Status",
+          "request": {
+            "name": "Check Data Export Job Status",
+            "description": {
+              "content": "View the status of an export job using the job id returned during job creation. \n\n**OAuth Scope required:** `public.export.readReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "exports",
+                ":jobId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "jobId",
+                  "description": "(Required) The job id to be checked."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "4d6f563c-4a6b-4826-86be-85871b231d55",
+              "name": "200",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "exports",
+                    ":jobId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "jobId",
+                      "description": "(Required) The job id to be checked."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jobId\": \"02e1343b-d024-4de0-a22e-a579282f05d9\",\n  \"jobStatus\": \"running\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "da0d045d-66d9-4ab6-a348-6929b9abe386",
+              "name": "400",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "exports",
+                    ":jobId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "jobId",
+                      "description": "(Required) The job id to be checked."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Could not retrieve job status. Please verify the job id and try again.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "005b5a8b-6ce6-4d25-ab14-da1268385d8d",
+          "name": "Download Data Export File",
+          "request": {
+            "name": "Download Data Export File",
+            "description": {
+              "content": "Download completed file produced by the export job. \n\n**OAuth Scope required:** `public.export.readReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "exports",
+                ":jobId",
+                "download"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "jobId",
+                  "description": "(Required) The job id to be checked."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "31bd9feb-d0c7-46b2-9b2a-16ca8ca12187",
+              "name": "200",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "exports",
+                    ":jobId",
+                    "download"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "jobId",
+                      "description": "(Required) The job id to be checked."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "\"\"",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "10e7aa31-6f56-44d6-b0bd-c0ffdeb22bbb",
+              "name": "400",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "exports",
+                    ":jobId",
+                    "download"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "jobId",
+                      "description": "(Required) The job id to be checked."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Could not retrieve job status. Please verify the job id and try again.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://na1.ironcladapp.com/oauth",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "d07fa2aa-4412-4a2e-99cf-392d3b2b98c2",
+    "name": "Ironclad OAuth 2.0 Authorization Exports API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).\n\nContact Support:\n Name: Ironclad Support\n Email: support@ironcladapp.com",
+      "type": "text/plain"
+    }
+  }
+}

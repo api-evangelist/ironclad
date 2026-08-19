@@ -1,0 +1,670 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Records API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Records",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/records",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              },
+              {
+                "name": "hydrateEntities",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether to fully hydrate related entities (true) or return minimal information (false)."
+              },
+              {
+                "name": "types",
+                "value": "mutualNDA,consultingAgreement",
+                "type": "query",
+                "description": "Comma separated (no spaces) record types to export. Use the [Retrieve Records Schema](https://developer.ironcladapp.com/reference/list-all-records-metadata) endpoint to retrieve a list of types."
+              },
+              {
+                "name": "lastUpdated",
+                "value": "2018-03-10T00:00:00.000Z",
+                "type": "query",
+                "description": "Get records updated since (UTC)"
+              },
+              {
+                "name": "filter",
+                "value": "Equals([counterpartyName], 'Test LLC')",
+                "type": "query",
+                "description": "Filter records using a formula. The record property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nRecord properties can be identified using the [Retrieve Records Schema](https://developer.ironcladapp.com/reference/list-all-records-metadata) endpoint.\n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
+              },
+              {
+                "name": "sortField",
+                "value": "",
+                "type": "query",
+                "description": "The field to sort Records. Only one field is supported in the sort operation."
+              },
+              {
+                "name": "sortDirection",
+                "value": "",
+                "type": "query",
+                "description": "The direction the records are sorted by in correlation with the `sortField`."
+              },
+              {
+                "name": "addressAsObject",
+                "value": "",
+                "type": "query",
+                "description": "When true, returns addresses as objects instead of strings."
+              }
+            ]
+          },
+          "docs": "View all records in the company, with filtering available via query parameters. \n\n**OAuth Scope required:** `public.records.readRecords`"
+        },
+        {
+          "info": {
+            "name": "Create a Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/records",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "addressAsObject",
+                "value": "",
+                "type": "query",
+                "description": "When true, returns addresses as objects instead of strings."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a contract record by specifying its intended metadata properties. See [more documentation](https://developer.ironcladapp.com/docs/create-a-record-1) on creating a record. \n\n**OAuth Scope required:** `public.records.createRecords`"
+        },
+        {
+          "info": {
+            "name": "Create Attachment Download URLs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/records/attachments/download-urls",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Request signed download URLs for record attachments in bulk (currently only latest signed copy is supported). Returns a job ID that can be polled for results.\n\n**OAuth Scope required:** `public.records.readAttachments`"
+        },
+        {
+          "info": {
+            "name": "Get Attachment Download URLs Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/records/attachments/download-urls/:jobId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "jobId",
+                "value": "",
+                "type": "path",
+                "description": "The job ID returned from the create attachment download URLs endpoint."
+              }
+            ]
+          },
+          "docs": "Poll the status of a previously submitted attachment download URLs job.\n\n**OAuth Scope required:** `public.records.readAttachments`"
+        },
+        {
+          "info": {
+            "name": "Retrieve Predictions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/records/smart-import",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "recordId",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the Record for prediction status."
+              },
+              {
+                "name": "importId",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the Import for prediction statuses."
+              }
+            ]
+          },
+          "docs": "Retrieve status of predictions of specific smart import record or all records in an import, one of Record Id or Import Id is required. \n\n**OAuth Scope required:** `public.records.readSmartImportRecords`"
+        },
+        {
+          "info": {
+            "name": "Create a Smart Import Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/records/smart-import",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "attachment",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "recordType",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "newRecordTypeId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "newRecordTypeDisplayName",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Upload a file to create a record with smart import and predictions.  Provide none of recordType, newRecordTypeId, or newRecordTypeDisplayName to default to Imported type. \n\n**OAuth Scope required:** `public.records.createSmartImportRecords`"
+        },
+        {
+          "info": {
+            "name": "Upload a Smart Import Record to an existing Import",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/records/smart-import/:importId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "importId",
+                "value": "",
+                "type": "path",
+                "description": "The Import Id. You can upload a record to an existing import in the repository. "
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "attachment",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "recordType",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "newRecordTypeId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "newRecordTypeDisplayName",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Upload a file to an existing import and create a record with smart import and predictions. Provide none of recordType, newRecordTypeId, or newRecordTypeDisplayName to default to Imported type. \n\n**OAuth Scope required:** `public.records.createSmartImportRecords`"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/records/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "hydrateEntities",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether to fully hydrate related entities (true) or return minimal information (false)."
+              },
+              {
+                "name": "addressAsObject",
+                "value": "",
+                "type": "query",
+                "description": "When true, returns addresses as objects instead of strings."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Record."
+              }
+            ]
+          },
+          "docs": "View a specific record and its associated data. \n\n**OAuth Scope required:** `public.records.readRecords`"
+        },
+        {
+          "info": {
+            "name": "Replace a Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://na1.ironcladapp.com/oauth/records/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "addressAsObject",
+                "value": "",
+                "type": "query",
+                "description": "When true, returns addresses as objects instead of strings."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Record."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing record with a new set of metadata. \n\n**OAuth Scope required:** `public.records.updateRecords`"
+        },
+        {
+          "info": {
+            "name": "Update Record Metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/records/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "addressAsObject",
+                "value": "",
+                "type": "query",
+                "description": "When true, returns addresses as objects instead of strings."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Record."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update specific fields on a record. \n\n**OAuth Scope required:** `public.records.updateRecords`"
+        },
+        {
+          "info": {
+            "name": "Delete a Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://na1.ironcladapp.com/oauth/records/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Record."
+              }
+            ]
+          },
+          "docs": "Delete an existing record. \n\n**OAuth Scope required:** `public.records.deleteRecords`"
+        },
+        {
+          "info": {
+            "name": "Retrieve Records Schema",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/records/metadata",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "View the schema associated with contract records, including available record types and metadata properties. \n\n**OAuth Scope required:** `public.records.readSchemas`"
+        },
+        {
+          "info": {
+            "name": "Retrieve an Attachment on a Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/records/:id/attachments/:key",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the Record."
+              },
+              {
+                "name": "key",
+                "value": "",
+                "type": "path",
+                "description": "The attachment key."
+              }
+            ]
+          },
+          "docs": "View an attachment associated with a specific record. \n\n**OAuth Scope required:** `public.records.readAttachments`"
+        },
+        {
+          "info": {
+            "name": "Create an Attachment on a Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/records/:id/attachments/:key",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Record. For an explanation of Record IDs or Ironclad IDs and how to find them, see [Getting Started](https://developer.ironcladapp.com/reference/getting-started-api)."
+              },
+              {
+                "name": "key",
+                "value": "",
+                "type": "path",
+                "description": "The attachment key at which to store the attachment. This can be any arbitrary string."
+              },
+              {
+                "name": "addressAsObject",
+                "value": "",
+                "type": "query",
+                "description": "When true, returns addresses as objects instead of strings."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "attachment",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "metadata",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Create an attachment on a specified record at the specified attachment key. \n\n**OAuth Scope required:** `public.records.createAttachments`"
+        },
+        {
+          "info": {
+            "name": "Delete an Attachment on a Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://na1.ironcladapp.com/oauth/records/:id/attachments/:key",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Record."
+              },
+              {
+                "name": "key",
+                "value": "",
+                "type": "path",
+                "description": "The attachment key."
+              }
+            ]
+          },
+          "docs": "Remove an attachment associated with a specific record. \n\n**OAuth Scope required:** `public.records.deleteAttachments`"
+        },
+        {
+          "info": {
+            "name": "Run an Action on a Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/records/:id/actions",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Record. For an explanation of Record IDs or Ironclad IDs and how to find them, see [Getting Started](https://developer.ironcladapp.com/reference/getting-started-api)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Runs an action on the contract. It supports lifecycle actions such as activating a contract. \n\n**OAuth Scope required:** `public.records.applyContractAction`"
+        },
+        {
+          "info": {
+            "name": "Retrieve XLSX Export File of Records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/records/export",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "types",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of record types to export. Example: `mutualNDA,NDA`"
+              },
+              {
+                "name": "properties",
+                "value": "",
+                "type": "query",
+                "description": "IDs of properties to export, comma separated. Example: `counterpartyName,agreementDate`"
+              }
+            ]
+          },
+          "docs": "Export a records report with filtering available via query parameters. \n\n**OAuth Scope required:** `public.records.readRecords`"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

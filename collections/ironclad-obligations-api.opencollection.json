@@ -1,0 +1,158 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Obligations API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Obligations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Obligations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/obligations",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              },
+              {
+                "name": "filter",
+                "value": "Equals([name], 'Obligation Name')",
+                "type": "query",
+                "description": "Filter obligations using a formula. The obligation property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
+              },
+              {
+                "name": "sortField",
+                "value": "",
+                "type": "query",
+                "description": "The field to sort by. Default is 'name'."
+              },
+              {
+                "name": "sortDirection",
+                "value": "",
+                "type": "query",
+                "description": "The direction to sort by. Default is 'DESC'."
+              }
+            ]
+          },
+          "docs": "View all obligations in the company, with filtering available via query parameters. \n\n**OAuth Scope required:** `public.obligations.readObligations`"
+        },
+        {
+          "info": {
+            "name": "Create an Obligation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/obligations",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new obligation. \n\n**OAuth Scope required:** `public.obligations.createObligations`"
+        },
+        {
+          "info": {
+            "name": "Retrieve an Obligation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/obligations/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Obligation to fetch."
+              }
+            ]
+          },
+          "docs": "View a specific obligation and its associated data. \n\n**OAuth Scope required:** `public.obligations.readObligations`"
+        },
+        {
+          "info": {
+            "name": "Update an Obligation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/obligations/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID or Ironclad ID of the Obligation to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing obligation. \n\n**OAuth Scope required:** `public.obligations.updateObligations`"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

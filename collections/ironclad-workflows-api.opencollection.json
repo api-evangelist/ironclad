@@ -1,0 +1,1576 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Workflows API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workflows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Workflows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              },
+              {
+                "name": "hydrateEntities",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether to fully hydrate related entities (true) or return minimal information (false)."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter the workflows that are listed based on their status. If this parameter is omitted, `active` workflows will be returned. Active workflows include workflows in the Create, Review, Sign, and Archive stages. Also accepts multiple comma-separated statuses to get workflows in more than one status."
+              },
+              {
+                "name": "template",
+                "value": "",
+                "type": "query",
+                "description": "Filter workflows to a specific Template ID."
+              },
+              {
+                "name": "lastUpdated",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve workflows that have been updated since a UTC date."
+              },
+              {
+                "name": "filter",
+                "value": "Equals([counterpartyName], 'Harley Quinn')",
+                "type": "query",
+                "description": "Filter workflows using a formula. The workflow attribute ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`.\n\nWorkflow attributes for a specific workflow design can be identified using the [List All Workflow Schemas](https://developer.ironcladapp.com/reference/list-all-workflow-schemas) endpoint.\n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
+              }
+            ]
+          },
+          "docs": "List all workflows in your Ironclad account. \n\n**OAuth Scope required:** `public.workflows.readWorkflows`"
+        },
+        {
+          "info": {
+            "name": "Create a Workflow Synchronously",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "useDefaultValues",
+                "value": "",
+                "type": "query",
+                "description": "If values are not specified for a given field, use the default values specified in the launch form configuration."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Launch a new Workflow synchronously. \n\n**OAuth Scope required:** `public.workflows.createWorkflows`"
+        },
+        {
+          "info": {
+            "name": "Create a Workflow Asynchronously",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/async",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "useDefaultValues",
+                "value": "",
+                "type": "query",
+                "description": "If values are not specified for a given field, use the default values specified in the launch form configuration."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Launch a new Workflow asynchronously for non-blocking performance, which is helpful when/if you provide files to the Workflow. \n\n**OAuth Scope required:** `public.workflows.createWorkflows`"
+        },
+        {
+          "info": {
+            "name": "Retrieve the Status of an Async Workflow Create Job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/async/:asyncJobId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "asyncJobId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier provided in the response of creating a Workflow asynchronously."
+              }
+            ]
+          },
+          "docs": "Check the status of a Workflow you created while using the [Create a Workflow Async](https://developer.ironcladapp.com/reference/create-a-workflow-sync-vs-async#create-a-new-workflow-async) route. \n\n**OAuth Scope required:** `public.workflows.createWorkflows`"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "hydrateEntities",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether to fully hydrate related entities (true) or return minimal information (false)."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ]
+          },
+          "docs": "View the data associated with a specific workflow. \n\n**OAuth Scope required:** `public.workflows.readWorkflows`"
+        },
+        {
+          "info": {
+            "name": "List All Workflow Approvals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/approvals",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ]
+          },
+          "docs": "Returns a list of approvals for the workflow. The `approvalGroups` property will display only triggered approvals (i.e. conditional approvals that have not been triggered will not appear). \n\n**OAuth Scope required:** `public.workflows.readApprovals`"
+        },
+        {
+          "info": {
+            "name": "Retrieve the Approval Requests on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/approval-requests",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              },
+              {
+                "name": "actorDetails",
+                "value": "",
+                "type": "query",
+                "description": "An optional boolean parameter that adds additional information about the actor to each item in the response. Defaults to false."
+              },
+              {
+                "name": "requestType",
+                "value": "",
+                "type": "query",
+                "description": "An optional string parameter that specifies the type of approval requests and returns approval requests by `role` or `user`."
+              }
+            ]
+          },
+          "docs": "Returns a list of approval requests that have taken place on the workflow. \n\n**OAuth Scope required:** `public.workflows.readApprovals`"
+        },
+        {
+          "info": {
+            "name": "Update Approval Status on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/approvals/:roleId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "roleId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the approver role whose status should be changed. This identifier can be retrieved using the `GET /workflows/{id}/approvals` endpoint."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the status of an approval to the specified value. Approval statuses can only be updated during the Review step and when a given approval group is active (when it is that group's turn to approve). \n\n**OAuth Scope required:** `public.workflows.updateApprovals`"
+        },
+        {
+          "info": {
+            "name": "Retrieve the Turn History on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/turn-history",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              }
+            ]
+          },
+          "docs": "An array of objects for each turn on a workflow. \n\n**OAuth Scope required:** `public.workflows.readTurnHistory`"
+        },
+        {
+          "info": {
+            "name": "Retrieve Sign Step Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ]
+          },
+          "docs": "Returns information about a workflow in the sign step. \n\n**OAuth Scope required:** `public.workflows.readSignStatus` \n\n**NOTE:** The workflow must be in the sign step to access this route."
+        },
+        {
+          "info": {
+            "name": "Send Signature Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status/send-signature-request",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ]
+          },
+          "docs": "Send a signature request.\n\n**OAuth Scope required:** `public.workflows.sendSignatureRequests`\n\n **Note**: You can only send a packet out for signature if all signers have an associated signature or initials tag (tag requirements are dependent on the signature provider)."
+        },
+        {
+          "info": {
+            "name": "Schedule Send Signature Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status/scheduled-send",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Schedule a signature request to be sent out for signature. The workflow must be on the Sign step and not yet out for signature.\n\n**OAuth Scope required:** `public.workflows.scheduleSendSignatureRequest`\n\n"
+        },
+        {
+          "info": {
+            "name": "Update Scheduled Signature Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status/scheduled-send",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a scheduled signature request. The workflow must be on the Sign step and not yet out for signature.\n\n**OAuth Scope required:** `public.workflows.updateScheduledSignatureRequest`\n\n"
+        },
+        {
+          "info": {
+            "name": "Delete Scheduled Signature Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status/scheduled-send",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ]
+          },
+          "docs": "Delete a scheduled signature request. The workflow must be on the Sign step and not yet out for signature.\n\n**OAuth Scope required:** `public.workflows.deleteScheduledSignatureRequest`\n\n"
+        },
+        {
+          "info": {
+            "name": "Cancel Signature Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status/cancel-signature-request",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancel a signature request that was out for signature.\n\n**OAuth Scope required:** `public.workflows.cancelSignatureRequests`\n\n"
+        },
+        {
+          "info": {
+            "name": "Update Signer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status/signers/:signerRoleName",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "signerRoleName",
+                "value": "Counterparty%20Signer",
+                "type": "path",
+                "description": "The role name of the signer to be updated. Note: the role name should be URL encoded in the URL."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Reassign a signer or edit an external signer's name or email, as specified by the `signerRoleName` parameter. The original signer will receive an email that the packet has been reassigned if it was sent out for signature.\n\n**OAuth Scope required:** `public.workflows.updateSigners`\n\n**NOTE**: Editing a signer will not cancel a signature request unless your configured signature provider is Adobe Sign. Also, you cannot update a signer that has already signed via the API for any signature provider."
+        },
+        {
+          "info": {
+            "name": "Delete Signer",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status/signers/:signerRoleName",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "signerRoleName",
+                "value": "Counterparty%20Signer",
+                "type": "path",
+                "description": "The role name of the signer to be removed. Note: the role name should be URL encoded in the URL."
+              }
+            ]
+          },
+          "docs": "Deletes a signer from a signature packet, as specified by the `signerRoleName` parameter.\n\n**OAuth Scope required:** `public.workflows.deleteSigners`\n\n**NOTE**: Removing a signer will cancel the current packet that is out collecting signatures."
+        },
+        {
+          "info": {
+            "name": "Remind Signer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/sign-status/signers/:signerRoleName/remind",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "signerRoleName",
+                "value": "Counterparty%20Signer",
+                "type": "path",
+                "description": "The role name of the signer to be reminded. Note: the role name should be URL encoded in the URL."
+              }
+            ]
+          },
+          "docs": "Send a reminder email to a signer that a signature is needed.\n\n**OAuth Scope required:** `public.workflows.remindSigners`\n\n**NOTE**: You can only send a reminder after the signature packet has been sent out for signature. Also, if using Adobe Sign as your signature provider, reminding a signer reminds all unsigned signers."
+        },
+        {
+          "info": {
+            "name": "List All Workflow Signers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/signatures",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ]
+          },
+          "docs": "Returns a list of workflow signers and the status of their signature. \n\n**OAuth Scope required:** `public.workflows.readSignatures`"
+        },
+        {
+          "info": {
+            "name": "Create a Recipient URL for a Signer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/signatures/recipient-urls",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a recipient URL for a signer or viewer to access the signature request.\n\nThis functionality is exclusive to Ironclad Signature. See [this help center article](https://support.ironcladapp.com/hc/en-us/articles/12276957992983-Manage-Signatures-During-the-Sign-Step#copysignerlink) for more information.\n\n**OAuth Scope required:** `public.workflows.createSignatureRecipientUrls`"
+        },
+        {
+          "info": {
+            "name": "Create an Embeddable Recipient URL for a Signer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/signatures/recipient-urls/embedded",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an embeddable recipient URL for a signer to access the signature request.\n\nThis functionality is exclusive to Ironclad Signature. See [this help center article](https://support.ironcladapp.com/hc/en-us/articles/12276957992983-Manage-Signatures-During-the-Sign-Step#copysignerlink) for more information.\n\n**OAuth Scope required:** `public.workflows.createEmbeddableSignerUrls`"
+        },
+        {
+          "info": {
+            "name": "Create a Signed Document on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/upload-signed",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "attachment",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "metadata",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Upload a fully or partially signed document to a specified workflow that is in sign step. \n\n**OAuth Scope required:** `public.workflows.uploadSignedDocuments`"
+        },
+        {
+          "info": {
+            "name": "List All Workflow Participants",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/participants",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The Ironclad user's email address."
+              }
+            ]
+          },
+          "docs": "Returns a list of workflow participants. \n\n**OAuth Scope required:** `public.workflows.readParticipants`"
+        },
+        {
+          "info": {
+            "name": "Update Workflow Role Assignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/roles/:roleName",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "roleName",
+                "value": "Legal%20Approver",
+                "type": "path",
+                "description": "The display name of the role, URL-encoded (e.g. `Legal%20Approver`)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the assignment of the specified role (e.g. Archiver, Signature Coordinator, etc.) on the workflow to a new user. The new assignee must be eligible to be assigned to the role per the workflow definition configured in workflow designer. \n\n**OAuth Scope required:** `public.workflows.updateRoleAssignment`"
+        },
+        {
+          "info": {
+            "name": "List Eligible Assignees for a Workflow Role",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/roles/:roleName/eligible-assignees",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "roleName",
+                "value": "Legal Approver",
+                "type": "path",
+                "description": "The display name of the role, URL-encoded (e.g. `Legal%20Approver`)."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of users eligible to be assigned to the specified role on the workflow along with the user ID of current assignee if a user is already assigned to the role. \n\n**OAuth Scope required:** `public.workflows.readRoleAssignees`"
+        },
+        {
+          "info": {
+            "name": "Revert a Workflow to the Review Step",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/revert-to-review",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Reverts a workflow to the Review step. Only workflows sourced from Workflow Designer and in the Sign step can be reverted. \n\n**OAuth Scope required:** `public.workflows.revertToReview`"
+        },
+        {
+          "info": {
+            "name": "Cancel a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/cancel",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancel a workflow. \n\n**OAuth Scope required:** `public.workflows.cancel`"
+        },
+        {
+          "info": {
+            "name": "Pause a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/pause",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Pause an active workflow. \n\n**OAuth Scope required:** `public.workflows.pauseAndResume`"
+        },
+        {
+          "info": {
+            "name": "Resume a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/resume",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Resume a paused Workflow. \n\n**OAuth Scope required:** `public.workflows.pauseAndResume`"
+        },
+        {
+          "info": {
+            "name": "Create a Comment on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/comment",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a comment in the specified workflow's activity feed."
+        },
+        {
+          "info": {
+            "name": "List all Comments on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/comments",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              }
+            ]
+          },
+          "docs": "Return a list of comments on a workflow. \n\n**OAuth Scope required:** `public.workflows.readComments`"
+        },
+        {
+          "info": {
+            "name": "Create a Comment on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/comments",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a comment in the specified workflow's activity feed. \n\n**OAuth Scope required:** `public.workflows.createComments`"
+        },
+        {
+          "info": {
+            "name": "List a Comment from a Specified Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/comments/:commentId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow."
+              },
+              {
+                "name": "commentId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a comment."
+              }
+            ]
+          },
+          "docs": "Return a single comment for a specified workflow. \n\n**OAuth Scope required:** `public.workflows.readComments`"
+        },
+        {
+          "info": {
+            "name": "Update Workflow Metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/attributes",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The workflow must be in the Review step in order for its data to be updated. Use the `remove` action to clear field values and the `set` action to add or modify values. Form validation is enforced; required fields cannot be removed and any required fields triggered by conditions must be populated.\n\n**Note:** This endpoint does not support updating document/file type attributes. To manage documents, use the [Create a Document on a Workflow](https://developer.ironcladapp.com/reference/create-a-wor"
+        },
+        {
+          "info": {
+            "name": "Retrieve Documents from a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/documents",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ]
+          },
+          "docs": "Retrieve all documents from a workflow that are included and excluded from the signature packet. \n\n**OAuth Scope required:** `public.workflows.readDocuments`"
+        },
+        {
+          "info": {
+            "name": "Update Signature Packet on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/signature-packet",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a workflow's signature packet by moving documents into it, moving documents out of it, or reordering documents within it. The request body specifies which workflow documents should be in the signature packet and their order. Documents in the request but not currently in the signature packet will be moved into it. Documents currently in the signature packet but not in the request will be moved out of it.\n\n**Note:** Only editable file types (.doc, .docx, .pdf) can be included in the signatu"
+        },
+        {
+          "info": {
+            "name": "Create a Document on a Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/documents/:attributeId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow"
+              },
+              {
+                "name": "attributeId",
+                "value": "",
+                "type": "path",
+                "description": "The file attribute (e.g. \"draft\", \"myFileField\") - \"document\" type attributes can be found in the schema portion of the [Retrieve a Workflow](https://developer.ironcladapp.com/reference/retrieve-a-workflow) response."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "attachment",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "metadata",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Create a document in the specified workflow attribute. If a document key to an existing draft document is provided, the new file will be uploaded as a new version of the existing document. For all other non-draft documents and when document key is absent, this operation will only append the new document to the document attribute array. Please note that to upload a signed document, reference the [Create a Signed Document on a Workflow](https://developer.ironcladapp.com/reference/workflow-upload-s"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Workflow Document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/document/:key/download",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier or Ironclad ID of a workflow."
+              },
+              {
+                "name": "key",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the attachment. This key can be located using the [Retrieve a Workflow](https://developer.ironcladapp.com/reference/retrieve-a-workflow) endpoint. In the response, locate the file attribute (e.g., `draft`) and look at its `download` parameter. The download parameter includes the key at the end of the URL `.../document/{ATTACHMENT_KEY}/download`"
+              }
+            ]
+          },
+          "docs": "Download a document associated with a specific workflow via a reference to its document key. \n\n**OAuth Scope required:** `public.workflows.readDocuments`"
+        },
+        {
+          "info": {
+            "name": "Retrieve Email Threads from A Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/emails",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number used when paginating through a list of results."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "A limit of the number of results to return."
+              }
+            ]
+          },
+          "docs": "List all email threads in the specified workflow. \n\n**OAuth Scope required:** `public.workflows.readEmailCommunications`"
+        },
+        {
+          "info": {
+            "name": "Retrieve an Email Thread from a Specified Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/emails/:emailThreadId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow"
+              },
+              {
+                "name": "emailThreadId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of an email thread"
+              }
+            ]
+          },
+          "docs": "List a single email thread for a specified workflow. \n\n**OAuth Scope required:** `public.workflows.readEmailCommunications`"
+        },
+        {
+          "info": {
+            "name": "Retrieve an Attachment from an Email Thread",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflows/:id/emails/:emailThreadId/attachments/:attachmentId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a workflow"
+              },
+              {
+                "name": "emailThreadId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of an email thread"
+              },
+              {
+                "name": "attachmentId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier for the attachment. This key can be located using the [Retrieve email threads from workflow](https://developer.ironcladapp.com/reference/retrieve-emails) endpoint. In the response, locate the file attribute (e.g., `attachments`) and look at its `download` parameter. The download parameter includes the key at the end of the URL `...emails/{emailThreadId}/attachment/{ATTACHMENT_ID}`"
+              }
+            ]
+          },
+          "docs": "Retrieve an attachment from the specified email thread. \n\n**OAuth Scope required:** `public.workflows.readEmailCommunications`"
+        },
+        {
+          "info": {
+            "name": "List All Workflow Schemas",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflow-schemas",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "form",
+                "value": "",
+                "type": "query",
+                "description": "The launch form is the only form supported at this time."
+              }
+            ]
+          },
+          "docs": "Returns a list of workflow schemas. Each schema specifies the fields used in the workflow's launch form. \n\n**OAuth Scope required:** `public.workflows.readSchemas`"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Workflow Schema",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/workflow-schemas/:id",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of a schema (see explanation of [Template ID](https://developer.ironcladapp.com/reference/getting-started-api)). A list of identifiers can be retrieved using the `GET /workflow-schemas` endpoint. Only published workflows will have an identifier. "
+              },
+              {
+                "name": "form",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns the fields used in the workflow's launch form. \n\n**OAuth Scope required:** `public.workflows.readSchemas`"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

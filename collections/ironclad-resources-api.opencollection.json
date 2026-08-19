@@ -1,0 +1,60 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Resources API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Resources",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve Company Info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/company-info",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "After a client application has obtained an access token, it can make a request to the /company-info endpoint to get company-related information and entitlements associated with the token."
+        },
+        {
+          "info": {
+            "name": "Retrieve Token User Info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/userinfo",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "After a client application has obtained an access token, it can make a request to the /userinfo endpoint to get user-related information. The data returned include the user's ID, email, username, and other profile details along with the scopes granted to the token."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

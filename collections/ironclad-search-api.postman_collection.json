@@ -1,0 +1,256 @@
+{
+  "item": [
+    {
+      "id": "cdb4d282-3f5a-4bee-87fb-043e1075ee8f",
+      "name": "Search",
+      "description": {
+        "content": "Documentation on Ironclad Search.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8ab75593-9d94-4dd2-9f81-f2936818809f",
+          "name": "Run Conversational Search",
+          "request": {
+            "name": "Run Conversational Search",
+            "description": {
+              "content": "Ask a natural language question and get an AI-generated response grounded in your contracts and records.\n\n**OAuth Scopes required:** `public.search.conversational`, `public.records.readRecords`, `public.workflows.readWorkflows`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "search",
+                "conversational"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"<string>\",\n  \"modelTier\": \"<string>\",\n  \"userTimezone\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1c8a1335-a239-4a82-b283-224108a98cc1",
+              "name": "200",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search",
+                    "conversational"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"Which contracts are expiring in the next 30 days?\",\n  \"modelTier\": \"fast\",\n  \"userTimezone\": \"America/New_York\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"result\": \"string\",\n  \"records\": {\n    \"key_0\": {\n      \"url\": \"string\"\n    },\n    \"key_1\": {\n      \"url\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "749e8c6d-e201-4c3f-9471-b9e867468a46",
+              "name": "400",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search",
+                    "conversational"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"Which contracts are expiring in the next 30 days?\",\n  \"modelTier\": \"fast\",\n  \"userTimezone\": \"America/New_York\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"MISSING_PARAM\",\n  \"message\": \"reason why something has gone wrong\",\n  \"param\": \"parameter identifier\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5276eb7e-9ef0-494b-af25-d7828cb852b9",
+              "name": "401",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search",
+                    "conversational"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"Which contracts are expiring in the next 30 days?\",\n  \"modelTier\": \"fast\",\n  \"userTimezone\": \"America/New_York\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"UNAUTHORIZED\",\n  \"message\": \"invalid authentication token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b28d155b-9c40-4b1f-b36c-549e763b9253",
+              "name": "403",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search",
+                    "conversational"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"Which contracts are expiring in the next 30 days?\",\n  \"modelTier\": \"fast\",\n  \"userTimezone\": \"America/New_York\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"FORBIDDEN\",\n  \"message\": \"access forbidden\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://na1.ironcladapp.com/oauth",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "e32fcc3e-cf28-4c88-a757-f500993affe9",
+    "name": "Ironclad OAuth 2.0 Authorization Search API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).\n\nContact Support:\n Name: Ironclad Support\n Email: support@ironcladapp.com",
+      "type": "text/plain"
+    }
+  }
+}

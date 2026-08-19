@@ -1,0 +1,240 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ironclad OAuth 2.0 Authorization Users API",
+    "version": "1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/Users",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "startIndex",
+                "value": "",
+                "type": "query",
+                "description": "The starting index for retrieving this resource. Resources are indexed based on when they were first added to Ironclad."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the maximum number of resources to return in a single page of results."
+              },
+              {
+                "name": "filter",
+                "value": "userName eq \"alex.doe@example.com\"",
+                "type": "query",
+                "description": "Filters for identifying subsets of users. Filters must comply with the SCIM protocol's convention. For more details, see SCIM [RFC 7644 Section 3.4.2.2](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2)."
+              },
+              {
+                "name": "excludedAttributes",
+                "value": "",
+                "type": "query",
+                "description": "A comma-separated list of attributes to exclude from the resources in the response."
+              }
+            ]
+          },
+          "docs": "Documentation on listing Users via SCIM. \n\n**OAuth Scope required:** `scim.users.readUsers`"
+        },
+        {
+          "info": {
+            "name": "Create a User",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://na1.ironcladapp.com/oauth/Users",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "excludedAttributes",
+                "value": "",
+                "type": "query",
+                "description": "A comma-separated list of attributes to exclude from the resources in the response."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Documentation on creating a User via SCIM. \n\n**OAuth Scope required:** `scim.users.createUsers`"
+        },
+        {
+          "info": {
+            "name": "Retrieve a User",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://na1.ironcladapp.com/oauth/Users/:userId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+              },
+              {
+                "name": "excludedAttributes",
+                "value": "",
+                "type": "query",
+                "description": "A comma-separated list of attributes to exclude from the resources in the response."
+              }
+            ]
+          },
+          "docs": "Documentation on accessing User info via SCIM. \n\n**OAuth Scope required:** `scim.users.readUsers`"
+        },
+        {
+          "info": {
+            "name": "Replace a User",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://na1.ironcladapp.com/oauth/Users/:userId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+              },
+              {
+                "name": "excludedAttributes",
+                "value": "",
+                "type": "query",
+                "description": "A comma-separated list of attributes to exclude from the resources in the response."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Documentation on replacing a User via SCIM. \n\n**OAuth Scope required:** `scim.users.updateUsers`"
+        },
+        {
+          "info": {
+            "name": "Update User Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://na1.ironcladapp.com/oauth/Users/:userId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+              },
+              {
+                "name": "excludedAttributes",
+                "value": "",
+                "type": "query",
+                "description": "A comma-separated list of attributes to exclude from the resources in the response."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Documentation on updating a User via SCIM. \n\n**OAuth Scope required:** `scim.users.updateUsers`"
+        },
+        {
+          "info": {
+            "name": "Delete a User",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://na1.ironcladapp.com/oauth/Users/:userId",
+            "headers": [
+              {
+                "name": "x-as-user-email",
+                "value": ""
+              },
+              {
+                "name": "x-as-user-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter"
+              }
+            ]
+          },
+          "docs": "Delete a user on Ironclad. If the deletion is successful, all active workflows associated with the deleted user should be automatically reassigned to the default user within the admin group. To learn how to set a default user, see the [Manage Groups](https://support.ironcladapp.com/hc/en-us/articles/12286570480791-Manage-Groups) guide. \n\n**OAuth Scope required:** `scim.users.deleteUsers`"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
