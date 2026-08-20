@@ -132,6 +132,8 @@ apis:
   humanURL: https://developer.ironcladapp.com/reference/getting-started-api
   baseURL: https://na1.ironcladapp.com/public/api/v1
   tags:
+  - Export
+  tags_raw:
   - Exports
   properties:
   - type: OpenAPI
@@ -182,6 +184,8 @@ apis:
   humanURL: https://developer.ironcladapp.com/reference/getting-started-api
   baseURL: https://na1.ironcladapp.com/public/api/v1
   tags:
+  - Group
+  tags_raw:
   - Groups
   properties:
   - type: OpenAPI
@@ -482,6 +486,8 @@ apis:
   humanURL: https://developer.ironcladapp.com/reference/getting-started-api
   baseURL: https://na1.ironcladapp.com/public/api/v1
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -532,6 +538,8 @@ apis:
   humanURL: https://developer.ironcladapp.com/reference/getting-started-api
   baseURL: https://na1.ironcladapp.com/public/api/v1
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
@@ -639,6 +647,20 @@ description: Ironclad is the enterprise contract lifecycle management (CLM) plat
   NA1/EU1 hosting, OAuth 2.0 with scoped tokens, SCIM-based provisioning, and event-driven
   webhooks. Ironclad reported surpassing $200M in ARR in February 2026.
 tags:
+- Contract Lifecycle Management
+- CLM
+- Contracts
+- Legal Tech
+- LegalOps
+- Enterprise
+- Workflows
+- E-Signature
+- Clickwrap
+- Artificial Intelligence
+- Authentication
+- SCIM
+- Webhook
+tags_raw:
 - Contract Lifecycle Management
 - CLM
 - Contracts
