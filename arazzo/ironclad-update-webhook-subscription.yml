@@ -10,8 +10,8 @@ info:
     the underlying OpenAPI description.
   version: 1.0.0
 sourceDescriptions:
-- name: ironcladPublicApi
-  url: ../openapi/ironclad-public-api-openapi.yml
+- name: webhooksApi
+  url: ../openapi/ironclad-webhooks-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: update-webhook-subscription
