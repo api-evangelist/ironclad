@@ -386,6 +386,8 @@ apis:
   humanURL: https://developer.ironcladapp.com/reference/getting-started-api
   baseURL: https://na1.ironcladapp.com/public/api/v1
   tags:
+  - Schema
+  tags_raw:
   - Schemas
   properties:
   - type: OpenAPI
