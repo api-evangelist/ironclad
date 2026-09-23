@@ -1,18 +1,20 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Ironclad OAuth 2.0 Authorization Users API
-  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
+  title: Ironclad SCIM Users API
+  description: Documentation for Ironclad's SCIM Implementation.
   version: '1'
   contact:
     name: Ironclad Support
     email: support@ironcladapp.com
 servers:
-- url: https://na1.ironcladapp.com/oauth
+- url: https://na1.ironcladapp.com/scim/v2
   description: Production server
-- url: https://eu1.ironcladapp.com/oauth
+- url: https://eu1.ironcladapp.com/scim/v2
   description: EU Production server
-- url: https://demo.ironcladapp.com/oauth
+- url: https://demo.ironcladapp.com/scim/v2
   description: Demo server
+security:
+- sec0: []
 tags:
 - name: Users
   description: Documentation on SCIM Users.
@@ -20,7 +22,10 @@ paths:
   /Users:
     get:
       summary: List all Users
-      description: "Documentation on listing Users via SCIM. \n\n**OAuth Scope required:** `scim.users.readUsers`"
+      description: 'Documentation on listing Users via SCIM.
+
+
+        **OAuth Scope required:** `scim.users.readUsers`'
       operationId: retrieve-all-users
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -47,7 +52,10 @@ paths:
       - Users
     post:
       summary: Create a User
-      description: "Documentation on creating a User via SCIM. \n\n**OAuth Scope required:** `scim.users.createUsers`"
+      description: 'Documentation on creating a User via SCIM.
+
+
+        **OAuth Scope required:** `scim.users.createUsers`'
       operationId: create-a-user
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -71,7 +79,10 @@ paths:
   /Users/{userId}:
     get:
       summary: Retrieve a User
-      description: "Documentation on accessing User info via SCIM. \n\n**OAuth Scope required:** `scim.users.readUsers`"
+      description: 'Documentation on accessing User info via SCIM.
+
+
+        **OAuth Scope required:** `scim.users.readUsers`'
       operationId: retrieve-a-user
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -91,7 +102,10 @@ paths:
       - Users
     patch:
       summary: Update User Data
-      description: "Documentation on updating a User via SCIM. \n\n**OAuth Scope required:** `scim.users.updateUsers`"
+      description: 'Documentation on updating a User via SCIM.
+
+
+        **OAuth Scope required:** `scim.users.updateUsers`'
       operationId: update-user-data
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -144,7 +158,10 @@ paths:
       - Users
     put:
       summary: Replace a User
-      description: "Documentation on replacing a User via SCIM. \n\n**OAuth Scope required:** `scim.users.updateUsers`"
+      description: 'Documentation on replacing a User via SCIM.
+
+
+        **OAuth Scope required:** `scim.users.updateUsers`'
       operationId: replace-a-user
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -168,7 +185,10 @@ paths:
       - Users
     delete:
       summary: Delete a User
-      description: "Delete a user on Ironclad. If the deletion is successful, all active workflows associated with the deleted user should be automatically reassigned to the default user within the admin group. To learn how to set a default user, see the [Manage Groups](https://support.ironcladapp.com/hc/en-us/articles/12286570480791-Manage-Groups) guide. \n\n**OAuth Scope required:** `scim.users.deleteUsers`"
+      description: 'Delete a user on Ironclad. If the deletion is successful, all active workflows associated with the deleted user should be automatically reassigned to the default user within the admin group. To learn how to set a default user, see the Manage Groups guide.
+
+
+        **OAuth Scope required:** `scim.users.deleteUsers`'
       operationId: delete-a-user
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -187,8 +207,14 @@ paths:
       - Users
 components:
   responses:
-    ForbiddenResponse403:
-      description: 403 Forbidden
+    UserResponse201:
+      description: 201 Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserResponseObject'
+    UsersResponse200:
+      description: 200 OK
       content:
         application/json:
           schema:
@@ -198,13 +224,35 @@ components:
                 type: array
                 items:
                   type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:Error
-              status:
-                type: string
-                description: The HTTP status code expressed as a string.
-                example: '403'
+                  example: urn:ietf:params:scim:api:messages:2.0:ListResponse
+              totalResults:
+                type: integer
+                description: The total number of users that match this filter. This may be larger than the number of users in this page, in which case pagination may be used to retrieve the next page of results.
+                example: 2
+                default: 0
+              Resources:
+                type: array
+                description: The current page of user results.
+                items:
+                  $ref: '#/components/schemas/UserResponseObject'
+              startIndex:
+                type: integer
+                description: The 1-based index of the first result in the current set of list results.
+                example: 1
+                default: 0
+              itemsPerPage:
+                type: integer
+                description: Specifies the maximum number of resources that can be returned in a single page of results.
+                example: 25
+                default: 0
     UserResponse204:
       description: 204 No Content
+    UserResponse200:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserResponseObject'
     UserFilterResponse400:
       description: 400 Bad Request
       content:
@@ -229,6 +277,26 @@ components:
                 type: string
                 description: A detailed human-readable message.
                 example: 'No matching schema for attribute: name,lastName'
+    ServerErrorResponse500:
+      description: 500 Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:Error
+              status:
+                type: string
+                description: The HTTP status code expressed as a string.
+                example: '500'
+              detail:
+                type: string
+                description: A detailed human-readable message.
+                example: Internal server error
     NotFoundResponse404:
       description: 404 Not Found
       content:
@@ -265,70 +333,6 @@ components:
                 type: string
                 description: The HTTP status code expressed as a string.
                 example: '409'
-    UserResponse200:
-      description: 200 OK
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UserResponseObject'
-    UserResponse201:
-      description: 201 Created
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UserResponseObject'
-    ServerErrorResponse500:
-      description: 500 Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:Error
-              status:
-                type: string
-                description: The HTTP status code expressed as a string.
-                example: '500'
-              detail:
-                type: string
-                description: A detailed human-readable message.
-                example: Internal server error
-    UsersResponse200:
-      description: 200 OK
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:ListResponse
-              totalResults:
-                type: integer
-                description: The total number of users that match this filter. This may be larger than the number of users in this page, in which case pagination may be used to retrieve the next page of results.
-                example: 2
-                default: 0
-              Resources:
-                type: array
-                description: The current page of user results.
-                items:
-                  $ref: '#/components/schemas/UserResponseObject'
-              startIndex:
-                type: integer
-                description: The 1-based index of the first result in the current set of list results.
-                example: 1
-                default: 0
-              itemsPerPage:
-                type: integer
-                description: Specifies the maximum number of resources that can be returned in a single page of results.
-                example: 25
-                default: 0
     UserResponse400:
       description: 400 Bad Request
       content:
@@ -353,6 +357,132 @@ components:
                 type: string
                 description: A detailed human-readable message.
                 example: 'Invalid value at name.givenName: 123'
+    ForbiddenResponse403:
+      description: 403 Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:Error
+              status:
+                type: string
+                description: The HTTP status code expressed as a string.
+                example: '403'
+  parameters:
+    StartIndex:
+      name: startIndex
+      in: query
+      description: The starting index for retrieving this resource. Resources are indexed based on when they were first added to Ironclad.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+    UserId:
+      name: userId
+      in: path
+      description: A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter
+      schema:
+        type: string
+      required: true
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+    ExcludedAttributes:
+      name: excludedAttributes
+      in: query
+      description: A comma-separated list of attributes to exclude from the resources in the response.
+      schema:
+        type: string
+    Count:
+      name: count
+      in: query
+      description: Specifies the maximum number of resources to return in a single page of results.
+      schema:
+        type: integer
+        format: int32
+        default: 25
+        minimum: 0
+        maximum: 1000
+  requestBodies:
+    UserCreateRequestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - schemas
+            - userName
+            - name
+            properties:
+              schemas:
+                type: array
+                default:
+                - urn:ietf:params:scim:schemas:core:2.0:User
+                items:
+                  type: string
+              userName:
+                type: string
+                description: The email address of the user (e.g., jdoe@acme.com).
+              name:
+                type: object
+                description: The first name and last name of the user.
+                properties:
+                  givenName:
+                    type: string
+                    description: The first name of the user.
+                  familyName:
+                    type: string
+                    description: The last name of the user.
+              title:
+                type: string
+                description: The user's legal title.
+              password:
+                type: string
+                description: "The user's password for username/password type sign in method. Required if there are no SAML configurations set up for the company. \n\nPassword requirements:\n- 16+ characters \n- At least one lowercase letter \n- At least one uppercase letter \n- At least one number \n- At least one special character (!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~)"
+              active:
+                type: boolean
+                description: Whether the user is currently active. Ironclad users cannot be marked as inactive, and will be removed from the company if this is set to false.
+                default: true
+              urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:
+                type: object
+                description: Enterprise User attributes
+                properties:
+                  department:
+                    type: string
+                    description: Which department the user is a part of.
+                    example: Legal
+              urn:ietf:params:scim:schemas:extension:ironclad:2.0:User:
+                type: object
+                description: Ironclad User attributes
+                properties:
+                  departmentHead:
+                    type: string
+                    format: email
+                    description: The email address (username) of the user's department head.
+                    example: jane.doe@test.com
+                  allowProviderConversion:
+                    type: boolean
+                    description: Allow the user to convert from 'local' to 'google' provider.
+                    example: false
   schemas:
     UserResponseObject:
       type: object
@@ -466,116 +596,12 @@ components:
               format: url
               description: The URI of the User resource being returned.
               example: https://na1.ironcladapp.com/scim/v2/Users/67e4488c605caf0d8aa2e5c6
-  requestBodies:
-    UserCreateRequestBody:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - schemas
-            - userName
-            - name
-            properties:
-              schemas:
-                type: array
-                default:
-                - urn:ietf:params:scim:schemas:core:2.0:User
-                items:
-                  type: string
-              userName:
-                type: string
-                description: The email address of the user (e.g., jdoe@acme.com).
-              name:
-                type: object
-                description: The first name and last name of the user.
-                properties:
-                  givenName:
-                    type: string
-                    description: The first name of the user.
-                  familyName:
-                    type: string
-                    description: The last name of the user.
-              title:
-                type: string
-                description: The user's legal title.
-              password:
-                type: string
-                description: "The user's password for username/password type sign in method. Required if there are no SAML configurations set up for the company. \n\nPassword requirements:\n- 16+ characters \n- At least one lowercase letter \n- At least one uppercase letter \n- At least one number \n- At least one special character (!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~)"
-              active:
-                type: boolean
-                description: Whether the user is currently active. Ironclad users cannot be marked as inactive, and will be removed from the company if this is set to false.
-                default: true
-              urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:
-                type: object
-                description: Enterprise User attributes
-                properties:
-                  department:
-                    type: string
-                    description: Which department the user is a part of.
-                    example: Legal
-              urn:ietf:params:scim:schemas:extension:ironclad:2.0:User:
-                type: object
-                description: Ironclad User attributes
-                properties:
-                  departmentHead:
-                    type: string
-                    format: email
-                    description: The email address (username) of the user's department head.
-                    example: jane.doe@test.com
-                  allowProviderConversion:
-                    type: boolean
-                    description: Allow the user to convert from 'local' to 'google' provider.
-                    example: false
-  parameters:
-    Count:
-      name: count
-      in: query
-      description: Specifies the maximum number of resources to return in a single page of results.
-      schema:
-        type: integer
-        format: int32
-        default: 25
-        minimum: 0
-        maximum: 1000
-    ExcludedAttributes:
-      name: excludedAttributes
-      in: query
-      description: A comma-separated list of attributes to exclude from the resources in the response.
-      schema:
-        type: string
-    XAsUserId:
-      name: x-as-user-id
+  securitySchemes:
+    sec0:
+      type: apiKey
       in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
-    UserId:
-      name: userId
-      in: path
-      description: A user's unique id can be identified using the Retrieve all Users endpoint with a filter parameter
-      schema:
-        type: string
-      required: true
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    StartIndex:
-      name: startIndex
-      in: query
-      description: The starting index for retrieving this resource. Resources are indexed based on when they were first added to Ironclad.
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
+      name: Authorization
+      x-bearer-format: bearer
 x-readme:
   headers: []
   explorer-enabled: true

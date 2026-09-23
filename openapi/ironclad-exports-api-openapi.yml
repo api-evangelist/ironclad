@@ -1,17 +1,17 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Ironclad OAuth 2.0 Authorization Exports API
-  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
-  version: '1'
+  title: Ironclad Public Exports API
+  description: Documentation for Ironclad's REST API.
   contact:
     name: Ironclad Support
     email: support@ironcladapp.com
+  version: '1'
 servers:
-- url: https://na1.ironcladapp.com/oauth
+- url: https://na1.ironcladapp.com/public/api/v1
   description: Production server
-- url: https://eu1.ironcladapp.com/oauth
+- url: https://eu1.ironcladapp.com/public/api/v1
   description: EU Production server
-- url: https://demo.ironcladapp.com/oauth
+- url: https://demo.ironcladapp.com/public/api/v1
   description: Demo server
 tags:
 - name: Exports
@@ -20,7 +20,13 @@ paths:
   /exports:
     post:
       summary: Submit a request to generate a new data export
-      description: "Submit a request to generate a new data export. \n\n**OAuth Scope required:** `public.export.createReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+      description: 'Submit a request to generate a new data export.
+
+
+        **OAuth Scope required:** `public.export.createReports`
+
+
+        The Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package.'
       operationId: export
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -64,7 +70,13 @@ paths:
   /exports/{jobId}:
     get:
       summary: Check Data Export Job Status
-      description: "View the status of an export job using the job id returned during job creation. \n\n**OAuth Scope required:** `public.export.readReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+      description: 'View the status of an export job using the job id returned during job creation.
+
+
+        **OAuth Scope required:** `public.export.readReports`
+
+
+        The Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package.'
       operationId: export-job
       parameters:
       - name: jobId
@@ -110,7 +122,13 @@ paths:
   /exports/{jobId}/download:
     get:
       summary: Download Data Export File
-      description: "Download completed file produced by the export job. \n\n**OAuth Scope required:** `public.export.readReports` \n\nThe Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package."
+      description: 'Download completed file produced by the export job.
+
+
+        **OAuth Scope required:** `public.export.readReports`
+
+
+        The Data Export feature is part of the paid Security & Data Pro add-on. Contact your Ironclad account representative for more information about purchasing this package.'
       operationId: export-job-download
       parameters:
       - name: jobId
@@ -147,6 +165,23 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DataExportRequestModel'
+  parameters:
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
   schemas:
     DataExportConfigWorkflowActivities:
       title: Workflow activities export config
@@ -162,6 +197,22 @@ components:
         includeCommentDetail:
           type: boolean
           description: Include comment details in export.
+    DataExportConfigAuditLog:
+      title: Audit log export config
+      type: object
+      additionalProperties: false
+      properties:
+        eventCategories:
+          type: array
+          items:
+            type: string
+            enum:
+            - user_entitlement
+            - integration_errors
+          example:
+          - user_entitlement
+          - integration_errors
+          description: Array of categories of audit log events to include in the export.
     DataExportRequestModel:
       type: object
       additionalProperties: false
@@ -198,39 +249,140 @@ components:
           - $ref: '#/components/schemas/DataExportConfigAuditLog'
       required:
       - exportType
-    DataExportConfigAuditLog:
-      title: Audit log export config
-      type: object
-      additionalProperties: false
-      properties:
-        eventCategories:
-          type: array
-          items:
-            type: string
-            enum:
-            - user_entitlement
-            - integration_errors
-          example:
-          - user_entitlement
-          - integration_errors
-          description: Array of categories of audit log events to include in the export.
-  parameters:
-    XAsUserEmail:
-      name: x-as-user-email
+  securitySchemes:
+    sec0:
+      type: apiKey
       in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    XAsUserId:
-      name: x-as-user-id
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
+      name: Authorization
+      x-bearer-format: bearer
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://na1.ironcladapp.com/oauth/authorize
+          tokenUrl: https://na1.ironcladapp.com/oauth/token
+          scopes:
+            public.records.createRecords: Create Records
+            public.records.readRecords: Read Records
+            public.records.updateRecords: Update Records
+            public.records.deleteRecords: Delete Records
+            public.records.readSchemas: Read Record Schemas
+            public.records.createAttachments: Create Record Attachments
+            public.records.readAttachments: Read Record Attachments
+            public.records.deleteAttachments: Delete Record Attachments
+            public.records.createSmartImportRecords: Create Records via Smart Import
+            public.records.readSmartImportRecords: Read Record Import Details from Smart Import
+            public.records.applyContractAction: Apply Contract Actions
+            public.webhooks.createWebhooks: Create Webhooks
+            public.webhooks.readWebhooks: Read Webhooks
+            public.webhooks.updateWebhooks: Update Webhooks
+            public.webhooks.deleteWebhooks: Delete Webhooks
+            public.workflows.createWorkflows: Create Workflows
+            public.workflows.readWorkflows: Read Workflows
+            public.workflows.updateWorkflows: Update Workflows
+            public.workflows.readApprovals: Read Workflow Approvals
+            public.workflows.updateApprovals: Update Workflow Approvals
+            public.workflows.readSignatures: Read Workflow Signatures
+            public.workflows.uploadSignedDocuments: Upload Signed Workflow Documents
+            public.workflows.readParticipants: Read Workflow Participants
+            public.workflows.readRoleAssignees: Read Workflow Role Eligible Assignees
+            public.workflows.updateRoleAssignment: Update Workflow Role Assignment
+            public.workflows.revertToReview: Revert Workflows to Review
+            public.workflows.cancel: Cancel Workflows
+            public.workflows.pauseAndResume: Resume and Pause Workflows
+            public.workflows.createComments: Create Workflow Comments
+            public.workflows.readComments: Read Workflow Comments
+            public.workflows.createDocuments: Create Workflow Documents
+            public.workflows.readDocuments: Read Workflow Documents
+            public.workflows.updateSignaturePacket: Update Signature Packet
+            public.workflows.readSchemas: Read Workflow Schemas
+            public.workflows.readTurnHistory: Read Workflow Turn History
+            public.workflows.readEmailCommunications: Read Workflow Email Communications
+            public.workflows.readSignStatus: Read Sign Status
+            public.records.createComments: Create Workflow Comments
+            public.export.createReports: Create Reports
+            public.export.readReports: Read Reports
+            public.workflows.createSignatureRecipientUrls: Create Signature Request Recipient URLs
+            public.workflows.createEmbeddableSignerUrls: Create Embeddable Signature Request Recipient URLs
+            public.workflows.sendSignatureRequests: Send Signature Requests
+            public.workflows.cancelSignatureRequests: Cancel Signature Requests
+            public.workflows.deleteSigners: Delete Signers
+            public.workflows.remindSigners: Remind Signers
+            public.workflows.updateSigners: Update Signers
+            public.entities.readRelationshipTypes: Read Relationship Types
+            public.entities.updateEntities: Update Entities
+            public.entities.deleteEntities: Delete Entities
+            public.entities.createEntities: Create Entities
+            public.entities.readEntities: Read Entities
+            public.obligations.readObligations: Read Obligations
+            public.obligations.createObligations: Create Obligations
+            public.obligations.updateObligations: Update Obligations
+            public.obligations.deleteObligations: Delete Obligations
+            public.workflows.scheduleSendSignatureRequest: Schedule Send Signature Request
+            public.workflows.updateScheduledSignatureRequest: Update Scheduled Signature Request
+            public.workflows.deleteScheduledSignatureRequest: Delete Scheduled Signature Request
+            public.search.conversational: Run Conversational agent Search
+        clientCredentials:
+          tokenUrl: https://na1.ironcladapp.com/oauth/token
+          scopes:
+            public.records.createRecords: Create Records
+            public.records.readRecords: Read Records
+            public.records.updateRecords: Update Records
+            public.records.deleteRecords: Delete Records
+            public.records.readSchemas: Read Record Schemas
+            public.records.createAttachments: Create Record Attachments
+            public.records.readAttachments: Read Record Attachments
+            public.records.deleteAttachments: Delete Record Attachments
+            public.records.createSmartImportRecords: Create Records via Smart Import
+            public.records.readSmartImportRecords: Read Record Import Details from Smart Import
+            public.records.applyContractAction: Apply Contract Actions
+            public.webhooks.createWebhooks: Create Webhooks
+            public.webhooks.readWebhooks: Read Webhooks
+            public.webhooks.updateWebhooks: Update Webhooks
+            public.webhooks.deleteWebhooks: Delete Webhooks
+            public.workflows.createWorkflows: Create Workflows
+            public.workflows.readWorkflows: Read Workflows
+            public.workflows.updateWorkflows: Update Workflows
+            public.workflows.readApprovals: Read Workflow Approvals
+            public.workflows.updateApprovals: Update Workflow Approvals
+            public.workflows.readSignatures: Read Workflow Signatures
+            public.workflows.uploadSignedDocuments: Upload Signed Workflow Documents
+            public.workflows.readParticipants: Read Workflow Participants
+            public.workflows.readRoleAssignees: Read Workflow Role Eligible Assignees
+            public.workflows.updateRoleAssignment: Update Workflow Role Assignment
+            public.workflows.revertToReview: Revert Workflows to Review
+            public.workflows.cancel: Cancel Workflows
+            public.workflows.pauseAndResume: Resume and Pause Workflows
+            public.workflows.createComments: Create Workflow Comments
+            public.workflows.readComments: Read Workflow Comments
+            public.workflows.createDocuments: Create Workflow Documents
+            public.workflows.readDocuments: Read Workflow Documents
+            public.workflows.updateSignaturePacket: Update Signature Packet
+            public.workflows.readSchemas: Read Workflow Schemas
+            public.workflows.readTurnHistory: Read Workflow Turn History
+            public.workflows.readEmailCommunications: Read Workflow Email Communications
+            public.records.createComments: Create Workflow Comments
+            public.export.createReports: Create Reports
+            public.export.readReports: Read Reports
+            public.workflows.createSignatureRecipientUrls: Create Signature Request Recipient URLs
+            public.workflows.createEmbeddableSignerUrls: Create Embeddable Signature Request Recipient URLs
+            public.workflows.sendSignatureRequests: Send Signature Requests
+            public.workflows.cancelSignatureRequests: Cancel Signature Requests
+            public.workflows.deleteSigners: Delete Signers
+            public.workflows.remindSigners: Remind Signers
+            public.workflows.updateSigners: Update Signers
+            public.entities.readRelationshipTypes: Read Relationship Types
+            public.entities.updateEntities: Update Entities
+            public.entities.deleteEntities: Delete Entities
+            public.entities.createEntities: Create Entities
+            public.entities.readEntities: Read Entities
+            public.obligations.readObligations: Read Obligations
+            public.obligations.createObligations: Create Obligations
+            public.obligations.updateObligations: Update Obligations
+            public.obligations.deleteObligations: Delete Obligations
+            public.workflows.scheduleSendSignatureRequest: Schedule Send Signature Request
+            public.workflows.updateScheduledSignatureRequest: Update Scheduled Signature Request
+            public.workflows.deleteScheduledSignatureRequest: Delete Scheduled Signature Request
 x-readme:
   headers: []
   explorer-enabled: true

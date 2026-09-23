@@ -1,17 +1,17 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Ironclad OAuth 2.0 Authorization Obligations API
-  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
-  version: '1'
+  title: Ironclad Public Obligations API
+  description: Documentation for Ironclad's REST API.
   contact:
     name: Ironclad Support
     email: support@ironcladapp.com
+  version: '1'
 servers:
-- url: https://na1.ironcladapp.com/oauth
+- url: https://na1.ironcladapp.com/public/api/v1
   description: Production server
-- url: https://eu1.ironcladapp.com/oauth
+- url: https://eu1.ironcladapp.com/public/api/v1
   description: EU Production server
-- url: https://demo.ironcladapp.com/oauth
+- url: https://demo.ironcladapp.com/public/api/v1
   description: Demo server
 tags:
 - name: Obligations
@@ -20,7 +20,10 @@ paths:
   /obligations:
     get:
       summary: List All Obligations
-      description: "View all obligations in the company, with filtering available via query parameters. \n\n**OAuth Scope required:** `public.obligations.readObligations`"
+      description: 'View all obligations in the company, with filtering available via query parameters.
+
+
+        **OAuth Scope required:** `public.obligations.readObligations`'
       operationId: list-all-obligations
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -75,7 +78,10 @@ paths:
       - Obligations
     post:
       summary: Create an Obligation
-      description: "Create a new obligation. \n\n**OAuth Scope required:** `public.obligations.createObligations`"
+      description: 'Create a new obligation.
+
+
+        **OAuth Scope required:** `public.obligations.createObligations`'
       operationId: create-an-obligation
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -125,7 +131,10 @@ paths:
   /obligations/{id}:
     get:
       summary: Retrieve an Obligation
-      description: "View a specific obligation and its associated data. \n\n**OAuth Scope required:** `public.obligations.readObligations`"
+      description: 'View a specific obligation and its associated data.
+
+
+        **OAuth Scope required:** `public.obligations.readObligations`'
       operationId: retrieve-an-obligation
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -173,7 +182,10 @@ paths:
       - Obligations
     patch:
       summary: Update an Obligation
-      description: "Update an existing obligation. \n\n**OAuth Scope required:** `public.obligations.updateObligations`"
+      description: 'Update an existing obligation.
+
+
+        **OAuth Scope required:** `public.obligations.updateObligations`'
       operationId: update-an-obligation
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -245,29 +257,6 @@ paths:
       - Obligations
 components:
   schemas:
-    ClauseLanguagePositionPlaybook:
-      title: Clause Language Position Playbook
-      type: object
-      description: A playbook clause language position
-      required:
-      - type
-      - name
-      - preferred
-      properties:
-        type:
-          type: string
-          description: The source type of the playbook clause
-          enum:
-          - playbook
-          example: playbook
-        name:
-          type: string
-          description: The name of the playbook clause
-          example: Standard
-        preferred:
-          type: boolean
-          description: Whether the playbook clause is the preferred language
-          example: true
     RecordPropertyArray:
       title: Record Property Array
       type: object
@@ -290,9 +279,30 @@ components:
           example:
           - red
           - blue
-    RecordPropertyPlaybookClause:
+    EntityProperties:
       type: object
-      description: A playbook-based clause-type record property
+      description: The entity properties associated with the entity
+      additionalProperties:
+        $ref: '#/components/schemas/EntityPropertyType'
+    RecordPropertyType:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/RecordPropertyString'
+      - $ref: '#/components/schemas/RecordPropertyNumber'
+      - $ref: '#/components/schemas/RecordPropertyBoolean'
+      - $ref: '#/components/schemas/RecordPropertyDate'
+      - $ref: '#/components/schemas/RecordPropertyDuration'
+      - $ref: '#/components/schemas/RecordPropertyEmail'
+      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
+      - $ref: '#/components/schemas/RecordPropertyClause'
+      - $ref: '#/components/schemas/RecordPropertyPlaybookClause'
+      - $ref: '#/components/schemas/RecordPropertyAddress'
+      - $ref: '#/components/schemas/RecordPropertyArray'
+      - $ref: '#/components/schemas/RecordPropertyReference'
+    RecordPropertyDate:
+      title: Record Property Date
+      type: object
+      description: A date-type record property
       required:
       - type
       - value
@@ -301,34 +311,23 @@ components:
           type: string
           description: The data type of the property
           enum:
-          - playbookClause
-          example: playbookClause
+          - date
+          example: date
         value:
           type: string
-          description: The playbook clause name
-          example: Standard
-    RecordPropertyBoolean:
-      title: Record Property Boolean
-      type: object
-      description: A true/false boolean-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - boolean
-          example: boolean
-        value:
-          type: boolean
-          description: The boolean value of the property
-          example: true
+          description: The date value of the property in ISO8601 format
+          format: date-time
+          example: '1992-10-04T09:31:00Z'
         originalValue:
-          type: boolean
+          type: string
           description: The original value of the property before amendment (only present when property is amended)
-          example: false
+          format: date-time
+          example: '1990-01-01T00:00:00Z'
+    RecordProperties:
+      type: object
+      description: The record properties associated with the record
+      additionalProperties:
+        $ref: '#/components/schemas/RecordPropertyType'
     ObligationModel:
       type: object
       properties:
@@ -369,9 +368,40 @@ components:
       - ironcladId
       - name
       - properties
-    RecordPropertyReference:
+    ObligationTypeKey:
+      description: The key of the obligation type to be added to the obligation. Only one obligation type can be added or updated per obligation, currently. More info on obligation types can be found in the [Obligation Types](https://support.ironcladapp.com/hc/en-us/articles/31128654301079-Create-and-Manage-Obligations) article.
+      type: array
+      items:
+        type: string
+      maxItems: 1
+      minItems: 1
+    ClauseLanguagePositionPlaybook:
+      title: Clause Language Position Playbook
       type: object
-      description: A reference-type record property that points to another record
+      description: A playbook clause language position
+      required:
+      - type
+      - name
+      - preferred
+      properties:
+        type:
+          type: string
+          description: The source type of the playbook clause
+          enum:
+          - playbook
+          example: playbook
+        name:
+          type: string
+          description: The name of the playbook clause
+          example: Standard
+        preferred:
+          type: boolean
+          description: Whether the playbook clause is the preferred language
+          example: true
+    RecordPropertyString:
+      title: Record Property String
+      type: object
+      description: A text-type record property
       required:
       - type
       - value
@@ -380,164 +410,38 @@ components:
           type: string
           description: The data type of the property
           enum:
-          - reference
-          example: reference
-        value:
-          type: object
-          description: The reference value of the property
-          required:
-          - recordId
-          properties:
-            recordId:
-              type: string
-              description: The unique identifier of the referenced record
-              example: REC12345
-            subTypeId:
-              type: string
-              description: Optional sub-type identifier for the referenced record
-              example: contract
-            namedTypeIds:
-              type: array
-              description: The unique identifiers of the relationship types associated with the entity
-              items:
-                type: string
-                example: 43d3e321-e89b-12d3-a456-426614174000
-            readableId:
-              type: string
-              description: The unique identifier of the referenced record
-              example: ENTITY-1
-            attributes:
-              $ref: '#/components/schemas/EntityProperties'
-        originalValue:
-          type: object
-          description: The original reference value before amendment (only present when property is amended)
-          required:
-          - recordId
-          properties:
-            recordId:
-              type: string
-              description: The unique identifier of the original referenced record
-              example: REC67890
-            subTypeId:
-              type: string
-              description: Optional sub-type identifier for the original referenced record
-              example: agreement
-            namedTypeIds:
-              type: array
-              description: The unique identifiers of the relationship types associated with the original entity
-              items:
-                type: string
-                example: 43d3e321-e89b-12d3-a456-426614174000
-            readableId:
-              type: string
-              description: The unique identifier of the original referenced record
-              example: ENTITY-2
-            attributes:
-              $ref: '#/components/schemas/EntityProperties'
-    RecordPropertyAddress:
-      type: object
-      description: An address-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - address
-          example: address
-        value:
-          type: object
-          description: The address
-          example:
-            lines:
-            - 123 Main St.
-            locality: Los Angeles
-            region: CA
-            postcode: '90001'
-          properties:
-            lines:
-              type: array
-              maxLength: 4
-              items:
-                type: string
-              description: Address Lines (Street, Apt., etc.)
-            locality:
-              type: string
-              description: Locality (City, Town, etc)
-            country:
-              type: string
-              description: Country
-            region:
-              type: string
-              description: Region (State, Province, etc)
-            postcode:
-              type: string
-              description: Postcode (ZIP code, etc)
-            raw:
-              type: string
-              description: A raw address string, useful when address is not stored in a structured way
-        originalValue:
-          type: object
-          description: The original address before amendment (only present when property is amended)
-          example:
-            lines:
-            - 456 Old St.
-            locality: San Francisco
-            region: CA
-            postcode: '94102'
-          properties:
-            lines:
-              type: array
-              maxLength: 4
-              items:
-                type: string
-              description: Original Address Lines (Street, Apt., etc.)
-            locality:
-              type: string
-              description: Original Locality (City, Town, etc)
-            country:
-              type: string
-              description: Original Country
-            region:
-              type: string
-              description: Original Region (State, Province, etc)
-            postcode:
-              type: string
-              description: Original Postcode (ZIP code, etc)
-            raw:
-              type: string
-              description: A raw original address string, useful when address is not stored in a structured way
-    RecordProperties:
-      type: object
-      description: The record properties associated with the record
-      additionalProperties:
-        $ref: '#/components/schemas/RecordPropertyType'
-    RecordPropertyDate:
-      title: Record Property Date
-      type: object
-      description: A date-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - date
-          example: date
+          - string
+          example: string
         value:
           type: string
-          description: The date value of the property in ISO8601 format
-          format: date-time
-          example: '1992-10-04T09:31:00Z'
+          description: The string value of the property
+          example: Foobar
         originalValue:
           type: string
           description: The original value of the property before amendment (only present when property is amended)
-          format: date-time
-          example: '1990-01-01T00:00:00Z'
+          example: Original Value
+    RecordPropertyDuration:
+      title: Record Property Duration
+      type: object
+      description: A duration-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - duration
+          example: duration
+        value:
+          type: string
+          description: The duration value of the property in ISO8601 format
+          example: P10Y3M2W1D
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          example: P5Y1M1W
     RecordPropertyClause:
       type: object
       description: A clause-type record property
@@ -619,6 +523,81 @@ components:
                   type: integer
                   description: The page number of the clause in the document
                   example: 1
+    RecordPropertyAddress:
+      type: object
+      description: An address-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - address
+          example: address
+        value:
+          type: object
+          description: The address
+          example:
+            lines:
+            - 123 Main St.
+            locality: Los Angeles
+            region: CA
+            postcode: '90001'
+          properties:
+            lines:
+              type: array
+              maxLength: 4
+              items:
+                type: string
+              description: Address Lines (Street, Apt., etc.)
+            locality:
+              type: string
+              description: Locality (City, Town, etc)
+            country:
+              type: string
+              description: Country
+            region:
+              type: string
+              description: Region (State, Province, etc)
+            postcode:
+              type: string
+              description: Postcode (ZIP code, etc)
+            raw:
+              type: string
+              description: A raw address string, useful when address is not stored in a structured way
+        originalValue:
+          type: object
+          description: The original address before amendment (only present when property is amended)
+          example:
+            lines:
+            - 456 Old St.
+            locality: San Francisco
+            region: CA
+            postcode: '94102'
+          properties:
+            lines:
+              type: array
+              maxLength: 4
+              items:
+                type: string
+              description: Original Address Lines (Street, Apt., etc.)
+            locality:
+              type: string
+              description: Original Locality (City, Town, etc)
+            country:
+              type: string
+              description: Original Country
+            region:
+              type: string
+              description: Original Region (State, Province, etc)
+            postcode:
+              type: string
+              description: Original Postcode (ZIP code, etc)
+            raw:
+              type: string
+              description: A raw original address string, useful when address is not stored in a structured way
     ClauseLanguagePositionCustom:
       title: Clause Language Position Custom
       type: object
@@ -632,29 +611,7 @@ components:
           enum:
           - custom
           example: custom
-    RecordPropertyDuration:
-      title: Record Property Duration
-      type: object
-      description: A duration-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - duration
-          example: duration
-        value:
-          type: string
-          description: The duration value of the property in ISO8601 format
-          example: P10Y3M2W1D
-        originalValue:
-          type: string
-          description: The original value of the property before amendment (only present when property is amended)
-          example: P5Y1M1W
-    RecordPropertyType:
+    EntityPropertyType:
       type: object
       oneOf:
       - $ref: '#/components/schemas/RecordPropertyString'
@@ -664,18 +621,73 @@ components:
       - $ref: '#/components/schemas/RecordPropertyDuration'
       - $ref: '#/components/schemas/RecordPropertyEmail'
       - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
-      - $ref: '#/components/schemas/RecordPropertyClause'
-      - $ref: '#/components/schemas/RecordPropertyPlaybookClause'
       - $ref: '#/components/schemas/RecordPropertyAddress'
-      - $ref: '#/components/schemas/RecordPropertyArray'
-      - $ref: '#/components/schemas/RecordPropertyReference'
-    ObligationTypeKey:
-      description: The key of the obligation type to be added to the obligation. Only one obligation type can be added or updated per obligation, currently. More info on obligation types can be found in the [Obligation Types](https://support.ironcladapp.com/hc/en-us/articles/31128654301079-Create-and-Manage-Obligations) article.
-      type: array
-      items:
-        type: string
-      maxItems: 1
-      minItems: 1
+    RecordPropertyBoolean:
+      title: Record Property Boolean
+      type: object
+      description: A true/false boolean-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - boolean
+          example: boolean
+        value:
+          type: boolean
+          description: The boolean value of the property
+          example: true
+        originalValue:
+          type: boolean
+          description: The original value of the property before amendment (only present when property is amended)
+          example: false
+    RecordPropertyMonetaryAmount:
+      title: Record Property Monetary Amount
+      type: object
+      description: A monetary amount-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - monetary_amount
+          example: monetary_amount
+        value:
+          type: object
+          description: The monetary amount value of the property
+          required:
+          - amount
+          - currency
+          properties:
+            currency:
+              type: string
+              description: The currency of the monetary value in ISO 4217 format
+              example: USD
+            amount:
+              type: number
+              description: The amount of the monetary value
+              example: 100000
+        originalValue:
+          type: object
+          description: The original value of the property before amendment (only present when property is amended)
+          required:
+          - amount
+          - currency
+          properties:
+            currency:
+              type: string
+              description: The currency of the original monetary value in ISO 4217 format
+              example: USD
+            amount:
+              type: number
+              description: The original amount of the monetary value
+              example: 50000
     RecordPropertyNumber:
       title: Record Property Number
       type: object
@@ -722,10 +734,9 @@ components:
           format: email
           description: The original value of the property before amendment (only present when property is amended)
           example: original@example.com
-    RecordPropertyMonetaryAmount:
-      title: Record Property Monetary Amount
+    RecordPropertyPlaybookClause:
       type: object
-      description: A monetary amount-type record property
+      description: A playbook-based clause-type record property
       required:
       - type
       - value
@@ -734,58 +745,15 @@ components:
           type: string
           description: The data type of the property
           enum:
-          - monetary_amount
-          example: monetary_amount
+          - playbookClause
+          example: playbookClause
         value:
-          type: object
-          description: The monetary amount value of the property
-          required:
-          - amount
-          - currency
-          properties:
-            currency:
-              type: string
-              description: The currency of the monetary value in ISO 4217 format
-              example: USD
-            amount:
-              type: number
-              description: The amount of the monetary value
-              example: 100000
-        originalValue:
-          type: object
-          description: The original value of the property before amendment (only present when property is amended)
-          required:
-          - amount
-          - currency
-          properties:
-            currency:
-              type: string
-              description: The currency of the original monetary value in ISO 4217 format
-              example: USD
-            amount:
-              type: number
-              description: The original amount of the monetary value
-              example: 50000
-    EntityPropertyType:
+          type: string
+          description: The playbook clause name
+          example: Standard
+    RecordPropertyReference:
       type: object
-      oneOf:
-      - $ref: '#/components/schemas/RecordPropertyString'
-      - $ref: '#/components/schemas/RecordPropertyNumber'
-      - $ref: '#/components/schemas/RecordPropertyBoolean'
-      - $ref: '#/components/schemas/RecordPropertyDate'
-      - $ref: '#/components/schemas/RecordPropertyDuration'
-      - $ref: '#/components/schemas/RecordPropertyEmail'
-      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
-      - $ref: '#/components/schemas/RecordPropertyAddress'
-    EntityProperties:
-      type: object
-      description: The entity properties associated with the entity
-      additionalProperties:
-        $ref: '#/components/schemas/EntityPropertyType'
-    RecordPropertyString:
-      title: Record Property String
-      type: object
-      description: A text-type record property
+      description: A reference-type record property that points to another record
       required:
       - type
       - value
@@ -794,16 +762,124 @@ components:
           type: string
           description: The data type of the property
           enum:
-          - string
-          example: string
+          - reference
+          example: reference
         value:
-          type: string
-          description: The string value of the property
-          example: Foobar
+          type: object
+          description: The reference value of the property
+          required:
+          - recordId
+          properties:
+            recordId:
+              type: string
+              description: The unique identifier of the referenced record
+              example: REC12345
+            subTypeId:
+              type: string
+              description: Optional sub-type identifier for the referenced record
+              example: contract
+            namedTypeIds:
+              type: array
+              description: The unique identifiers of the relationship types associated with the entity
+              items:
+                type: string
+                example: 43d3e321-e89b-12d3-a456-426614174000
+            readableId:
+              type: string
+              description: The unique identifier of the referenced record
+              example: ENTITY-1
+            attributes:
+              $ref: '#/components/schemas/EntityProperties'
         originalValue:
-          type: string
-          description: The original value of the property before amendment (only present when property is amended)
-          example: Original Value
+          type: object
+          description: The original reference value before amendment (only present when property is amended)
+          required:
+          - recordId
+          properties:
+            recordId:
+              type: string
+              description: The unique identifier of the original referenced record
+              example: REC67890
+            subTypeId:
+              type: string
+              description: Optional sub-type identifier for the original referenced record
+              example: agreement
+            namedTypeIds:
+              type: array
+              description: The unique identifiers of the relationship types associated with the original entity
+              items:
+                type: string
+                example: 43d3e321-e89b-12d3-a456-426614174000
+            readableId:
+              type: string
+              description: The unique identifier of the original referenced record
+              example: ENTITY-2
+            attributes:
+              $ref: '#/components/schemas/EntityProperties'
+  parameters:
+    ObligationFilter:
+      name: filter
+      in: query
+      description: "Filter obligations using a formula. The obligation property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
+      schema:
+        type: string
+      example: Equals([name], 'Obligation Name')
+    QueryPageNumber:
+      name: page
+      in: query
+      description: The page number used when paginating through a list of results.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 100000000
+    QueryPageSize:
+      name: pageSize
+      in: query
+      description: A limit of the number of results to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    QuerySortDirection:
+      name: sortDirection
+      in: query
+      description: The direction to sort by. Default is 'DESC'.
+      schema:
+        type: string
+        enum:
+        - ASC
+        - DESC
+        default: DESC
+    QuerySortField:
+      name: sortField
+      in: query
+      description: The field to sort by. Default is 'name'.
+      schema:
+        type: string
+        enum:
+        - name
+        - lastUpdated
+        default: name
   responses:
     BadRequestError400:
       description: '400'
@@ -821,6 +897,19 @@ components:
               param:
                 type: string
                 example: parameter identifier
+    ForbiddenError403:
+      description: '403'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FORBIDDEN
+              message:
+                type: string
+                example: access forbidden
     NotFoundError404:
       description: '404'
       content:
@@ -862,83 +951,140 @@ components:
               value:
                 code: UNAUTHORIZED
                 message: token has expired
-    ForbiddenError403:
-      description: '403'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: string
-                example: FORBIDDEN
-              message:
-                type: string
-                example: access forbidden
-  parameters:
-    QueryPageSize:
-      name: pageSize
-      in: query
-      description: A limit of the number of results to return.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-        default: 20
-    XAsUserId:
-      name: x-as-user-id
+  securitySchemes:
+    sec0:
+      type: apiKey
       in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
-    ObligationFilter:
-      name: filter
-      in: query
-      description: "Filter obligations using a formula. The obligation property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
-      schema:
-        type: string
-      example: Equals([name], 'Obligation Name')
-    QuerySortField:
-      name: sortField
-      in: query
-      description: The field to sort by. Default is 'name'.
-      schema:
-        type: string
-        enum:
-        - name
-        - lastUpdated
-        default: name
-    QuerySortDirection:
-      name: sortDirection
-      in: query
-      description: The direction to sort by. Default is 'DESC'.
-      schema:
-        type: string
-        enum:
-        - ASC
-        - DESC
-        default: DESC
-    QueryPageNumber:
-      name: page
-      in: query
-      description: The page number used when paginating through a list of results.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-        maximum: 100000000
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
+      name: Authorization
+      x-bearer-format: bearer
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://na1.ironcladapp.com/oauth/authorize
+          tokenUrl: https://na1.ironcladapp.com/oauth/token
+          scopes:
+            public.records.createRecords: Create Records
+            public.records.readRecords: Read Records
+            public.records.updateRecords: Update Records
+            public.records.deleteRecords: Delete Records
+            public.records.readSchemas: Read Record Schemas
+            public.records.createAttachments: Create Record Attachments
+            public.records.readAttachments: Read Record Attachments
+            public.records.deleteAttachments: Delete Record Attachments
+            public.records.createSmartImportRecords: Create Records via Smart Import
+            public.records.readSmartImportRecords: Read Record Import Details from Smart Import
+            public.records.applyContractAction: Apply Contract Actions
+            public.webhooks.createWebhooks: Create Webhooks
+            public.webhooks.readWebhooks: Read Webhooks
+            public.webhooks.updateWebhooks: Update Webhooks
+            public.webhooks.deleteWebhooks: Delete Webhooks
+            public.workflows.createWorkflows: Create Workflows
+            public.workflows.readWorkflows: Read Workflows
+            public.workflows.updateWorkflows: Update Workflows
+            public.workflows.readApprovals: Read Workflow Approvals
+            public.workflows.updateApprovals: Update Workflow Approvals
+            public.workflows.readSignatures: Read Workflow Signatures
+            public.workflows.uploadSignedDocuments: Upload Signed Workflow Documents
+            public.workflows.readParticipants: Read Workflow Participants
+            public.workflows.readRoleAssignees: Read Workflow Role Eligible Assignees
+            public.workflows.updateRoleAssignment: Update Workflow Role Assignment
+            public.workflows.revertToReview: Revert Workflows to Review
+            public.workflows.cancel: Cancel Workflows
+            public.workflows.pauseAndResume: Resume and Pause Workflows
+            public.workflows.createComments: Create Workflow Comments
+            public.workflows.readComments: Read Workflow Comments
+            public.workflows.createDocuments: Create Workflow Documents
+            public.workflows.readDocuments: Read Workflow Documents
+            public.workflows.updateSignaturePacket: Update Signature Packet
+            public.workflows.readSchemas: Read Workflow Schemas
+            public.workflows.readTurnHistory: Read Workflow Turn History
+            public.workflows.readEmailCommunications: Read Workflow Email Communications
+            public.workflows.readSignStatus: Read Sign Status
+            public.records.createComments: Create Workflow Comments
+            public.export.createReports: Create Reports
+            public.export.readReports: Read Reports
+            public.workflows.createSignatureRecipientUrls: Create Signature Request Recipient URLs
+            public.workflows.createEmbeddableSignerUrls: Create Embeddable Signature Request Recipient URLs
+            public.workflows.sendSignatureRequests: Send Signature Requests
+            public.workflows.cancelSignatureRequests: Cancel Signature Requests
+            public.workflows.deleteSigners: Delete Signers
+            public.workflows.remindSigners: Remind Signers
+            public.workflows.updateSigners: Update Signers
+            public.entities.readRelationshipTypes: Read Relationship Types
+            public.entities.updateEntities: Update Entities
+            public.entities.deleteEntities: Delete Entities
+            public.entities.createEntities: Create Entities
+            public.entities.readEntities: Read Entities
+            public.obligations.readObligations: Read Obligations
+            public.obligations.createObligations: Create Obligations
+            public.obligations.updateObligations: Update Obligations
+            public.obligations.deleteObligations: Delete Obligations
+            public.workflows.scheduleSendSignatureRequest: Schedule Send Signature Request
+            public.workflows.updateScheduledSignatureRequest: Update Scheduled Signature Request
+            public.workflows.deleteScheduledSignatureRequest: Delete Scheduled Signature Request
+            public.search.conversational: Run Conversational agent Search
+        clientCredentials:
+          tokenUrl: https://na1.ironcladapp.com/oauth/token
+          scopes:
+            public.records.createRecords: Create Records
+            public.records.readRecords: Read Records
+            public.records.updateRecords: Update Records
+            public.records.deleteRecords: Delete Records
+            public.records.readSchemas: Read Record Schemas
+            public.records.createAttachments: Create Record Attachments
+            public.records.readAttachments: Read Record Attachments
+            public.records.deleteAttachments: Delete Record Attachments
+            public.records.createSmartImportRecords: Create Records via Smart Import
+            public.records.readSmartImportRecords: Read Record Import Details from Smart Import
+            public.records.applyContractAction: Apply Contract Actions
+            public.webhooks.createWebhooks: Create Webhooks
+            public.webhooks.readWebhooks: Read Webhooks
+            public.webhooks.updateWebhooks: Update Webhooks
+            public.webhooks.deleteWebhooks: Delete Webhooks
+            public.workflows.createWorkflows: Create Workflows
+            public.workflows.readWorkflows: Read Workflows
+            public.workflows.updateWorkflows: Update Workflows
+            public.workflows.readApprovals: Read Workflow Approvals
+            public.workflows.updateApprovals: Update Workflow Approvals
+            public.workflows.readSignatures: Read Workflow Signatures
+            public.workflows.uploadSignedDocuments: Upload Signed Workflow Documents
+            public.workflows.readParticipants: Read Workflow Participants
+            public.workflows.readRoleAssignees: Read Workflow Role Eligible Assignees
+            public.workflows.updateRoleAssignment: Update Workflow Role Assignment
+            public.workflows.revertToReview: Revert Workflows to Review
+            public.workflows.cancel: Cancel Workflows
+            public.workflows.pauseAndResume: Resume and Pause Workflows
+            public.workflows.createComments: Create Workflow Comments
+            public.workflows.readComments: Read Workflow Comments
+            public.workflows.createDocuments: Create Workflow Documents
+            public.workflows.readDocuments: Read Workflow Documents
+            public.workflows.updateSignaturePacket: Update Signature Packet
+            public.workflows.readSchemas: Read Workflow Schemas
+            public.workflows.readTurnHistory: Read Workflow Turn History
+            public.workflows.readEmailCommunications: Read Workflow Email Communications
+            public.records.createComments: Create Workflow Comments
+            public.export.createReports: Create Reports
+            public.export.readReports: Read Reports
+            public.workflows.createSignatureRecipientUrls: Create Signature Request Recipient URLs
+            public.workflows.createEmbeddableSignerUrls: Create Embeddable Signature Request Recipient URLs
+            public.workflows.sendSignatureRequests: Send Signature Requests
+            public.workflows.cancelSignatureRequests: Cancel Signature Requests
+            public.workflows.deleteSigners: Delete Signers
+            public.workflows.remindSigners: Remind Signers
+            public.workflows.updateSigners: Update Signers
+            public.entities.readRelationshipTypes: Read Relationship Types
+            public.entities.updateEntities: Update Entities
+            public.entities.deleteEntities: Delete Entities
+            public.entities.createEntities: Create Entities
+            public.entities.readEntities: Read Entities
+            public.obligations.readObligations: Read Obligations
+            public.obligations.createObligations: Create Obligations
+            public.obligations.updateObligations: Update Obligations
+            public.obligations.deleteObligations: Delete Obligations
+            public.workflows.scheduleSendSignatureRequest: Schedule Send Signature Request
+            public.workflows.updateScheduledSignatureRequest: Update Scheduled Signature Request
+            public.workflows.deleteScheduledSignatureRequest: Delete Scheduled Signature Request
 x-readme:
   headers: []
   explorer-enabled: true

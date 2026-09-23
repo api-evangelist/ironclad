@@ -1,36 +1,46 @@
 {
   "provider": "ironclad",
   "sources": [
-    "ironclad-authorization-api-openapi.yml",
-    "ironclad-entities-api-openapi.yml",
-    "ironclad-exports-api-openapi.yml",
-    "ironclad-groups-api-openapi.yml",
-    "ironclad-obligations-api-openapi.yml",
-    "ironclad-records-api-openapi.yml",
-    "ironclad-resources-api-openapi.yml",
-    "ironclad-schemas-api-openapi.yml",
-    "ironclad-search-api-openapi.yml",
-    "ironclad-users-api-openapi.yml",
-    "ironclad-webhooks-api-openapi.yml",
-    "ironclad-workflows-api-openapi.yml"
+    "_original/ironclad-oauth-20-api-openapi.yml",
+    "_original/ironclad-public-api-openapi.yml",
+    "_original/ironclad-scim-api-openapi.yml"
   ],
   "outputs": [
     "ironclad-authorization-api-openapi.yml",
+    "ironclad-resources-api-openapi.yml",
     "ironclad-entities-api-openapi.yml",
     "ironclad-exports-api-openapi.yml",
-    "ironclad-groups-api-openapi.yml",
     "ironclad-obligations-api-openapi.yml",
     "ironclad-records-api-openapi.yml",
-    "ironclad-resources-api-openapi.yml",
-    "ironclad-schemas-api-openapi.yml",
     "ironclad-search-api-openapi.yml",
-    "ironclad-users-api-openapi.yml",
     "ironclad-webhooks-api-openapi.yml",
-    "ironclad-workflows-api-openapi.yml"
+    "ironclad-workflows-api-openapi.yml",
+    "ironclad-groups-api-openapi.yml",
+    "ironclad-schemas-api-openapi.yml",
+    "ironclad-users-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "ironclad-oauth-20-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "ironclad-public-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "ironclad-scim-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "ironclad-authorization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-entities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-exports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-obligations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-records-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-resources-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-schemas-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ironclad-workflows-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

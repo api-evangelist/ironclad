@@ -1,17 +1,17 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Ironclad OAuth 2.0 Authorization Webhooks API
-  description: Documentation for Ironclad's OAuth 2.0 Implementation. More details on the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749).
-  version: '1'
+  title: Ironclad Public Webhooks API
+  description: Documentation for Ironclad's REST API.
   contact:
     name: Ironclad Support
     email: support@ironcladapp.com
+  version: '1'
 servers:
-- url: https://na1.ironcladapp.com/oauth
+- url: https://na1.ironcladapp.com/public/api/v1
   description: Production server
-- url: https://eu1.ironcladapp.com/oauth
+- url: https://eu1.ironcladapp.com/public/api/v1
   description: EU Production server
-- url: https://demo.ironcladapp.com/oauth
+- url: https://demo.ironcladapp.com/public/api/v1
   description: Demo server
 tags:
 - name: Webhooks
@@ -20,7 +20,10 @@ paths:
   /webhooks:
     post:
       summary: Create a Webhook
-      description: "Creates a webhook for the specified events. Send separate requests if you need to create webhooks for multiple target URLs. Each target URL may only have one active registration. \n\n**OAuth Scope required:** `public.webhooks.createWebhooks`"
+      description: 'Creates a webhook for the specified events. Send separate requests if you need to create webhooks for multiple target URLs. Each target URL may only have one active registration.
+
+
+        **OAuth Scope required:** `public.webhooks.createWebhooks`'
       operationId: create-a-webhook
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -68,7 +71,10 @@ paths:
       - Webhooks
     get:
       summary: List All Webhooks
-      description: "View all webhooks associated with a specific company with filtering available via query parameters. \n\n**OAuth Scope required:** `public.webhooks.readWebhooks`"
+      description: 'View all webhooks associated with a specific company with filtering available via query parameters.
+
+
+        **OAuth Scope required:** `public.webhooks.readWebhooks`'
       operationId: list-all-webhooks
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -113,7 +119,10 @@ paths:
   /webhooks/{id}:
     get:
       summary: Retrieve a Webhook
-      description: "View the data associated with a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.readWebhooks`"
+      description: 'View the data associated with a specific webhook.
+
+
+        **OAuth Scope required:** `public.webhooks.readWebhooks`'
       operationId: retrieve-a-webhook
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -141,7 +150,10 @@ paths:
       - Webhooks
     patch:
       summary: Update a Webhook
-      description: "Update the data associated with a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.updateWebhooks`"
+      description: 'Update the data associated with a specific webhook.
+
+
+        **OAuth Scope required:** `public.webhooks.updateWebhooks`'
       operationId: update-a-webhook
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -191,7 +203,10 @@ paths:
       - Webhooks
     delete:
       summary: Delete a Webhook
-      description: "Delete a specific webhook. \n\n**OAuth Scope required:** `public.webhooks.deleteWebhooks`"
+      description: 'Delete a specific webhook.
+
+
+        **OAuth Scope required:** `public.webhooks.deleteWebhooks`'
       operationId: delete-a-webhook
       parameters:
       - $ref: '#/components/parameters/XAsUserEmail'
@@ -245,7 +260,64 @@ paths:
       tags:
       - Webhooks
 components:
+  parameters:
+    QueryPageNumber:
+      name: page
+      in: query
+      description: The page number used when paginating through a list of results.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 100000000
+    QueryPageSize:
+      name: pageSize
+      in: query
+      description: A limit of the number of results to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    WebhookId:
+      name: id
+      in: path
+      description: The unique identifier of the webhook
+      schema:
+        type: string
+      required: true
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
   schemas:
+    WebhookTargetURLExistsBadRequestResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - INVALID_PARAM
+        message:
+          type: string
+          example: webhook already exists for event workflow_completed and target [SOME_EXISTING_TARGET_URL]
+        param:
+          type: string
+          example: tagetURL
     WebhookInvalidEventTypeBadRequestResponse:
       type: object
       properties:
@@ -258,47 +330,6 @@ components:
         param:
           type: string
           example: events
-    WebhookEvent:
-      type: string
-      description: Events that can be subscribed to using a webhook.
-      example: workflow_launched
-      enum:
-      - '*'
-      - workflow_launched
-      - workflow_updated
-      - workflow_cancelled
-      - workflow_completed
-      - workflow_approval_status_changed
-      - workflow_attribute_updated
-      - workflow_comment_added
-      - workflow_comment_removed
-      - workflow_comment_updated
-      - workflow_comment_reaction_added
-      - workflow_comment_reaction_removed
-      - workflow_counterparty_invite_sent
-      - workflow_counterparty_invite_revoked
-      - workflow_documents_added
-      - workflow_documents_removed
-      - workflow_documents_updated
-      - workflow_documents_renamed
-      - workflow_document_edited
-      - workflow_changed_turn
-      - workflow_paused
-      - workflow_resumed
-      - workflow_signature_packet_cancelled
-      - workflow_signature_packet_document_moved
-      - workflow_signature_packet_fully_signed
-      - workflow_signature_packet_sent
-      - workflow_signature_packet_signatures_collected
-      - workflow_signature_packet_signer_first_viewed
-      - workflow_signature_packet_signer_viewed
-      - workflow_signature_packet_uploaded
-      - workflow_signer_added
-      - workflow_signer_removed
-      - workflow_signer_reassigned
-      - workflow_step_updated
-      - workflow_roles_assigned
-      - record_contract_status_changed
     WebhookModel:
       description: Webhook object describing the subscribed events and target URL to be called.
       type: object
@@ -355,63 +386,47 @@ components:
           type: string
           format: date-time
           example: '2025-01-17T17:51:49.008Z'
-    WebhookTargetURLExistsBadRequestResponse:
-      type: object
-      properties:
-        code:
-          type: string
-          enum:
-          - INVALID_PARAM
-        message:
-          type: string
-          example: webhook already exists for event workflow_completed and target [SOME_EXISTING_TARGET_URL]
-        param:
-          type: string
-          example: tagetURL
-  parameters:
-    QueryPageSize:
-      name: pageSize
-      in: query
-      description: A limit of the number of results to return.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-        default: 20
-    QueryPageNumber:
-      name: page
-      in: query
-      description: The page number used when paginating through a list of results.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-        maximum: 100000000
-    WebhookId:
-      name: id
-      in: path
-      description: The unique identifier of the webhook
-      schema:
-        type: string
-      required: true
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    XAsUserId:
-      name: x-as-user-id
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
+    WebhookEvent:
+      type: string
+      description: Events that can be subscribed to using a webhook.
+      example: workflow_launched
+      enum:
+      - '*'
+      - workflow_launched
+      - workflow_updated
+      - workflow_cancelled
+      - workflow_completed
+      - workflow_approval_status_changed
+      - workflow_attribute_updated
+      - workflow_comment_added
+      - workflow_comment_removed
+      - workflow_comment_updated
+      - workflow_comment_reaction_added
+      - workflow_comment_reaction_removed
+      - workflow_counterparty_invite_sent
+      - workflow_counterparty_invite_revoked
+      - workflow_documents_added
+      - workflow_documents_removed
+      - workflow_documents_updated
+      - workflow_documents_renamed
+      - workflow_document_edited
+      - workflow_changed_turn
+      - workflow_paused
+      - workflow_resumed
+      - workflow_signature_packet_cancelled
+      - workflow_signature_packet_document_moved
+      - workflow_signature_packet_fully_signed
+      - workflow_signature_packet_sent
+      - workflow_signature_packet_signatures_collected
+      - workflow_signature_packet_signer_first_viewed
+      - workflow_signature_packet_signer_viewed
+      - workflow_signature_packet_uploaded
+      - workflow_signer_added
+      - workflow_signer_removed
+      - workflow_signer_reassigned
+      - workflow_step_updated
+      - workflow_roles_assigned
+      - record_contract_status_changed
   responses:
     WebhookCreateResponse400:
       description: Bad request error when creating webhook.
@@ -421,6 +436,140 @@ components:
             oneOf:
             - $ref: '#/components/schemas/WebhookInvalidEventTypeBadRequestResponse'
             - $ref: '#/components/schemas/WebhookTargetURLExistsBadRequestResponse'
+  securitySchemes:
+    sec0:
+      type: apiKey
+      in: header
+      name: Authorization
+      x-bearer-format: bearer
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://na1.ironcladapp.com/oauth/authorize
+          tokenUrl: https://na1.ironcladapp.com/oauth/token
+          scopes:
+            public.records.createRecords: Create Records
+            public.records.readRecords: Read Records
+            public.records.updateRecords: Update Records
+            public.records.deleteRecords: Delete Records
+            public.records.readSchemas: Read Record Schemas
+            public.records.createAttachments: Create Record Attachments
+            public.records.readAttachments: Read Record Attachments
+            public.records.deleteAttachments: Delete Record Attachments
+            public.records.createSmartImportRecords: Create Records via Smart Import
+            public.records.readSmartImportRecords: Read Record Import Details from Smart Import
+            public.records.applyContractAction: Apply Contract Actions
+            public.webhooks.createWebhooks: Create Webhooks
+            public.webhooks.readWebhooks: Read Webhooks
+            public.webhooks.updateWebhooks: Update Webhooks
+            public.webhooks.deleteWebhooks: Delete Webhooks
+            public.workflows.createWorkflows: Create Workflows
+            public.workflows.readWorkflows: Read Workflows
+            public.workflows.updateWorkflows: Update Workflows
+            public.workflows.readApprovals: Read Workflow Approvals
+            public.workflows.updateApprovals: Update Workflow Approvals
+            public.workflows.readSignatures: Read Workflow Signatures
+            public.workflows.uploadSignedDocuments: Upload Signed Workflow Documents
+            public.workflows.readParticipants: Read Workflow Participants
+            public.workflows.readRoleAssignees: Read Workflow Role Eligible Assignees
+            public.workflows.updateRoleAssignment: Update Workflow Role Assignment
+            public.workflows.revertToReview: Revert Workflows to Review
+            public.workflows.cancel: Cancel Workflows
+            public.workflows.pauseAndResume: Resume and Pause Workflows
+            public.workflows.createComments: Create Workflow Comments
+            public.workflows.readComments: Read Workflow Comments
+            public.workflows.createDocuments: Create Workflow Documents
+            public.workflows.readDocuments: Read Workflow Documents
+            public.workflows.updateSignaturePacket: Update Signature Packet
+            public.workflows.readSchemas: Read Workflow Schemas
+            public.workflows.readTurnHistory: Read Workflow Turn History
+            public.workflows.readEmailCommunications: Read Workflow Email Communications
+            public.workflows.readSignStatus: Read Sign Status
+            public.records.createComments: Create Workflow Comments
+            public.export.createReports: Create Reports
+            public.export.readReports: Read Reports
+            public.workflows.createSignatureRecipientUrls: Create Signature Request Recipient URLs
+            public.workflows.createEmbeddableSignerUrls: Create Embeddable Signature Request Recipient URLs
+            public.workflows.sendSignatureRequests: Send Signature Requests
+            public.workflows.cancelSignatureRequests: Cancel Signature Requests
+            public.workflows.deleteSigners: Delete Signers
+            public.workflows.remindSigners: Remind Signers
+            public.workflows.updateSigners: Update Signers
+            public.entities.readRelationshipTypes: Read Relationship Types
+            public.entities.updateEntities: Update Entities
+            public.entities.deleteEntities: Delete Entities
+            public.entities.createEntities: Create Entities
+            public.entities.readEntities: Read Entities
+            public.obligations.readObligations: Read Obligations
+            public.obligations.createObligations: Create Obligations
+            public.obligations.updateObligations: Update Obligations
+            public.obligations.deleteObligations: Delete Obligations
+            public.workflows.scheduleSendSignatureRequest: Schedule Send Signature Request
+            public.workflows.updateScheduledSignatureRequest: Update Scheduled Signature Request
+            public.workflows.deleteScheduledSignatureRequest: Delete Scheduled Signature Request
+            public.search.conversational: Run Conversational agent Search
+        clientCredentials:
+          tokenUrl: https://na1.ironcladapp.com/oauth/token
+          scopes:
+            public.records.createRecords: Create Records
+            public.records.readRecords: Read Records
+            public.records.updateRecords: Update Records
+            public.records.deleteRecords: Delete Records
+            public.records.readSchemas: Read Record Schemas
+            public.records.createAttachments: Create Record Attachments
+            public.records.readAttachments: Read Record Attachments
+            public.records.deleteAttachments: Delete Record Attachments
+            public.records.createSmartImportRecords: Create Records via Smart Import
+            public.records.readSmartImportRecords: Read Record Import Details from Smart Import
+            public.records.applyContractAction: Apply Contract Actions
+            public.webhooks.createWebhooks: Create Webhooks
+            public.webhooks.readWebhooks: Read Webhooks
+            public.webhooks.updateWebhooks: Update Webhooks
+            public.webhooks.deleteWebhooks: Delete Webhooks
+            public.workflows.createWorkflows: Create Workflows
+            public.workflows.readWorkflows: Read Workflows
+            public.workflows.updateWorkflows: Update Workflows
+            public.workflows.readApprovals: Read Workflow Approvals
+            public.workflows.updateApprovals: Update Workflow Approvals
+            public.workflows.readSignatures: Read Workflow Signatures
+            public.workflows.uploadSignedDocuments: Upload Signed Workflow Documents
+            public.workflows.readParticipants: Read Workflow Participants
+            public.workflows.readRoleAssignees: Read Workflow Role Eligible Assignees
+            public.workflows.updateRoleAssignment: Update Workflow Role Assignment
+            public.workflows.revertToReview: Revert Workflows to Review
+            public.workflows.cancel: Cancel Workflows
+            public.workflows.pauseAndResume: Resume and Pause Workflows
+            public.workflows.createComments: Create Workflow Comments
+            public.workflows.readComments: Read Workflow Comments
+            public.workflows.createDocuments: Create Workflow Documents
+            public.workflows.readDocuments: Read Workflow Documents
+            public.workflows.updateSignaturePacket: Update Signature Packet
+            public.workflows.readSchemas: Read Workflow Schemas
+            public.workflows.readTurnHistory: Read Workflow Turn History
+            public.workflows.readEmailCommunications: Read Workflow Email Communications
+            public.records.createComments: Create Workflow Comments
+            public.export.createReports: Create Reports
+            public.export.readReports: Read Reports
+            public.workflows.createSignatureRecipientUrls: Create Signature Request Recipient URLs
+            public.workflows.createEmbeddableSignerUrls: Create Embeddable Signature Request Recipient URLs
+            public.workflows.sendSignatureRequests: Send Signature Requests
+            public.workflows.cancelSignatureRequests: Cancel Signature Requests
+            public.workflows.deleteSigners: Delete Signers
+            public.workflows.remindSigners: Remind Signers
+            public.workflows.updateSigners: Update Signers
+            public.entities.readRelationshipTypes: Read Relationship Types
+            public.entities.updateEntities: Update Entities
+            public.entities.deleteEntities: Delete Entities
+            public.entities.createEntities: Create Entities
+            public.entities.readEntities: Read Entities
+            public.obligations.readObligations: Read Obligations
+            public.obligations.createObligations: Create Obligations
+            public.obligations.updateObligations: Update Obligations
+            public.obligations.deleteObligations: Delete Obligations
+            public.workflows.scheduleSendSignatureRequest: Schedule Send Signature Request
+            public.workflows.updateScheduledSignatureRequest: Update Scheduled Signature Request
+            public.workflows.deleteScheduledSignatureRequest: Delete Scheduled Signature Request
 x-readme:
   headers: []
   explorer-enabled: true
