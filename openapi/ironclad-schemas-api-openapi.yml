@@ -63,6 +63,123 @@ paths:
       tags:
       - Schemas
 components:
+  parameters:
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    SchemaId:
+      name: schemaId
+      in: path
+      description: A schema's unique id can be identified using the Retrieve all Schemas endpoint
+      schema:
+        type: string
+      required: true
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+  responses:
+    ServerErrorResponse500:
+      description: 500 Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:Error
+              status:
+                type: string
+                description: The HTTP status code expressed as a string.
+                example: '500'
+              detail:
+                type: string
+                description: A detailed human-readable message.
+                example: Internal server error
+    SchemasResponse200:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:ListResponse
+              totalResults:
+                type: integer
+                description: Total number of schemas.
+                example: 4
+              Resources:
+                type: array
+                description: Schema information.
+                items:
+                  anyOf:
+                  - $ref: '#/components/schemas/GroupSchema'
+                  - $ref: '#/components/schemas/CoreUserSchema'
+                  - $ref: '#/components/schemas/EnterpriseUserSchema'
+                  - $ref: '#/components/schemas/IroncladUserSchema'
+    SchemaResponse200:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            type: object
+            anyOf:
+            - $ref: '#/components/schemas/GroupSchema'
+            - $ref: '#/components/schemas/CoreUserSchema'
+            - $ref: '#/components/schemas/EnterpriseUserSchema'
+            - $ref: '#/components/schemas/IroncladUserSchema'
+    NotFoundResponse404:
+      description: 404 Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:Error
+              status:
+                type: string
+                description: The HTTP status code expressed as a string.
+                example: '404'
+              detail:
+                type: string
+                description: A detailed human-readable message.
+                example: Resource 6643ce2e22daa40f80025aee not found
+    ForbiddenResponse403:
+      description: 403 Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:Error
+              status:
+                type: string
+                description: The HTTP status code expressed as a string.
+                example: '403'
   schemas:
     CoreUserSchema:
       type: object
@@ -471,6 +588,245 @@ components:
               type: string
               format: uri
               example: https://na1.ironcladapp.com/scim/v2/Schemas/urn:ietf:params:scim:schemas:core:2.0:User
+    IroncladUserSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          example: urn:ietf:params:scim:schemas:extension:ironclad:2.0:User
+        name:
+          type: string
+          example: IroncladUser
+        description:
+          type: string
+          example: Ironclad User
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: string
+              multiValued:
+                type: boolean
+                example: false
+              description:
+                type: string
+                example: The email address (username) of the user's department head
+              required:
+                type: boolean
+                example: false
+              caseExact:
+                type: boolean
+                example: false
+              mutability:
+                type: string
+                example: readWrite
+              returned:
+                type: string
+                example: default
+              uniqueness:
+                type: string
+                example: none
+              name:
+                type: string
+                example: departmentHead
+        meta:
+          type: object
+          properties:
+            resourceType:
+              type: string
+              example: Schema
+            location:
+              type: string
+              format: uri
+              example: https://na1.ironcladapp.com/scim/v2/Schemas/urn:ietf:params:scim:schemas:extension:ironclad:2.0:User
+    GroupSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          example: urn:ietf:params:scim:schemas:core:2.0:Group
+        name:
+          type: string
+          example: Group
+        description:
+          type: string
+          example: Group
+        attributes:
+          type: array
+          items:
+            anyOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  example: string
+                multiValued:
+                  type: boolean
+                  example: false
+                description:
+                  type: string
+                  example: A human-readable name for the Group.  REQUIRED.
+                required:
+                  type: boolean
+                  example: true
+                caseExact:
+                  type: boolean
+                  example: false
+                mutability:
+                  type: string
+                  example: readWrite
+                returned:
+                  type: string
+                  example: default
+                uniqueness:
+                  type: string
+                  example: none
+                name:
+                  type: string
+                  example: displayName
+            - type: object
+              properties:
+                type:
+                  type: string
+                  example: complex
+                multiValued:
+                  type: boolean
+                  example: true
+                description:
+                  type: string
+                  example: A list of members of the Group.
+                required:
+                  type: boolean
+                  example: false
+                mutability:
+                  type: string
+                  example: readWrite
+                returned:
+                  type: string
+                  example: default
+                name:
+                  type: string
+                  example: members
+                subattributes:
+                  type: array
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          example: string
+                        multiValued:
+                          type: boolean
+                          example: false
+                        description:
+                          type: string
+                          example: Identifier of the member of this Group.
+                        required:
+                          type: boolean
+                          example: false
+                        caseExact:
+                          type: boolean
+                          example: false
+                        mutability:
+                          type: string
+                          example: immutable
+                        returned:
+                          type: string
+                          example: default
+                        uniqueness:
+                          type: string
+                          example: none
+                        name:
+                          type: string
+                          example: value
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          example: reference
+                        referenceTypes:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - User
+                            - Group
+                          example:
+                          - User
+                          - Group
+                        multiValued:
+                          type: boolean
+                          example: false
+                        description:
+                          type: string
+                          example: The URI corresponding to a SCIM resource that is a member of this Group.
+                        required:
+                          type: boolean
+                          example: false
+                        caseExact:
+                          type: boolean
+                          example: false
+                        mutability:
+                          type: string
+                          example: immutable
+                        returned:
+                          type: string
+                          example: default
+                        uniqueness:
+                          type: string
+                          example: none
+                        name:
+                          type: string
+                          example: $ref
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          example: string
+                        multiValued:
+                          type: boolean
+                          example: false
+                        description:
+                          type: string
+                          example: A label indicating the type of resource, e.g., 'User' or 'Group'.
+                        required:
+                          type: boolean
+                          example: false
+                        caseExact:
+                          type: boolean
+                          example: false
+                        canonicalValues:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                          - User, Group
+                        mutability:
+                          type: string
+                          example: immutable
+                        returned:
+                          type: string
+                          example: default
+                        uniqueness:
+                          type: string
+                          example: none
+                        name:
+                          type: string
+                          example: type
+        meta:
+          type: object
+          properties:
+            resourceType:
+              type: string
+              example: Schema
+            location:
+              type: string
+              format: uri
+              example: https://na1.ironcladapp.com/scim/v2/Schemas/urn:ietf:params:scim:schemas:core:2.0:Group
     EnterpriseUserSchema:
       type: object
       properties:
@@ -777,362 +1133,6 @@ components:
               type: string
               format: uri
               example: https://na1.ironcladapp.com/scim/v2/Schemas/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
-    IroncladUserSchema:
-      type: object
-      properties:
-        id:
-          type: string
-          example: urn:ietf:params:scim:schemas:extension:ironclad:2.0:User
-        name:
-          type: string
-          example: IroncladUser
-        description:
-          type: string
-          example: Ironclad User
-        attributes:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                example: string
-              multiValued:
-                type: boolean
-                example: false
-              description:
-                type: string
-                example: The email address (username) of the user's department head
-              required:
-                type: boolean
-                example: false
-              caseExact:
-                type: boolean
-                example: false
-              mutability:
-                type: string
-                example: readWrite
-              returned:
-                type: string
-                example: default
-              uniqueness:
-                type: string
-                example: none
-              name:
-                type: string
-                example: departmentHead
-        meta:
-          type: object
-          properties:
-            resourceType:
-              type: string
-              example: Schema
-            location:
-              type: string
-              format: uri
-              example: https://na1.ironcladapp.com/scim/v2/Schemas/urn:ietf:params:scim:schemas:extension:ironclad:2.0:User
-    GroupSchema:
-      type: object
-      properties:
-        id:
-          type: string
-          example: urn:ietf:params:scim:schemas:core:2.0:Group
-        name:
-          type: string
-          example: Group
-        description:
-          type: string
-          example: Group
-        attributes:
-          type: array
-          items:
-            anyOf:
-            - type: object
-              properties:
-                type:
-                  type: string
-                  example: string
-                multiValued:
-                  type: boolean
-                  example: false
-                description:
-                  type: string
-                  example: A human-readable name for the Group.  REQUIRED.
-                required:
-                  type: boolean
-                  example: true
-                caseExact:
-                  type: boolean
-                  example: false
-                mutability:
-                  type: string
-                  example: readWrite
-                returned:
-                  type: string
-                  example: default
-                uniqueness:
-                  type: string
-                  example: none
-                name:
-                  type: string
-                  example: displayName
-            - type: object
-              properties:
-                type:
-                  type: string
-                  example: complex
-                multiValued:
-                  type: boolean
-                  example: true
-                description:
-                  type: string
-                  example: A list of members of the Group.
-                required:
-                  type: boolean
-                  example: false
-                mutability:
-                  type: string
-                  example: readWrite
-                returned:
-                  type: string
-                  example: default
-                name:
-                  type: string
-                  example: members
-                subattributes:
-                  type: array
-                  items:
-                    anyOf:
-                    - type: object
-                      properties:
-                        type:
-                          type: string
-                          example: string
-                        multiValued:
-                          type: boolean
-                          example: false
-                        description:
-                          type: string
-                          example: Identifier of the member of this Group.
-                        required:
-                          type: boolean
-                          example: false
-                        caseExact:
-                          type: boolean
-                          example: false
-                        mutability:
-                          type: string
-                          example: immutable
-                        returned:
-                          type: string
-                          example: default
-                        uniqueness:
-                          type: string
-                          example: none
-                        name:
-                          type: string
-                          example: value
-                    - type: object
-                      properties:
-                        type:
-                          type: string
-                          example: reference
-                        referenceTypes:
-                          type: array
-                          items:
-                            type: string
-                            enum:
-                            - User
-                            - Group
-                          example:
-                          - User
-                          - Group
-                        multiValued:
-                          type: boolean
-                          example: false
-                        description:
-                          type: string
-                          example: The URI corresponding to a SCIM resource that is a member of this Group.
-                        required:
-                          type: boolean
-                          example: false
-                        caseExact:
-                          type: boolean
-                          example: false
-                        mutability:
-                          type: string
-                          example: immutable
-                        returned:
-                          type: string
-                          example: default
-                        uniqueness:
-                          type: string
-                          example: none
-                        name:
-                          type: string
-                          example: $ref
-                    - type: object
-                      properties:
-                        type:
-                          type: string
-                          example: string
-                        multiValued:
-                          type: boolean
-                          example: false
-                        description:
-                          type: string
-                          example: A label indicating the type of resource, e.g., 'User' or 'Group'.
-                        required:
-                          type: boolean
-                          example: false
-                        caseExact:
-                          type: boolean
-                          example: false
-                        canonicalValues:
-                          type: array
-                          items:
-                            type: string
-                          example:
-                          - User, Group
-                        mutability:
-                          type: string
-                          example: immutable
-                        returned:
-                          type: string
-                          example: default
-                        uniqueness:
-                          type: string
-                          example: none
-                        name:
-                          type: string
-                          example: type
-        meta:
-          type: object
-          properties:
-            resourceType:
-              type: string
-              example: Schema
-            location:
-              type: string
-              format: uri
-              example: https://na1.ironcladapp.com/scim/v2/Schemas/urn:ietf:params:scim:schemas:core:2.0:Group
-  parameters:
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    SchemaId:
-      name: schemaId
-      in: path
-      description: A schema's unique id can be identified using the Retrieve all Schemas endpoint
-      schema:
-        type: string
-      required: true
-    XAsUserId:
-      name: x-as-user-id
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
-  responses:
-    ForbiddenResponse403:
-      description: 403 Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:Error
-              status:
-                type: string
-                description: The HTTP status code expressed as a string.
-                example: '403'
-    SchemasResponse200:
-      description: 200 OK
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:ListResponse
-              totalResults:
-                type: integer
-                description: Total number of schemas.
-                example: 4
-              Resources:
-                type: array
-                description: Schema information.
-                items:
-                  anyOf:
-                  - $ref: '#/components/schemas/GroupSchema'
-                  - $ref: '#/components/schemas/CoreUserSchema'
-                  - $ref: '#/components/schemas/EnterpriseUserSchema'
-                  - $ref: '#/components/schemas/IroncladUserSchema'
-    ServerErrorResponse500:
-      description: 500 Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:Error
-              status:
-                type: string
-                description: The HTTP status code expressed as a string.
-                example: '500'
-              detail:
-                type: string
-                description: A detailed human-readable message.
-                example: Internal server error
-    NotFoundResponse404:
-      description: 404 Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:Error
-              status:
-                type: string
-                description: The HTTP status code expressed as a string.
-                example: '404'
-              detail:
-                type: string
-                description: A detailed human-readable message.
-                example: Resource 6643ce2e22daa40f80025aee not found
-    SchemaResponse200:
-      description: 200 OK
-      content:
-        application/json:
-          schema:
-            type: object
-            anyOf:
-            - $ref: '#/components/schemas/GroupSchema'
-            - $ref: '#/components/schemas/CoreUserSchema'
-            - $ref: '#/components/schemas/EnterpriseUserSchema'
-            - $ref: '#/components/schemas/IroncladUserSchema'
   securitySchemes:
     sec0:
       type: apiKey

@@ -218,106 +218,7 @@ paths:
       tags:
       - Groups
 components:
-  requestBodies:
-    GroupCreateRequestBody:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - schemas
-            - displayName
-            properties:
-              schemas:
-                type: array
-                default:
-                - urn:ietf:params:scim:schemas:core:2.0:Group
-                items:
-                  type: string
-              displayName:
-                type: string
-                description: The name you want to give the group in Ironclad.
-              members:
-                type: array
-                items:
-                  properties:
-                    value:
-                      type: string
-                      description: The unique id of the user. User Ids can be found by filtering the Retrieve all Users endpoint.
-                  required:
-                  - value
-                  type: object
   responses:
-    GroupResponse201:
-      description: 201 Created
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GroupResponseObject'
-    GroupsResponse200:
-      description: 200 OK
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:ListResponse
-              totalResults:
-                type: integer
-                description: The total number of groups that match this filter. This may be larger than the number of groups in this page, in which case pagination may be used to retrieve the next page of results.
-                example: 2
-                default: 0
-              Resources:
-                type: array
-                description: The current page of user results.
-                items:
-                  $ref: '#/components/schemas/GroupResponseObject'
-              startIndex:
-                type: integer
-                description: The 1-based index of the first result in the current set of list results.
-                example: 1
-                default: 0
-              itemsPerPage:
-                type: integer
-                description: Specifies the maximum number of resources that can be returned in a single page of results.
-                example: 25
-                default: 0
-    GroupResponse400:
-      description: 400 Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:Error
-              status:
-                type: string
-                description: The HTTP status code expressed as a string.
-                example: '400'
-              scimType:
-                type: string
-                description: The SCIM detail error keyword.
-                example: invalidValue
-              detail:
-                type: string
-                description: A detailed human-readable message.
-                example: 'Invalid value at displayName: 123'
-    GroupResponse204:
-      description: 204 No Content
-    GroupResponse200:
-      description: 200 OK
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GroupResponseObject'
     GroupFilterResponse400:
       description: 400 Bad Request
       content:
@@ -362,6 +263,92 @@ components:
                 type: string
                 description: A detailed human-readable message.
                 example: Internal server error
+    AlreadyExistsResponse409:
+      description: 409 Conflict
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:Error
+              status:
+                type: string
+                description: The HTTP status code expressed as a string.
+                example: '409'
+    GroupsResponse200:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:ListResponse
+              totalResults:
+                type: integer
+                description: The total number of groups that match this filter. This may be larger than the number of groups in this page, in which case pagination may be used to retrieve the next page of results.
+                example: 2
+                default: 0
+              Resources:
+                type: array
+                description: The current page of user results.
+                items:
+                  $ref: '#/components/schemas/GroupResponseObject'
+              startIndex:
+                type: integer
+                description: The 1-based index of the first result in the current set of list results.
+                example: 1
+                default: 0
+              itemsPerPage:
+                type: integer
+                description: Specifies the maximum number of resources that can be returned in a single page of results.
+                example: 25
+                default: 0
+    GroupResponse200:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GroupResponseObject'
+    GroupResponse201:
+      description: 201 Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GroupResponseObject'
+    GroupResponse204:
+      description: 204 No Content
+    GroupResponse400:
+      description: 400 Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schemas:
+                type: array
+                items:
+                  type: string
+                  example: urn:ietf:params:scim:api:messages:2.0:Error
+              status:
+                type: string
+                description: The HTTP status code expressed as a string.
+                example: '400'
+              scimType:
+                type: string
+                description: The SCIM detail error keyword.
+                example: invalidValue
+              detail:
+                type: string
+                description: A detailed human-readable message.
+                example: 'Invalid value at displayName: 123'
     NotFoundResponse404:
       description: 404 Not Found
       content:
@@ -382,22 +369,6 @@ components:
                 type: string
                 description: A detailed human-readable message.
                 example: Resource 6643ce2e22daa40f80025aee not found
-    AlreadyExistsResponse409:
-      description: 409 Conflict
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              schemas:
-                type: array
-                items:
-                  type: string
-                  example: urn:ietf:params:scim:api:messages:2.0:Error
-              status:
-                type: string
-                description: The HTTP status code expressed as a string.
-                example: '409'
     ForbiddenResponse403:
       description: 403 Forbidden
       content:
@@ -415,21 +386,6 @@ components:
                 description: The HTTP status code expressed as a string.
                 example: '403'
   parameters:
-    StartIndex:
-      name: startIndex
-      in: query
-      description: The starting index for retrieving this resource. Resources are indexed based on when they were first added to Ironclad.
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-    ExcludedAttributes:
-      name: excludedAttributes
-      in: query
-      description: A comma-separated list of attributes to exclude from the resources in the response.
-      schema:
-        type: string
     XAsUserEmail:
       name: x-as-user-email
       in: header
@@ -445,6 +401,12 @@ components:
       schema:
         type: string
       required: true
+    ExcludedAttributes:
+      name: excludedAttributes
+      in: query
+      description: A comma-separated list of attributes to exclude from the resources in the response.
+      schema:
+        type: string
     XAsUserId:
       name: x-as-user-id
       in: header
@@ -453,6 +415,15 @@ components:
       schema:
         type: string
         example: 5f0375c4cdc1927a3c5edcd3
+    StartIndex:
+      name: startIndex
+      in: query
+      description: The starting index for retrieving this resource. Resources are indexed based on when they were first added to Ironclad.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
     Count:
       name: count
       in: query
@@ -518,6 +489,35 @@ components:
               format: https-url
               description: The URI of the Group resource being returned.
               example: https://na1.ironcladapp.com/scim/v2/Groups/67e4488c605caf0d8aa2e5c6
+  requestBodies:
+    GroupCreateRequestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - schemas
+            - displayName
+            properties:
+              schemas:
+                type: array
+                default:
+                - urn:ietf:params:scim:schemas:core:2.0:Group
+                items:
+                  type: string
+              displayName:
+                type: string
+                description: The name you want to give the group in Ironclad.
+              members:
+                type: array
+                items:
+                  properties:
+                    value:
+                      type: string
+                      description: The unique id of the user. User Ids can be found by filtering the Retrieve all Users endpoint.
+                  required:
+                  - value
+                  type: object
   securitySchemes:
     sec0:
       type: apiKey

@@ -260,64 +260,7 @@ paths:
       tags:
       - Webhooks
 components:
-  parameters:
-    QueryPageNumber:
-      name: page
-      in: query
-      description: The page number used when paginating through a list of results.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-        maximum: 100000000
-    QueryPageSize:
-      name: pageSize
-      in: query
-      description: A limit of the number of results to return.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-        default: 20
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    WebhookId:
-      name: id
-      in: path
-      description: The unique identifier of the webhook
-      schema:
-        type: string
-      required: true
-    XAsUserId:
-      name: x-as-user-id
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
   schemas:
-    WebhookTargetURLExistsBadRequestResponse:
-      type: object
-      properties:
-        code:
-          type: string
-          enum:
-          - INVALID_PARAM
-        message:
-          type: string
-          example: webhook already exists for event workflow_completed and target [SOME_EXISTING_TARGET_URL]
-        param:
-          type: string
-          example: tagetURL
     WebhookInvalidEventTypeBadRequestResponse:
       type: object
       properties:
@@ -386,6 +329,19 @@ components:
           type: string
           format: date-time
           example: '2025-01-17T17:51:49.008Z'
+    WebhookTargetURLExistsBadRequestResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - INVALID_PARAM
+        message:
+          type: string
+          example: webhook already exists for event workflow_completed and target [SOME_EXISTING_TARGET_URL]
+        param:
+          type: string
+          example: tagetURL
     WebhookEvent:
       type: string
       description: Events that can be subscribed to using a webhook.
@@ -427,6 +383,50 @@ components:
       - workflow_step_updated
       - workflow_roles_assigned
       - record_contract_status_changed
+  parameters:
+    WebhookId:
+      name: id
+      in: path
+      description: The unique identifier of the webhook
+      schema:
+        type: string
+      required: true
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+    QueryPageNumber:
+      name: page
+      in: query
+      description: The page number used when paginating through a list of results.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 100000000
+    QueryPageSize:
+      name: pageSize
+      in: query
+      description: A limit of the number of results to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
   responses:
     WebhookCreateResponse400:
       description: Bad request error when creating webhook.

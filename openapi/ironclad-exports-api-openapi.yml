@@ -159,12 +159,6 @@ paths:
       tags:
       - Exports
 components:
-  requestBodies:
-    DataExportRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/DataExportRequestModel'
   parameters:
     XAsUserEmail:
       name: x-as-user-email
@@ -182,21 +176,13 @@ components:
       schema:
         type: string
         example: 5f0375c4cdc1927a3c5edcd3
+  requestBodies:
+    DataExportRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DataExportRequestModel'
   schemas:
-    DataExportConfigWorkflowActivities:
-      title: Workflow activities export config
-      type: object
-      additionalProperties: false
-      properties:
-        metadataProperties:
-          type: array
-          items:
-            type: string
-            example: counterpartyName
-          description: Array of available custom metadata properties to include in export. Contact support for assistance on locating your custom metadata properties.
-        includeCommentDetail:
-          type: boolean
-          description: Include comment details in export.
     DataExportConfigAuditLog:
       title: Audit log export config
       type: object
@@ -249,6 +235,20 @@ components:
           - $ref: '#/components/schemas/DataExportConfigAuditLog'
       required:
       - exportType
+    DataExportConfigWorkflowActivities:
+      title: Workflow activities export config
+      type: object
+      additionalProperties: false
+      properties:
+        metadataProperties:
+          type: array
+          items:
+            type: string
+            example: counterpartyName
+          description: Array of available custom metadata properties to include in export. Contact support for assistance on locating your custom metadata properties.
+        includeCommentDetail:
+          type: boolean
+          description: Include comment details in export.
   securitySchemes:
     sec0:
       type: apiKey
