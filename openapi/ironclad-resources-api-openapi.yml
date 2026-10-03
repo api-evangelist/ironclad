@@ -219,6 +219,15 @@ components:
         type: string
         example: 5f0375c4cdc1927a3c5edcd3
   schemas:
+    InvalidTokenError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          example: invalid authentication token
     ExpiredTokenError:
       type: object
       properties:
@@ -237,15 +246,6 @@ components:
         message:
           type: string
           example: token has been revoked
-    InvalidTokenError:
-      type: object
-      properties:
-        code:
-          type: string
-          example: UNAUTHORIZED
-        message:
-          type: string
-          example: invalid authentication token
 x-readme:
   headers: []
   explorer-enabled: true

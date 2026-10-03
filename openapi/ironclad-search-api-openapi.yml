@@ -85,19 +85,6 @@ paths:
       - Search
 components:
   responses:
-    ForbiddenError403:
-      description: '403'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: string
-                example: FORBIDDEN
-              message:
-                type: string
-                example: access forbidden
     UnauthorizedError401:
       description: '401'
       content:
@@ -126,6 +113,19 @@ components:
               value:
                 code: UNAUTHORIZED
                 message: token has expired
+    ForbiddenError403:
+      description: '403'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FORBIDDEN
+              message:
+                type: string
+                example: access forbidden
     BadRequestError400:
       description: '400'
       content:
