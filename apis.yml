@@ -1,5 +1,8 @@
 aid: ironclad
 url: https://raw.githubusercontent.com/api-evangelist/ironclad/refs/heads/main/apis.yml
+x-docs-platform: readme
+x-docs-platform-confidence: high
+x-docs-platform-checked: 2026-10-03
 apis:
 - aid: ironclad:ironclad-clickwrap-api
   name: Ironclad Clickwrap API
@@ -637,6 +640,7 @@ tags:
 - Authentication
 - SCIM
 - Webhook
+- Contract Management
 tags_raw:
 - Contract Lifecycle Management
 - CLM
@@ -651,6 +655,7 @@ tags_raw:
 - OAuth
 - SCIM
 - Webhooks
+- Contract Management
 kind: contract
 deliveryModel:
   model: saas
@@ -680,6 +685,9 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/ironclad.png
 access: 3rd-Party
 common:
+- type: CapabilityMap
+  url: capabilities/ironclad-capability-edges.yml
+  name: Ironclad Business Capability Map
 - type: Website
   url: https://www.ironcladapp.com/
 - type: AgenticAccess
