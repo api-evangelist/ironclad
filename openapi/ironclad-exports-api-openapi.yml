@@ -159,6 +159,23 @@ paths:
       tags:
       - Exports
 components:
+  parameters:
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
   schemas:
     DataExportConfigAuditLog:
       title: Audit log export config
@@ -176,6 +193,20 @@ components:
           - user_entitlement
           - integration_errors
           description: Array of categories of audit log events to include in the export.
+    DataExportConfigWorkflowActivities:
+      title: Workflow activities export config
+      type: object
+      additionalProperties: false
+      properties:
+        metadataProperties:
+          type: array
+          items:
+            type: string
+            example: counterpartyName
+          description: Array of available custom metadata properties to include in export. Contact support for assistance on locating your custom metadata properties.
+        includeCommentDetail:
+          type: boolean
+          description: Include comment details in export.
     DataExportRequestModel:
       type: object
       additionalProperties: false
@@ -212,43 +243,12 @@ components:
           - $ref: '#/components/schemas/DataExportConfigAuditLog'
       required:
       - exportType
-    DataExportConfigWorkflowActivities:
-      title: Workflow activities export config
-      type: object
-      additionalProperties: false
-      properties:
-        metadataProperties:
-          type: array
-          items:
-            type: string
-            example: counterpartyName
-          description: Array of available custom metadata properties to include in export. Contact support for assistance on locating your custom metadata properties.
-        includeCommentDetail:
-          type: boolean
-          description: Include comment details in export.
   requestBodies:
     DataExportRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/DataExportRequestModel'
-  parameters:
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    XAsUserId:
-      name: x-as-user-id
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
   securitySchemes:
     sec0:
       type: apiKey

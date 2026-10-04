@@ -260,60 +260,60 @@ paths:
       tags:
       - Webhooks
 components:
+  parameters:
+    QueryPageSize:
+      name: pageSize
+      in: query
+      description: A limit of the number of results to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+    QueryPageNumber:
+      name: page
+      in: query
+      description: The page number used when paginating through a list of results.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 100000000
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    WebhookId:
+      name: id
+      in: path
+      description: The unique identifier of the webhook
+      schema:
+        type: string
+      required: true
+  responses:
+    WebhookCreateResponse400:
+      description: Bad request error when creating webhook.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/WebhookInvalidEventTypeBadRequestResponse'
+            - $ref: '#/components/schemas/WebhookTargetURLExistsBadRequestResponse'
   schemas:
-    WebhookInvalidEventTypeBadRequestResponse:
-      type: object
-      properties:
-        code:
-          type: string
-          example: INVALID_PARAM
-        message:
-          type: string
-          example: invalid event type; *, workflow_launched, workflow_updated, workflow_cancelled, workflow_completed, workflow_approval_status_changed, workflow_attribute_updated, workflow_changed_turn, workflow_comment_reaction_added, workflow_comment_reaction_removed, workflow_comment_added, workflow_comment_removed, workflow_comment_updated, workflow_counterparty_invite_sent, workflow_counterparty_invite_revoked, workflow_documents_added, workflow_documents_removed, workflow_documents_updated, workflow_documents_renamed, workflow_document_edited, workflow_paused, workflow_resumed, workflow_signature_packet_sent, workflow_signature_packet_uploaded, or workflow_signature_packet_cancelled, workflow_signer_added, workflow_signer_removed, workflow_signer_reassigned are acceptable event types
-        param:
-          type: string
-          example: events
-    WebhookEvent:
-      type: string
-      description: Events that can be subscribed to using a webhook.
-      example: workflow_launched
-      enum:
-      - '*'
-      - workflow_launched
-      - workflow_updated
-      - workflow_cancelled
-      - workflow_completed
-      - workflow_approval_status_changed
-      - workflow_attribute_updated
-      - workflow_comment_added
-      - workflow_comment_removed
-      - workflow_comment_updated
-      - workflow_comment_reaction_added
-      - workflow_comment_reaction_removed
-      - workflow_counterparty_invite_sent
-      - workflow_counterparty_invite_revoked
-      - workflow_documents_added
-      - workflow_documents_removed
-      - workflow_documents_updated
-      - workflow_documents_renamed
-      - workflow_document_edited
-      - workflow_changed_turn
-      - workflow_paused
-      - workflow_resumed
-      - workflow_signature_packet_cancelled
-      - workflow_signature_packet_document_moved
-      - workflow_signature_packet_fully_signed
-      - workflow_signature_packet_sent
-      - workflow_signature_packet_signatures_collected
-      - workflow_signature_packet_signer_first_viewed
-      - workflow_signature_packet_signer_viewed
-      - workflow_signature_packet_uploaded
-      - workflow_signer_added
-      - workflow_signer_removed
-      - workflow_signer_reassigned
-      - workflow_step_updated
-      - workflow_roles_assigned
-      - record_contract_status_changed
     WebhookTargetURLExistsBadRequestResponse:
       type: object
       properties:
@@ -327,6 +327,18 @@ components:
         param:
           type: string
           example: tagetURL
+    WebhookInvalidEventTypeBadRequestResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: INVALID_PARAM
+        message:
+          type: string
+          example: invalid event type; *, workflow_launched, workflow_updated, workflow_cancelled, workflow_completed, workflow_approval_status_changed, workflow_attribute_updated, workflow_changed_turn, workflow_comment_reaction_added, workflow_comment_reaction_removed, workflow_comment_added, workflow_comment_removed, workflow_comment_updated, workflow_counterparty_invite_sent, workflow_counterparty_invite_revoked, workflow_documents_added, workflow_documents_removed, workflow_documents_updated, workflow_documents_renamed, workflow_document_edited, workflow_paused, workflow_resumed, workflow_signature_packet_sent, workflow_signature_packet_uploaded, or workflow_signature_packet_cancelled, workflow_signer_added, workflow_signer_removed, workflow_signer_reassigned are acceptable event types
+        param:
+          type: string
+          example: events
     WebhookModel:
       description: Webhook object describing the subscribed events and target URL to be called.
       type: object
@@ -383,59 +395,47 @@ components:
           type: string
           format: date-time
           example: '2025-01-17T17:51:49.008Z'
-  responses:
-    WebhookCreateResponse400:
-      description: Bad request error when creating webhook.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/WebhookInvalidEventTypeBadRequestResponse'
-            - $ref: '#/components/schemas/WebhookTargetURLExistsBadRequestResponse'
-  parameters:
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    QueryPageNumber:
-      name: page
-      in: query
-      description: The page number used when paginating through a list of results.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-        maximum: 100000000
-    QueryPageSize:
-      name: pageSize
-      in: query
-      description: A limit of the number of results to return.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-        default: 20
-    WebhookId:
-      name: id
-      in: path
-      description: The unique identifier of the webhook
-      schema:
-        type: string
-      required: true
-    XAsUserId:
-      name: x-as-user-id
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
+    WebhookEvent:
+      type: string
+      description: Events that can be subscribed to using a webhook.
+      example: workflow_launched
+      enum:
+      - '*'
+      - workflow_launched
+      - workflow_updated
+      - workflow_cancelled
+      - workflow_completed
+      - workflow_approval_status_changed
+      - workflow_attribute_updated
+      - workflow_comment_added
+      - workflow_comment_removed
+      - workflow_comment_updated
+      - workflow_comment_reaction_added
+      - workflow_comment_reaction_removed
+      - workflow_counterparty_invite_sent
+      - workflow_counterparty_invite_revoked
+      - workflow_documents_added
+      - workflow_documents_removed
+      - workflow_documents_updated
+      - workflow_documents_renamed
+      - workflow_document_edited
+      - workflow_changed_turn
+      - workflow_paused
+      - workflow_resumed
+      - workflow_signature_packet_cancelled
+      - workflow_signature_packet_document_moved
+      - workflow_signature_packet_fully_signed
+      - workflow_signature_packet_sent
+      - workflow_signature_packet_signatures_collected
+      - workflow_signature_packet_signer_first_viewed
+      - workflow_signature_packet_signer_viewed
+      - workflow_signature_packet_uploaded
+      - workflow_signer_added
+      - workflow_signer_removed
+      - workflow_signer_reassigned
+      - workflow_step_updated
+      - workflow_roles_assigned
+      - record_contract_status_changed
   securitySchemes:
     sec0:
       type: apiKey

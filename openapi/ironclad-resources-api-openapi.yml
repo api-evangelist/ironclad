@@ -202,14 +202,6 @@ paths:
                     example: NOT_FOUND
 components:
   parameters:
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
     XAsUserId:
       name: x-as-user-id
       in: header
@@ -218,16 +210,15 @@ components:
       schema:
         type: string
         example: 5f0375c4cdc1927a3c5edcd3
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
   schemas:
-    InvalidTokenError:
-      type: object
-      properties:
-        code:
-          type: string
-          example: UNAUTHORIZED
-        message:
-          type: string
-          example: invalid authentication token
     ExpiredTokenError:
       type: object
       properties:
@@ -237,6 +228,15 @@ components:
         message:
           type: string
           example: token has expired
+    InvalidTokenError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          example: invalid authentication token
     RevokedTokenError:
       type: object
       properties:

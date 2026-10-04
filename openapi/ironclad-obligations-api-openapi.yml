@@ -256,16 +256,87 @@ paths:
       tags:
       - Obligations
 components:
+  parameters:
+    QueryPageSize:
+      name: pageSize
+      in: query
+      description: A limit of the number of results to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+    QuerySortField:
+      name: sortField
+      in: query
+      description: The field to sort by. Default is 'name'.
+      schema:
+        type: string
+        enum:
+        - name
+        - lastUpdated
+        default: name
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    QueryPageNumber:
+      name: page
+      in: query
+      description: The page number used when paginating through a list of results.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 100000000
+    QuerySortDirection:
+      name: sortDirection
+      in: query
+      description: The direction to sort by. Default is 'DESC'.
+      schema:
+        type: string
+        enum:
+        - ASC
+        - DESC
+        default: DESC
+    ObligationFilter:
+      name: filter
+      in: query
+      description: "Filter obligations using a formula. The obligation property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
+      schema:
+        type: string
+      example: Equals([name], 'Obligation Name')
   schemas:
-    RecordProperties:
+    ClauseLanguagePositionCustom:
+      title: Clause Language Position Custom
       type: object
-      description: The record properties associated with the record
-      additionalProperties:
-        $ref: '#/components/schemas/RecordPropertyType'
-    RecordPropertyDuration:
-      title: Record Property Duration
+      description: A custom clause language position
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The source type of the custom clause
+          enum:
+          - custom
+          example: custom
+    RecordPropertyAddress:
       type: object
-      description: A duration-type record property
+      description: An address-type record property
       required:
       - type
       - value
@@ -274,16 +345,115 @@ components:
           type: string
           description: The data type of the property
           enum:
-          - duration
-          example: duration
+          - address
+          example: address
         value:
-          type: string
-          description: The duration value of the property in ISO8601 format
-          example: P10Y3M2W1D
+          type: object
+          description: The address
+          example:
+            lines:
+            - 123 Main St.
+            locality: Los Angeles
+            region: CA
+            postcode: '90001'
+          properties:
+            lines:
+              type: array
+              maxLength: 4
+              items:
+                type: string
+              description: Address Lines (Street, Apt., etc.)
+            locality:
+              type: string
+              description: Locality (City, Town, etc)
+            country:
+              type: string
+              description: Country
+            region:
+              type: string
+              description: Region (State, Province, etc)
+            postcode:
+              type: string
+              description: Postcode (ZIP code, etc)
+            raw:
+              type: string
+              description: A raw address string, useful when address is not stored in a structured way
         originalValue:
+          type: object
+          description: The original address before amendment (only present when property is amended)
+          example:
+            lines:
+            - 456 Old St.
+            locality: San Francisco
+            region: CA
+            postcode: '94102'
+          properties:
+            lines:
+              type: array
+              maxLength: 4
+              items:
+                type: string
+              description: Original Address Lines (Street, Apt., etc.)
+            locality:
+              type: string
+              description: Original Locality (City, Town, etc)
+            country:
+              type: string
+              description: Original Country
+            region:
+              type: string
+              description: Original Region (State, Province, etc)
+            postcode:
+              type: string
+              description: Original Postcode (ZIP code, etc)
+            raw:
+              type: string
+              description: A raw original address string, useful when address is not stored in a structured way
+    RecordPropertyNumber:
+      title: Record Property Number
+      type: object
+      description: A number-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
           type: string
+          description: The data type of the property
+          enum:
+          - number
+          example: number
+        value:
+          type: integer
+          description: The number value of the property
+          example: 123
+        originalValue:
+          type: integer
           description: The original value of the property before amendment (only present when property is amended)
-          example: P5Y1M1W
+          example: 100
+    ClauseLanguagePositionPlaybook:
+      title: Clause Language Position Playbook
+      type: object
+      description: A playbook clause language position
+      required:
+      - type
+      - name
+      - preferred
+      properties:
+        type:
+          type: string
+          description: The source type of the playbook clause
+          enum:
+          - playbook
+          example: playbook
+        name:
+          type: string
+          description: The name of the playbook clause
+          example: Standard
+        preferred:
+          type: boolean
+          description: Whether the playbook clause is the preferred language
+          example: true
     RecordPropertyClause:
       type: object
       description: A clause-type record property
@@ -365,6 +535,118 @@ components:
                   type: integer
                   description: The page number of the clause in the document
                   example: 1
+    RecordPropertyBoolean:
+      title: Record Property Boolean
+      type: object
+      description: A true/false boolean-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - boolean
+          example: boolean
+        value:
+          type: boolean
+          description: The boolean value of the property
+          example: true
+        originalValue:
+          type: boolean
+          description: The original value of the property before amendment (only present when property is amended)
+          example: false
+    RecordPropertyPlaybookClause:
+      type: object
+      description: A playbook-based clause-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - playbookClause
+          example: playbookClause
+        value:
+          type: string
+          description: The playbook clause name
+          example: Standard
+    RecordPropertyType:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/RecordPropertyString'
+      - $ref: '#/components/schemas/RecordPropertyNumber'
+      - $ref: '#/components/schemas/RecordPropertyBoolean'
+      - $ref: '#/components/schemas/RecordPropertyDate'
+      - $ref: '#/components/schemas/RecordPropertyDuration'
+      - $ref: '#/components/schemas/RecordPropertyEmail'
+      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
+      - $ref: '#/components/schemas/RecordPropertyClause'
+      - $ref: '#/components/schemas/RecordPropertyPlaybookClause'
+      - $ref: '#/components/schemas/RecordPropertyAddress'
+      - $ref: '#/components/schemas/RecordPropertyArray'
+      - $ref: '#/components/schemas/RecordPropertyReference'
+    RecordPropertyDate:
+      title: Record Property Date
+      type: object
+      description: A date-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - date
+          example: date
+        value:
+          type: string
+          description: The date value of the property in ISO8601 format
+          format: date-time
+          example: '1992-10-04T09:31:00Z'
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          format: date-time
+          example: '1990-01-01T00:00:00Z'
+    ObligationTypeKey:
+      description: The key of the obligation type to be added to the obligation. Only one obligation type can be added or updated per obligation, currently. More info on obligation types can be found in the [Obligation Types](https://support.ironcladapp.com/hc/en-us/articles/31128654301079-Create-and-Manage-Obligations) article.
+      type: array
+      items:
+        type: string
+      maxItems: 1
+      minItems: 1
+    EntityProperties:
+      type: object
+      description: The entity properties associated with the entity
+      additionalProperties:
+        $ref: '#/components/schemas/EntityPropertyType'
+    RecordPropertyString:
+      title: Record Property String
+      type: object
+      description: A text-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - string
+          example: string
+        value:
+          type: string
+          description: The string value of the property
+          example: Foobar
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          example: Original Value
     RecordPropertyReference:
       type: object
       description: A reference-type record property that points to another record
@@ -430,154 +712,6 @@ components:
               example: ENTITY-2
             attributes:
               $ref: '#/components/schemas/EntityProperties'
-    ObligationModel:
-      type: object
-      properties:
-        id:
-          description: The unique identifier of the obligation
-          type: string
-          example: 123e4567-e89b-12d3-a456-426614174000
-        ironcladId:
-          description: Readable Ironclad ID of the obligation
-          type: string
-          example: OB-1
-        name:
-          description: The name of the obligation
-          type: string
-          example: Obligation XYZ
-        properties:
-          $ref: '#/components/schemas/RecordProperties'
-        lastUpdated:
-          description: The last updated date of the obligation
-          type: string
-          example: '2021-01-01T00:00:00Z'
-        namedTypeIds:
-          description: The unique identifiers of the types associated with the obligation. These IDs are tied with the Named Type of obligations, like 'Breach Notice', 'Compliance' and so on.
-          type: array
-          items:
-            type: string
-            example: eda20988-6b99-404b-99dc-866b84b63883
-        parentReadableId:
-          description: The parent readable id of the obligation
-          type: string
-          example: IC-1
-        parentRecordName:
-          description: The parent record name of the obligation
-          type: string
-          example: Parent Record
-      required:
-      - id
-      - ironcladId
-      - name
-      - properties
-    RecordPropertyNumber:
-      title: Record Property Number
-      type: object
-      description: A number-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - number
-          example: number
-        value:
-          type: integer
-          description: The number value of the property
-          example: 123
-        originalValue:
-          type: integer
-          description: The original value of the property before amendment (only present when property is amended)
-          example: 100
-    ClauseLanguagePositionPlaybook:
-      title: Clause Language Position Playbook
-      type: object
-      description: A playbook clause language position
-      required:
-      - type
-      - name
-      - preferred
-      properties:
-        type:
-          type: string
-          description: The source type of the playbook clause
-          enum:
-          - playbook
-          example: playbook
-        name:
-          type: string
-          description: The name of the playbook clause
-          example: Standard
-        preferred:
-          type: boolean
-          description: Whether the playbook clause is the preferred language
-          example: true
-    RecordPropertyPlaybookClause:
-      type: object
-      description: A playbook-based clause-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - playbookClause
-          example: playbookClause
-        value:
-          type: string
-          description: The playbook clause name
-          example: Standard
-    RecordPropertyDate:
-      title: Record Property Date
-      type: object
-      description: A date-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - date
-          example: date
-        value:
-          type: string
-          description: The date value of the property in ISO8601 format
-          format: date-time
-          example: '1992-10-04T09:31:00Z'
-        originalValue:
-          type: string
-          description: The original value of the property before amendment (only present when property is amended)
-          format: date-time
-          example: '1990-01-01T00:00:00Z'
-    RecordPropertyString:
-      title: Record Property String
-      type: object
-      description: A text-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - string
-          example: string
-        value:
-          type: string
-          description: The string value of the property
-          example: Foobar
-        originalValue:
-          type: string
-          description: The original value of the property before amendment (only present when property is amended)
-          example: Original Value
     RecordPropertyArray:
       title: Record Property Array
       type: object
@@ -600,88 +734,6 @@ components:
           example:
           - red
           - blue
-    ObligationTypeKey:
-      description: The key of the obligation type to be added to the obligation. Only one obligation type can be added or updated per obligation, currently. More info on obligation types can be found in the [Obligation Types](https://support.ironcladapp.com/hc/en-us/articles/31128654301079-Create-and-Manage-Obligations) article.
-      type: array
-      items:
-        type: string
-      maxItems: 1
-      minItems: 1
-    RecordPropertyAddress:
-      type: object
-      description: An address-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - address
-          example: address
-        value:
-          type: object
-          description: The address
-          example:
-            lines:
-            - 123 Main St.
-            locality: Los Angeles
-            region: CA
-            postcode: '90001'
-          properties:
-            lines:
-              type: array
-              maxLength: 4
-              items:
-                type: string
-              description: Address Lines (Street, Apt., etc.)
-            locality:
-              type: string
-              description: Locality (City, Town, etc)
-            country:
-              type: string
-              description: Country
-            region:
-              type: string
-              description: Region (State, Province, etc)
-            postcode:
-              type: string
-              description: Postcode (ZIP code, etc)
-            raw:
-              type: string
-              description: A raw address string, useful when address is not stored in a structured way
-        originalValue:
-          type: object
-          description: The original address before amendment (only present when property is amended)
-          example:
-            lines:
-            - 456 Old St.
-            locality: San Francisco
-            region: CA
-            postcode: '94102'
-          properties:
-            lines:
-              type: array
-              maxLength: 4
-              items:
-                type: string
-              description: Original Address Lines (Street, Apt., etc.)
-            locality:
-              type: string
-              description: Original Locality (City, Town, etc)
-            country:
-              type: string
-              description: Original Country
-            region:
-              type: string
-              description: Original Region (State, Province, etc)
-            postcode:
-              type: string
-              description: Original Postcode (ZIP code, etc)
-            raw:
-              type: string
-              description: A raw original address string, useful when address is not stored in a structured way
     RecordPropertyMonetaryAmount:
       title: Record Property Monetary Amount
       type: object
@@ -726,56 +778,6 @@ components:
               type: number
               description: The original amount of the monetary value
               example: 50000
-    RecordPropertyType:
-      type: object
-      oneOf:
-      - $ref: '#/components/schemas/RecordPropertyString'
-      - $ref: '#/components/schemas/RecordPropertyNumber'
-      - $ref: '#/components/schemas/RecordPropertyBoolean'
-      - $ref: '#/components/schemas/RecordPropertyDate'
-      - $ref: '#/components/schemas/RecordPropertyDuration'
-      - $ref: '#/components/schemas/RecordPropertyEmail'
-      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
-      - $ref: '#/components/schemas/RecordPropertyClause'
-      - $ref: '#/components/schemas/RecordPropertyPlaybookClause'
-      - $ref: '#/components/schemas/RecordPropertyAddress'
-      - $ref: '#/components/schemas/RecordPropertyArray'
-      - $ref: '#/components/schemas/RecordPropertyReference'
-    RecordPropertyBoolean:
-      title: Record Property Boolean
-      type: object
-      description: A true/false boolean-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - boolean
-          example: boolean
-        value:
-          type: boolean
-          description: The boolean value of the property
-          example: true
-        originalValue:
-          type: boolean
-          description: The original value of the property before amendment (only present when property is amended)
-          example: false
-    ClauseLanguagePositionCustom:
-      title: Clause Language Position Custom
-      type: object
-      description: A custom clause language position
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The source type of the custom clause
-          enum:
-          - custom
-          example: custom
     EntityPropertyType:
       type: object
       oneOf:
@@ -787,6 +789,11 @@ components:
       - $ref: '#/components/schemas/RecordPropertyEmail'
       - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
       - $ref: '#/components/schemas/RecordPropertyAddress'
+    RecordProperties:
+      type: object
+      description: The record properties associated with the record
+      additionalProperties:
+        $ref: '#/components/schemas/RecordPropertyType'
     RecordPropertyEmail:
       title: Record Property Email
       type: object
@@ -811,92 +818,69 @@ components:
           format: email
           description: The original value of the property before amendment (only present when property is amended)
           example: original@example.com
-    EntityProperties:
+    RecordPropertyDuration:
+      title: Record Property Duration
       type: object
-      description: The entity properties associated with the entity
-      additionalProperties:
-        $ref: '#/components/schemas/EntityPropertyType'
-  parameters:
-    QuerySortField:
-      name: sortField
-      in: query
-      description: The field to sort by. Default is 'name'.
-      schema:
-        type: string
-        enum:
-        - name
-        - lastUpdated
-        default: name
-    QueryPageSize:
-      name: pageSize
-      in: query
-      description: A limit of the number of results to return.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-        default: 20
-    ObligationFilter:
-      name: filter
-      in: query
-      description: "Filter obligations using a formula. The obligation property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
-      schema:
-        type: string
-      example: Equals([name], 'Obligation Name')
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    XAsUserId:
-      name: x-as-user-id
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
-    QuerySortDirection:
-      name: sortDirection
-      in: query
-      description: The direction to sort by. Default is 'DESC'.
-      schema:
-        type: string
-        enum:
-        - ASC
-        - DESC
-        default: DESC
-    QueryPageNumber:
-      name: page
-      in: query
-      description: The page number used when paginating through a list of results.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-        maximum: 100000000
+      description: A duration-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - duration
+          example: duration
+        value:
+          type: string
+          description: The duration value of the property in ISO8601 format
+          example: P10Y3M2W1D
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          example: P5Y1M1W
+    ObligationModel:
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the obligation
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+        ironcladId:
+          description: Readable Ironclad ID of the obligation
+          type: string
+          example: OB-1
+        name:
+          description: The name of the obligation
+          type: string
+          example: Obligation XYZ
+        properties:
+          $ref: '#/components/schemas/RecordProperties'
+        lastUpdated:
+          description: The last updated date of the obligation
+          type: string
+          example: '2021-01-01T00:00:00Z'
+        namedTypeIds:
+          description: The unique identifiers of the types associated with the obligation. These IDs are tied with the Named Type of obligations, like 'Breach Notice', 'Compliance' and so on.
+          type: array
+          items:
+            type: string
+            example: eda20988-6b99-404b-99dc-866b84b63883
+        parentReadableId:
+          description: The parent readable id of the obligation
+          type: string
+          example: IC-1
+        parentRecordName:
+          description: The parent record name of the obligation
+          type: string
+          example: Parent Record
+      required:
+      - id
+      - ironcladId
+      - name
+      - properties
   responses:
-    BadRequestError400:
-      description: '400'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: string
-                example: MISSING_PARAM
-              message:
-                type: string
-                example: reason why something has gone wrong
-              param:
-                type: string
-                example: parameter identifier
     NotFoundError404:
       description: '404'
       content:
@@ -910,6 +894,19 @@ components:
               message:
                 type: string
                 example: not found
+    ForbiddenError403:
+      description: '403'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FORBIDDEN
+              message:
+                type: string
+                example: access forbidden
     UnauthorizedError401:
       description: '401'
       content:
@@ -938,8 +935,8 @@ components:
               value:
                 code: UNAUTHORIZED
                 message: token has expired
-    ForbiddenError403:
-      description: '403'
+    BadRequestError400:
+      description: '400'
       content:
         application/json:
           schema:
@@ -947,10 +944,13 @@ components:
             properties:
               code:
                 type: string
-                example: FORBIDDEN
+                example: MISSING_PARAM
               message:
                 type: string
-                example: access forbidden
+                example: reason why something has gone wrong
+              param:
+                type: string
+                example: parameter identifier
   securitySchemes:
     sec0:
       type: apiKey

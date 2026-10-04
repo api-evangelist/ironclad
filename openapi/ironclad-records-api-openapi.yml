@@ -1520,30 +1520,640 @@ paths:
       tags:
       - Records
 components:
+  parameters:
+    QueryPageSize:
+      name: pageSize
+      in: query
+      description: A limit of the number of results to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+    addressAsObject:
+      name: addressAsObject
+      in: query
+      description: When true, returns addresses as objects instead of strings.
+      schema:
+        type: boolean
+        default: false
+    RecordLastUpdated:
+      name: lastUpdated
+      in: query
+      description: Get records updated since (UTC)
+      example: '2018-03-10T00:00:00.000Z'
+      schema:
+        type: string
+    XAsUserId:
+      name: x-as-user-id
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: 5f0375c4cdc1927a3c5edcd3
+    HydrateEntitiesFlag:
+      name: hydrateEntities
+      in: query
+      description: Indicates whether to fully hydrate related entities (true) or return minimal information (false).
+      required: false
+      schema:
+        type: boolean
+        default: false
+    RecordFilter:
+      name: filter
+      in: query
+      description: "Filter records using a formula. The record property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nRecord properties can be identified using the [Retrieve Records Schema](https://developer.ironcladapp.com/reference/list-all-records-metadata) endpoint.\n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
+      schema:
+        type: string
+      example: Equals([counterpartyName], 'Test LLC')
+    XAsUserEmail:
+      name: x-as-user-email
+      in: header
+      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
+      required: false
+      schema:
+        type: string
+        example: jane.doe@test.com
+    QueryPageNumber:
+      name: page
+      in: query
+      description: The page number used when paginating through a list of results.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 100000000
+    RecordType:
+      name: types
+      in: query
+      description: Comma separated (no spaces) record types to export. Use the [Retrieve Records Schema](https://developer.ironcladapp.com/reference/list-all-records-metadata) endpoint to retrieve a list of types.
+      example: mutualNDA,consultingAgreement
+      schema:
+        type: string
   schemas:
-    SourcedFromAiChat:
-      title: Sourced From AI Chat
+    RenewalContractActionProperties:
       type: object
-      description: Record created from an AI chat
+      allOf:
+      - type: object
+        properties:
+          standard_renewalsRemaining:
+            type: object
+            description: The number of renewals an auto-renewal or optional extension with limited renewals has left.
+            required:
+            - type
+            - value
+            properties:
+              type:
+                type: string
+                enum:
+                - number
+              value:
+                type: number
+                example: 5
+          standard_renewalOptOutDate:
+            type: object
+            description: An agreement may have an opt-out date that lets you opt-out of the upcoming auto-renewal before it renews.
+            required:
+            - type
+            - value
+            properties:
+              type:
+                type: string
+                enum:
+                - date
+              value:
+                type: string
+                example: '2018-05-08T00:00:00-07:00'
+          standard_renewalOptOutPeriod:
+            type: object
+            description: An agreement may have an opt-out period that lets you opt-out of the upcoming auto-renewal before it renews. In the case of an opt period the last day to opt-out is the expiration date minus the opt-out period.
+            required:
+            - type
+            - value
+            properties:
+              type:
+                type: string
+                enum:
+                - duration
+              value:
+                type: string
+                example: P1M
+      - $ref: '#/components/schemas/RenewalTermLengthContractActionProperties'
+    SourcedFromMetadataImport:
+      title: Sourced From Metadata Import
+      type: object
+      description: Record created from a metadata import
       required:
       - type
-      - chatId
+      - metadataImportId
       properties:
         type:
           type: string
           description: The source type of the record
           enum:
-          - ai_chat
-          example: ai_chat
-        chatId:
+          - metadata_import
+          example: metadata_import
+        metadataImportId:
           type: string
-          description: The unique identifier of the AI chat that created the record
+          description: The unique identifier of the metadata import that created the record
           example: 4a785686-d3d5-47bc-960e-3df0df871ea9
-    RecordProperties:
+    ClauseLanguagePositionCustom:
+      title: Clause Language Position Custom
       type: object
-      description: The record properties associated with the record
+      description: A custom clause language position
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The source type of the custom clause
+          enum:
+          - custom
+          example: custom
+    RollUpConfiguration:
+      type: object
+      required:
+      - amendmentType
+      properties:
+        amendmentType:
+          type: string
+          enum:
+          - replace
+          description: How to amend the property value. Currently only 'replace' is supported.
+    PropertiesToAmend:
+      type: object
+      description: Configuration specifying which properties should be amended from this amendment record to its parent. Keys are property names, values define the amendment behavior. Only valid when parentLinkType is 'amendment'.
       additionalProperties:
-        $ref: '#/components/schemas/RecordPropertyType'
+        $ref: '#/components/schemas/RollUpConfiguration'
+      example:
+        contractValue:
+          amendmentType: replace
+        terminationDate:
+          amendmentType: replace
+    RecordPropertyAddress:
+      type: object
+      description: An address-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - address
+          example: address
+        value:
+          type: object
+          description: The address
+          example:
+            lines:
+            - 123 Main St.
+            locality: Los Angeles
+            region: CA
+            postcode: '90001'
+          properties:
+            lines:
+              type: array
+              maxLength: 4
+              items:
+                type: string
+              description: Address Lines (Street, Apt., etc.)
+            locality:
+              type: string
+              description: Locality (City, Town, etc)
+            country:
+              type: string
+              description: Country
+            region:
+              type: string
+              description: Region (State, Province, etc)
+            postcode:
+              type: string
+              description: Postcode (ZIP code, etc)
+            raw:
+              type: string
+              description: A raw address string, useful when address is not stored in a structured way
+        originalValue:
+          type: object
+          description: The original address before amendment (only present when property is amended)
+          example:
+            lines:
+            - 456 Old St.
+            locality: San Francisco
+            region: CA
+            postcode: '94102'
+          properties:
+            lines:
+              type: array
+              maxLength: 4
+              items:
+                type: string
+              description: Original Address Lines (Street, Apt., etc.)
+            locality:
+              type: string
+              description: Original Locality (City, Town, etc)
+            country:
+              type: string
+              description: Original Country
+            region:
+              type: string
+              description: Original Region (State, Province, etc)
+            postcode:
+              type: string
+              description: Original Postcode (ZIP code, etc)
+            raw:
+              type: string
+              description: A raw original address string, useful when address is not stored in a structured way
+    SourcedFromImportProject:
+      title: Sourced From Import Project
+      type: object
+      description: Record created from an import project
+      required:
+      - type
+      - importId
+      properties:
+        type:
+          type: string
+          description: The source type of the record
+          enum:
+          - import_project
+          example: import_project
+        importId:
+          type: string
+          description: The unique identifier of the import project that created the record
+          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
+    RecordPropertyNumber:
+      title: Record Property Number
+      type: object
+      description: A number-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - number
+          example: number
+        value:
+          type: integer
+          description: The number value of the property
+          example: 123
+        originalValue:
+          type: integer
+          description: The original value of the property before amendment (only present when property is amended)
+          example: 100
+    RenewalTermLengthContractActionProperties:
+      type: object
+      properties:
+        standard_renewalTermLength:
+          type: object
+          description: Renewal Term Length
+          required:
+          - type
+          - value
+          properties:
+            type:
+              type: string
+              enum:
+              - duration
+            value:
+              type: string
+              example: P1Y
+    TerminateContractAction:
+      type: object
+      required:
+      - type
+      - properties
+      properties:
+        type:
+          type: string
+          description: The action type to run on the contract.
+          enum:
+          - terminate
+        properties:
+          type: object
+          required:
+          - standard_terminatedDate
+          - standard_terminationEffectiveDate
+          properties:
+            standard_terminatedDate:
+              type: object
+              description: The date when the contract was terminated.
+              required:
+              - type
+              - value
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - date
+                value:
+                  type: string
+                  example: '2018-05-08T00:00:00-07:00'
+            standard_terminationEffectiveDate:
+              type: object
+              description: The effective date of the contract termination.
+              required:
+              - type
+              - value
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - date
+                value:
+                  type: string
+                  example: '2018-05-08T00:00:00-07:00'
+            standard_terminatingRecordId:
+              type: object
+              description: The record ID for the contract that terminated this contract.
+              required:
+              - type
+              - value
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - string
+                value:
+                  type: string
+                  example: 715f1e37-292f-4e6c-8b48-c07e1b68bccd
+          additionalProperties: false
+      additionalProperties: false
+    BadRequestErrorRecordAttachmentUnknownContentType:
+      type: object
+      description: Bad request error. Unknown content type.
+      title: Bad Request Error - Unknown Content Type
+      properties:
+        code:
+          type: string
+          example: INVALID_PARAM
+        message:
+          type: string
+          example: unknown content type 'filename or extension'
+        param:
+          type: string
+          example: metadata.filename
+    SourcedFromContract:
+      title: Sourced From Contract
+      type: object
+      description: Record created from a contract (typically an obligation)
+      required:
+      - type
+      - contractId
+      properties:
+        type:
+          type: string
+          description: The source type of the record
+          enum:
+          - contract
+          example: contract
+        contractId:
+          type: string
+          description: The unique identifier of the contract that created the record
+          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
+    ClauseLanguagePositionPlaybook:
+      title: Clause Language Position Playbook
+      type: object
+      description: A playbook clause language position
+      required:
+      - type
+      - name
+      - preferred
+      properties:
+        type:
+          type: string
+          description: The source type of the playbook clause
+          enum:
+          - playbook
+          example: playbook
+        name:
+          type: string
+          description: The name of the playbook clause
+          example: Standard
+        preferred:
+          type: boolean
+          description: Whether the playbook clause is the preferred language
+          example: true
+    EffectiveContractActionProperties:
+      type: object
+      properties:
+        standard_initialTermLength:
+          type: object
+          description: The initial term is the time from the effective date that the agreement will be effective for. If not defined, then the agreement will be active until the expiration date. If an expiration date is also not defined then the agreement will be active indefinitely, until the status of the agreement is manually changed.
+          required:
+          - type
+          - value
+          properties:
+            type:
+              type: string
+              enum:
+              - duration
+            value:
+              type: string
+              example: P1Y
+        expirationDate:
+          type: object
+          description: Expiration date is when this agreement will end or become inactive. If an expiration date isn't present then the effective date plus the initial term length are used to expire the contract.
+          required:
+          - type
+          - value
+          properties:
+            type:
+              type: string
+              enum:
+              - date
+            value:
+              type: string
+              example: '2018-05-08T00:00:00-07:00'
+    RecordPropertyClause:
+      type: object
+      description: A clause-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - clause
+          example: clause
+        value:
+          type: object
+          description: The clause value of the property
+          required:
+          - source
+          properties:
+            source:
+              type: string
+              description: The source of the clause property
+              enum:
+              - ai
+              - manual
+              example: ai
+            clauseType:
+              type: string
+              description: The string key denoting which type of clause used
+              example: remedies
+            clauseText:
+              type: string
+              description: The actual paragraph text used
+              example: This agreement is governed by the laws of the State of California.
+            documentId:
+              type: string
+              description: The unique identifier of the document that contains the clause
+              example: signedCopy
+            languagePosition:
+              type: object
+              description: The position of the clause in the document
+              oneOf:
+              - $ref: '#/components/schemas/ClauseLanguagePositionCustom'
+              - $ref: '#/components/schemas/ClauseLanguagePositionPlaybook'
+            documentLocation:
+              type: object
+              description: The autoML style formatted location of the clause in the document
+              required:
+              - startOffset
+              - endOffset
+              - boundingPoly
+              properties:
+                startOffset:
+                  type: integer
+                  description: The position in the document where the clause begins
+                  example: 0
+                endOffset:
+                  type: integer
+                  description: The position in the document where the clause ends
+                  example: 0
+                boundingPoly:
+                  type: array
+                  description: The bounding polygon of the clause in the document
+                  items:
+                    type: object
+                    required:
+                    - x
+                    - y
+                    properties:
+                      x:
+                        type: integer
+                        description: The x coordinate of the bounding polygon
+                        example: 0
+                      y:
+                        type: integer
+                        description: The y coordinate of the bounding polygon
+                        example: 0
+                pageNumber:
+                  type: integer
+                  description: The page number of the clause in the document
+                  example: 1
+    RecordParentModel:
+      type: object
+      description: Object containing Record IDs or Ironclad IDs to be set as the parent of the current record.
+      required:
+      - recordId
+      properties:
+        recordId:
+          type: string
+          description: The ID or Ironclad ID (readable ID) of the record to set as parent
+          example: 17009e0d-z2e9-425d-a85b-1cf152773efg
+        parentLinkType:
+          $ref: '#/components/schemas/LinkType'
+    RecordPropertyBoolean:
+      title: Record Property Boolean
+      type: object
+      description: A true/false boolean-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - boolean
+          example: boolean
+        value:
+          type: boolean
+          description: The boolean value of the property
+          example: true
+        originalValue:
+          type: boolean
+          description: The original value of the property before amendment (only present when property is amended)
+          example: false
+    BadRequestErrorRecordAttachmentMissingFormDataPart:
+      type: object
+      description: Bad request error. Missing form-data part.
+      title: Bad Request Error - Missing Form-Data Part
+      properties:
+        code:
+          type: string
+          example: INVALID_PARAM
+        message:
+          type: string
+          example: missing required form-data part 'metadata'
+        param:
+          type: string
+          example: metadata
+    RecordPropertyPlaybookClause:
+      type: object
+      description: A playbook-based clause-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - playbookClause
+          example: playbookClause
+        value:
+          type: string
+          description: The playbook clause name
+          example: Standard
+    SourcedFromConnector:
+      title: Sourced From Connector
+      type: object
+      description: Record created from a connector integration
+      required:
+      - type
+      - connectorId
+      properties:
+        type:
+          type: string
+          description: The source type of the record
+          enum:
+          - connector
+          example: connector
+        connectorId:
+          type: string
+          description: The unique identifier of the connector integration that created the record
+          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
+    SourcedFromWorkflow:
+      title: Sourced From Workflow
+      type: object
+      description: Record created from an Ironclad workflow
+      required:
+      - type
+      - workflowId
+      properties:
+        type:
+          type: string
+          description: The source type of the record
+          enum:
+          - workflow
+          example: workflow
+        workflowId:
+          type: string
+          description: The unique identifier of the workflow that created the record
+          example: workflow:4a785686-d3d5-47bc-960e-3df0df871ea9
     CancelAutoRenewalContractAction:
       type: object
       required:
@@ -1555,6 +2165,77 @@ components:
           enum:
           - cancelAutoRenewal
       additionalProperties: false
+    SourcedFromIntegration:
+      title: Sourced From Integration
+      type: object
+      description: Record created from an integration
+      required:
+      - type
+      - integrationName
+      properties:
+        type:
+          type: string
+          description: The source type of the record
+          enum:
+          - integration
+          example: integration
+        integrationName:
+          type: string
+          description: The name of the integration that created the record
+          example: s4hana
+    RecordPropertyType:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/RecordPropertyString'
+      - $ref: '#/components/schemas/RecordPropertyNumber'
+      - $ref: '#/components/schemas/RecordPropertyBoolean'
+      - $ref: '#/components/schemas/RecordPropertyDate'
+      - $ref: '#/components/schemas/RecordPropertyDuration'
+      - $ref: '#/components/schemas/RecordPropertyEmail'
+      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
+      - $ref: '#/components/schemas/RecordPropertyClause'
+      - $ref: '#/components/schemas/RecordPropertyPlaybookClause'
+      - $ref: '#/components/schemas/RecordPropertyAddress'
+      - $ref: '#/components/schemas/RecordPropertyArray'
+      - $ref: '#/components/schemas/RecordPropertyReference'
+    BadRequestErrorRecordAttachmentExtension:
+      type: object
+      description: Bad request error. The specified filename does not include a supported extension.
+      title: Bad Request Error - Record Attachment Extension Not Supported
+      properties:
+        code:
+          type: string
+          example: INVALID_PARAM
+        message:
+          type: string
+          example: 'filename "NDA - Acme LLC" does not have an accepted extension. Only the following extensions are allowed: .adoc, .asice, .bdoc, .csv, .ddoc, .doc, .docx, .edoc, .eml, .gif, .htm, .jpeg, .jpg, .msg, .pdf, .png, .ppt, .pptx, .rtf, .tif, .tif, .txt, .xls, .xlsx, .xml'
+        param:
+          type: string
+          example: metadata.filename
+    RecordPropertyDate:
+      title: Record Property Date
+      type: object
+      description: A date-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - date
+          example: date
+        value:
+          type: string
+          description: The date value of the property in ISO8601 format
+          format: date-time
+          example: '1992-10-04T09:31:00Z'
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          format: date-time
+          example: '1990-01-01T00:00:00Z'
     RecordModel:
       type: object
       required:
@@ -1696,28 +2377,53 @@ components:
           items:
             type: string
             example: IC-124
-    SourcedFromIntegration:
-      title: Sourced From Integration
+    RenewalTypeContractActionProperties:
       type: object
-      description: Record created from an integration
       required:
-      - type
-      - integrationName
+      - standard_renewalType
       properties:
-        type:
-          type: string
-          description: The source type of the record
-          enum:
-          - integration
-          example: integration
-        integrationName:
-          type: string
-          description: The name of the integration that created the record
-          example: s4hana
-    RecordPropertyDuration:
-      title: Record Property Duration
+        standard_renewalType:
+          type: object
+          description: "The renewal type for an agreement will govern what happens on its expiration date if it has one. Accepted values for renewal type:\n\n    \tAuto-Renew: These agreements will automatically renew on their expiration date which means they will then have a new expiration date which would be the current date plus the renewal term length.\n\n    \tOptional Extension: These agreements have an optional extension which means that the party can choose to renew the agreement by the renewal term length without renegotiating the contract. There may be a notification requirement to exercise this option.\n\n    \tEvergreen: These are agreements that don't have an expiration date, which means they are active forever. Also known as perpetual agreements.\n\n    \tNone: These agreements that don't have a renewal provision and will expire on their expiration date. If an agreement has no renewal provision but also doesn't have an expiration date, it'll be active forever.\n\n    \tOther: For renewal provisions that are not covered by these options."
+          required:
+          - type
+          - value
+          properties:
+            type:
+              type: string
+              enum:
+              - string
+            value:
+              type: string
+              enum:
+              - Auto-Renew
+              - Optional Extension
+              - Evergreen
+              - None
+              - Other
+        otherRenewalType:
+          type: object
+          description: This property helps downstream reporting for when you have a renewal type not defined by the system.
+          required:
+          - type
+          - value
+          properties:
+            type:
+              type: string
+              enum:
+              - string
+            value:
+              type: string
+              example: Custom Auto-Renew
+    EntityProperties:
       type: object
-      description: A duration-type record property
+      description: The entity properties associated with the entity
+      additionalProperties:
+        $ref: '#/components/schemas/EntityPropertyType'
+    RecordPropertyString:
+      title: Record Property String
+      type: object
+      description: A text-type record property
       required:
       - type
       - value
@@ -1726,172 +2432,36 @@ components:
           type: string
           description: The data type of the property
           enum:
-          - duration
-          example: duration
+          - string
+          example: string
         value:
           type: string
-          description: The duration value of the property in ISO8601 format
-          example: P10Y3M2W1D
+          description: The string value of the property
+          example: Foobar
         originalValue:
           type: string
           description: The original value of the property before amendment (only present when property is amended)
-          example: P5Y1M1W
-    BadRequestErrorRecordAttachmentUnknownContentType:
+          example: Original Value
+    LinkType:
+      type: string
+      enum:
+      - amendment
+      - obligation
+      description: Identifies the type of relationship this child record has with its parent (e.g. amendment)
+    BadRequestErrorRecordAttachmentUnknownAttachmentKey:
       type: object
-      description: Bad request error. Unknown content type.
-      title: Bad Request Error - Unknown Content Type
+      description: Bad request error. Unknown record attachment key.
+      title: Bad Request Error - Unknown Record Attachment Key
       properties:
         code:
           type: string
           example: INVALID_PARAM
         message:
           type: string
-          example: unknown content type 'filename or extension'
+          example: unknown record attachment key 'someRandomKey'
         param:
           type: string
-          example: metadata.filename
-    BadRequestErrorRecordIDNotFound:
-      type: object
-      description: Record ID Not Found Request Error
-      title: Bad Request Error - Record ID Not Found
-      properties:
-        code:
-          type: string
-          example: NOT_FOUND
-        message:
-          type: string
-          example: couldn't find a record matching the id [SOME_NONEXISTENT_RECORD_ID]
-    EditRenewalContractAction:
-      type: object
-      required:
-      - type
-      - properties
-      properties:
-        type:
-          type: string
-          description: The action type to run on the contract.
-          enum:
-          - editRenewal
-        properties:
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/RenewalContractActionProperties'
-          - $ref: '#/components/schemas/RenewalTypeContractActionProperties'
-          - $ref: '#/components/schemas/EffectiveContractActionProperties'
-          additionalProperties: false
-      additionalProperties: false
-    SourcedFromWorkflow:
-      title: Sourced From Workflow
-      type: object
-      description: Record created from an Ironclad workflow
-      required:
-      - type
-      - workflowId
-      properties:
-        type:
-          type: string
-          description: The source type of the record
-          enum:
-          - workflow
-          example: workflow
-        workflowId:
-          type: string
-          description: The unique identifier of the workflow that created the record
-          example: workflow:4a785686-d3d5-47bc-960e-3df0df871ea9
-    SourcedFromSingleImport:
-      title: Sourced From Single Import
-      type: object
-      description: Record created from a single import
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The source type of the record
-          enum:
-          - single_import
-          example: single_import
-    RecordPropertyClause:
-      type: object
-      description: A clause-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - clause
-          example: clause
-        value:
-          type: object
-          description: The clause value of the property
-          required:
-          - source
-          properties:
-            source:
-              type: string
-              description: The source of the clause property
-              enum:
-              - ai
-              - manual
-              example: ai
-            clauseType:
-              type: string
-              description: The string key denoting which type of clause used
-              example: remedies
-            clauseText:
-              type: string
-              description: The actual paragraph text used
-              example: This agreement is governed by the laws of the State of California.
-            documentId:
-              type: string
-              description: The unique identifier of the document that contains the clause
-              example: signedCopy
-            languagePosition:
-              type: object
-              description: The position of the clause in the document
-              oneOf:
-              - $ref: '#/components/schemas/ClauseLanguagePositionCustom'
-              - $ref: '#/components/schemas/ClauseLanguagePositionPlaybook'
-            documentLocation:
-              type: object
-              description: The autoML style formatted location of the clause in the document
-              required:
-              - startOffset
-              - endOffset
-              - boundingPoly
-              properties:
-                startOffset:
-                  type: integer
-                  description: The position in the document where the clause begins
-                  example: 0
-                endOffset:
-                  type: integer
-                  description: The position in the document where the clause ends
-                  example: 0
-                boundingPoly:
-                  type: array
-                  description: The bounding polygon of the clause in the document
-                  items:
-                    type: object
-                    required:
-                    - x
-                    - y
-                    properties:
-                      x:
-                        type: integer
-                        description: The x coordinate of the bounding polygon
-                        example: 0
-                      y:
-                        type: integer
-                        description: The y coordinate of the bounding polygon
-                        example: 0
-                pageNumber:
-                  type: integer
-                  description: The page number of the clause in the document
-                  example: 1
+          example: attachmentKey
     RecordPropertyReference:
       type: object
       description: A reference-type record property that points to another record
@@ -1957,56 +2527,65 @@ components:
               example: ENTITY-2
             attributes:
               $ref: '#/components/schemas/EntityProperties'
-    RecordPropertyNumber:
-      title: Record Property Number
+    ActivateContractAction:
       type: object
-      description: A number-type record property
       required:
       - type
-      - value
+      - properties
+      additionalProperties: false
       properties:
         type:
           type: string
-          description: The data type of the property
+          description: The action type to run on the contract.
           enum:
-          - number
-          example: number
-        value:
-          type: integer
-          description: The number value of the property
-          example: 123
-        originalValue:
-          type: integer
-          description: The original value of the property before amendment (only present when property is amended)
-          example: 100
-    BadRequestErrorRecordAttachmentUnknownAttachmentKey:
+          - activate
+        properties:
+          type: object
+          allOf:
+          - type: object
+            properties:
+              standard_terminationNoticePeriod:
+                type: object
+                description: This is the number of days of notice that needs to be given before this agreement can be terminated.
+                required:
+                - type
+                - value
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - duration
+                  value:
+                    type: string
+                    example: P14D
+              effectiveDate:
+                type: object
+                description: Effective date is when this agreement begins and is considered active. If effective date is not defined then the executed date of the agreement is used to mark the contract as active.
+                required:
+                - type
+                - value
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - date
+                  value:
+                    type: string
+                    example: '2018-05-08T00:00:00-07:00'
+          - $ref: '#/components/schemas/RenewalContractActionProperties'
+          - $ref: '#/components/schemas/RenewalTypeContractActionProperties'
+          - $ref: '#/components/schemas/EffectiveContractActionProperties'
+    BadRequestErrorRecordIDNotFound:
       type: object
-      description: Bad request error. Unknown record attachment key.
-      title: Bad Request Error - Unknown Record Attachment Key
+      description: Record ID Not Found Request Error
+      title: Bad Request Error - Record ID Not Found
       properties:
         code:
           type: string
-          example: INVALID_PARAM
+          example: NOT_FOUND
         message:
           type: string
-          example: unknown record attachment key 'someRandomKey'
-        param:
-          type: string
-          example: attachmentKey
-    BadRequestErrorRecordAttachmentExtension:
-      type: object
-      description: Bad request error. The specified filename does not include a supported extension.
-      title: Bad Request Error - Record Attachment Extension Not Supported
-      properties:
-        code:
-          type: string
-          example: INVALID_PARAM
-        message:
-          type: string
-          example: 'filename "NDA - Acme LLC" does not have an accepted extension. Only the following extensions are allowed: .adoc, .asice, .bdoc, .csv, .ddoc, .doc, .docx, .edoc, .eml, .gif, .htm, .jpeg, .jpg, .msg, .pdf, .png, .ppt, .pptx, .rtf, .tif, .tif, .txt, .xls, .xlsx, .xml'
-        param:
-          type: string
-          example: metadata.filename
+          example: couldn't find a record matching the id [SOME_NONEXISTENT_RECORD_ID]
     SmartImportRetrievePredictionsResponseElement:
       title: Single Prediction Status
       type: object
@@ -2027,32 +2606,10 @@ components:
           - pending
           - errored
           example: ready
-    ClauseLanguagePositionPlaybook:
-      title: Clause Language Position Playbook
+    RecordPropertyArray:
+      title: Record Property Array
       type: object
-      description: A playbook clause language position
-      required:
-      - type
-      - name
-      - preferred
-      properties:
-        type:
-          type: string
-          description: The source type of the playbook clause
-          enum:
-          - playbook
-          example: playbook
-        name:
-          type: string
-          description: The name of the playbook clause
-          example: Standard
-        preferred:
-          type: boolean
-          description: Whether the playbook clause is the preferred language
-          example: true
-    RecordPropertyPlaybookClause:
-      type: object
-      description: A playbook-based clause-type record property
+      description: An array-type record property
       required:
       - type
       - value
@@ -2061,12 +2618,266 @@ components:
           type: string
           description: The data type of the property
           enum:
-          - playbookClause
-          example: playbookClause
+          - array
+          example: array
+        value:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          example:
+          - red
+          - blue
+    SourcedFromSingleImport:
+      title: Sourced From Single Import
+      type: object
+      description: Record created from a single import
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The source type of the record
+          enum:
+          - single_import
+          example: single_import
+    BadRequestErrorRecordNotFound:
+      type: object
+      description: Bad request error. The specified record does not exist.
+      title: Bad Request Error - Record Does not Exist
+      properties:
+        code:
+          type: string
+          example: NOT_FOUND
+        message:
+          type: string
+          example: couldn't find a record matching the id workflow:6346f76fb8fc01d2b43e7c15a
+    ExtendContractAction:
+      type: object
+      required:
+      - type
+      - properties
+      properties:
+        type:
+          type: string
+          description: The action type to run on the contract.
+          enum:
+          - extend
+        properties:
+          $ref: '#/components/schemas/RenewalTermLengthContractActionProperties'
+      additionalProperties: false
+    RecordPropertyMonetaryAmount:
+      title: Record Property Monetary Amount
+      type: object
+      description: A monetary amount-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - monetary_amount
+          example: monetary_amount
+        value:
+          type: object
+          description: The monetary amount value of the property
+          required:
+          - amount
+          - currency
+          properties:
+            currency:
+              type: string
+              description: The currency of the monetary value in ISO 4217 format
+              example: USD
+            amount:
+              type: number
+              description: The amount of the monetary value
+              example: 100000
+        originalValue:
+          type: object
+          description: The original value of the property before amendment (only present when property is amended)
+          required:
+          - amount
+          - currency
+          properties:
+            currency:
+              type: string
+              description: The currency of the original monetary value in ISO 4217 format
+              example: USD
+            amount:
+              type: number
+              description: The original amount of the monetary value
+              example: 50000
+    SourcedFromAiChat:
+      title: Sourced From AI Chat
+      type: object
+      description: Record created from an AI chat
+      required:
+      - type
+      - chatId
+      properties:
+        type:
+          type: string
+          description: The source type of the record
+          enum:
+          - ai_chat
+          example: ai_chat
+        chatId:
+          type: string
+          description: The unique identifier of the AI chat that created the record
+          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
+    EntityPropertyType:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/RecordPropertyString'
+      - $ref: '#/components/schemas/RecordPropertyNumber'
+      - $ref: '#/components/schemas/RecordPropertyBoolean'
+      - $ref: '#/components/schemas/RecordPropertyDate'
+      - $ref: '#/components/schemas/RecordPropertyDuration'
+      - $ref: '#/components/schemas/RecordPropertyEmail'
+      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
+      - $ref: '#/components/schemas/RecordPropertyAddress'
+    RecordProperties:
+      type: object
+      description: The record properties associated with the record
+      additionalProperties:
+        $ref: '#/components/schemas/RecordPropertyType'
+    RecordPropertyEmail:
+      title: Record Property Email
+      type: object
+      description: An email-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - email
+          example: email
         value:
           type: string
-          description: The playbook clause name
-          example: Standard
+          format: email
+          description: The email value of the property
+          example: ironclad@example.com
+        originalValue:
+          type: string
+          format: email
+          description: The original value of the property before amendment (only present when property is amended)
+          example: original@example.com
+    RecordPropertyLinkModel:
+      type: object
+      required:
+      - recordId
+      properties:
+        recordId:
+          type: string
+          example: 17009e0d-z2e9-425d-a85b-1cf152773e49
+    EditRenewalContractAction:
+      type: object
+      required:
+      - type
+      - properties
+      properties:
+        type:
+          type: string
+          description: The action type to run on the contract.
+          enum:
+          - editRenewal
+        properties:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/RenewalContractActionProperties'
+          - $ref: '#/components/schemas/RenewalTypeContractActionProperties'
+          - $ref: '#/components/schemas/EffectiveContractActionProperties'
+          additionalProperties: false
+      additionalProperties: false
+    SourcedFromClickwrap:
+      title: Sourced From Clickwrap
+      type: object
+      description: Record created from a clickwrap agreement
+      required:
+      - type
+      - clickwrapId
+      properties:
+        type:
+          type: string
+          description: The source type of the record
+          enum:
+          - clickwrap
+          example: clickwrap
+        clickwrapId:
+          type: string
+          description: The unique identifier of the clickwrap agreement that created the record
+          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
+    ContractAction:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/ActivateContractAction'
+      - $ref: '#/components/schemas/TerminateContractAction'
+      - $ref: '#/components/schemas/SupersedeContractAction'
+      - $ref: '#/components/schemas/ExtendContractAction'
+      - $ref: '#/components/schemas/CancelAutoRenewalContractAction'
+      - $ref: '#/components/schemas/EditRenewalContractAction'
+      - $ref: '#/components/schemas/UndoContractAction'
+    RecordPropertyDuration:
+      title: Record Property Duration
+      type: object
+      description: A duration-type record property
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: The data type of the property
+          enum:
+          - duration
+          example: duration
+        value:
+          type: string
+          description: The duration value of the property in ISO8601 format
+          example: P10Y3M2W1D
+        originalValue:
+          type: string
+          description: The original value of the property before amendment (only present when property is amended)
+          example: P5Y1M1W
+    BadRequestErrorContractAction:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          enum:
+          - MISSING_PARAM
+          - INVALID_PARAM
+          - INVALID_STATE
+          example: MISSING_PARAM
+          readOnly: true
+          description: A unique code to identify why the contract action cannot be run
+          title: ''
+        message:
+          type: string
+          example: missing required attribute
+          readOnly: true
+          description: A message indicating why the contract action cannot be run
+          title: ''
+        param:
+          type: string
+          example: counterpartySignerTitle
+          readOnly: true
+          description: The required or expected parameter(s) that may be missing in order to run the contract action
+          title: ''
+      required:
+      - code
+      - message
+      - param
+      readOnly: true
+      description: ''
+      title: Bad Request Error - Contract Action
     BadRequestErrorRecordAttachmentIDNotFound:
       type: object
       description: Record Attachment ID Not Found Request Error
@@ -2137,390 +2948,6 @@ components:
                 value:
                   type: string
                   example: 715f1e37-292f-4e6c-8b48-c07e1b68bccd
-    RecordPropertyDate:
-      title: Record Property Date
-      type: object
-      description: A date-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - date
-          example: date
-        value:
-          type: string
-          description: The date value of the property in ISO8601 format
-          format: date-time
-          example: '1992-10-04T09:31:00Z'
-        originalValue:
-          type: string
-          description: The original value of the property before amendment (only present when property is amended)
-          format: date-time
-          example: '1990-01-01T00:00:00Z'
-    RecordPropertyArray:
-      title: Record Property Array
-      type: object
-      description: An array-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - array
-          example: array
-        value:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          example:
-          - red
-          - blue
-    RecordPropertyString:
-      title: Record Property String
-      type: object
-      description: A text-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - string
-          example: string
-        value:
-          type: string
-          description: The string value of the property
-          example: Foobar
-        originalValue:
-          type: string
-          description: The original value of the property before amendment (only present when property is amended)
-          example: Original Value
-    RenewalTypeContractActionProperties:
-      type: object
-      required:
-      - standard_renewalType
-      properties:
-        standard_renewalType:
-          type: object
-          description: "The renewal type for an agreement will govern what happens on its expiration date if it has one. Accepted values for renewal type:\n\n    \tAuto-Renew: These agreements will automatically renew on their expiration date which means they will then have a new expiration date which would be the current date plus the renewal term length.\n\n    \tOptional Extension: These agreements have an optional extension which means that the party can choose to renew the agreement by the renewal term length without renegotiating the contract. There may be a notification requirement to exercise this option.\n\n    \tEvergreen: These are agreements that don't have an expiration date, which means they are active forever. Also known as perpetual agreements.\n\n    \tNone: These agreements that don't have a renewal provision and will expire on their expiration date. If an agreement has no renewal provision but also doesn't have an expiration date, it'll be active forever.\n\n    \tOther: For renewal provisions that are not covered by these options."
-          required:
-          - type
-          - value
-          properties:
-            type:
-              type: string
-              enum:
-              - string
-            value:
-              type: string
-              enum:
-              - Auto-Renew
-              - Optional Extension
-              - Evergreen
-              - None
-              - Other
-        otherRenewalType:
-          type: object
-          description: This property helps downstream reporting for when you have a renewal type not defined by the system.
-          required:
-          - type
-          - value
-          properties:
-            type:
-              type: string
-              enum:
-              - string
-            value:
-              type: string
-              example: Custom Auto-Renew
-    SourcedFromClickwrap:
-      title: Sourced From Clickwrap
-      type: object
-      description: Record created from a clickwrap agreement
-      required:
-      - type
-      - clickwrapId
-      properties:
-        type:
-          type: string
-          description: The source type of the record
-          enum:
-          - clickwrap
-          example: clickwrap
-        clickwrapId:
-          type: string
-          description: The unique identifier of the clickwrap agreement that created the record
-          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
-    BadRequestErrorContractAction:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type: string
-          enum:
-          - MISSING_PARAM
-          - INVALID_PARAM
-          - INVALID_STATE
-          example: MISSING_PARAM
-          readOnly: true
-          description: A unique code to identify why the contract action cannot be run
-          title: ''
-        message:
-          type: string
-          example: missing required attribute
-          readOnly: true
-          description: A message indicating why the contract action cannot be run
-          title: ''
-        param:
-          type: string
-          example: counterpartySignerTitle
-          readOnly: true
-          description: The required or expected parameter(s) that may be missing in order to run the contract action
-          title: ''
-      required:
-      - code
-      - message
-      - param
-      readOnly: true
-      description: ''
-      title: Bad Request Error - Contract Action
-    PropertiesToAmend:
-      type: object
-      description: Configuration specifying which properties should be amended from this amendment record to its parent. Keys are property names, values define the amendment behavior. Only valid when parentLinkType is 'amendment'.
-      additionalProperties:
-        $ref: '#/components/schemas/RollUpConfiguration'
-      example:
-        contractValue:
-          amendmentType: replace
-        terminationDate:
-          amendmentType: replace
-    BadRequestErrorRecordNotFound:
-      type: object
-      description: Bad request error. The specified record does not exist.
-      title: Bad Request Error - Record Does not Exist
-      properties:
-        code:
-          type: string
-          example: NOT_FOUND
-        message:
-          type: string
-          example: couldn't find a record matching the id workflow:6346f76fb8fc01d2b43e7c15a
-    TerminateContractAction:
-      type: object
-      required:
-      - type
-      - properties
-      properties:
-        type:
-          type: string
-          description: The action type to run on the contract.
-          enum:
-          - terminate
-        properties:
-          type: object
-          required:
-          - standard_terminatedDate
-          - standard_terminationEffectiveDate
-          properties:
-            standard_terminatedDate:
-              type: object
-              description: The date when the contract was terminated.
-              required:
-              - type
-              - value
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - date
-                value:
-                  type: string
-                  example: '2018-05-08T00:00:00-07:00'
-            standard_terminationEffectiveDate:
-              type: object
-              description: The effective date of the contract termination.
-              required:
-              - type
-              - value
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - date
-                value:
-                  type: string
-                  example: '2018-05-08T00:00:00-07:00'
-            standard_terminatingRecordId:
-              type: object
-              description: The record ID for the contract that terminated this contract.
-              required:
-              - type
-              - value
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - string
-                value:
-                  type: string
-                  example: 715f1e37-292f-4e6c-8b48-c07e1b68bccd
-          additionalProperties: false
-      additionalProperties: false
-    RecordPropertyAddress:
-      type: object
-      description: An address-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - address
-          example: address
-        value:
-          type: object
-          description: The address
-          example:
-            lines:
-            - 123 Main St.
-            locality: Los Angeles
-            region: CA
-            postcode: '90001'
-          properties:
-            lines:
-              type: array
-              maxLength: 4
-              items:
-                type: string
-              description: Address Lines (Street, Apt., etc.)
-            locality:
-              type: string
-              description: Locality (City, Town, etc)
-            country:
-              type: string
-              description: Country
-            region:
-              type: string
-              description: Region (State, Province, etc)
-            postcode:
-              type: string
-              description: Postcode (ZIP code, etc)
-            raw:
-              type: string
-              description: A raw address string, useful when address is not stored in a structured way
-        originalValue:
-          type: object
-          description: The original address before amendment (only present when property is amended)
-          example:
-            lines:
-            - 456 Old St.
-            locality: San Francisco
-            region: CA
-            postcode: '94102'
-          properties:
-            lines:
-              type: array
-              maxLength: 4
-              items:
-                type: string
-              description: Original Address Lines (Street, Apt., etc.)
-            locality:
-              type: string
-              description: Original Locality (City, Town, etc)
-            country:
-              type: string
-              description: Original Country
-            region:
-              type: string
-              description: Original Region (State, Province, etc)
-            postcode:
-              type: string
-              description: Original Postcode (ZIP code, etc)
-            raw:
-              type: string
-              description: A raw original address string, useful when address is not stored in a structured way
-    RecordParentModel:
-      type: object
-      description: Object containing Record IDs or Ironclad IDs to be set as the parent of the current record.
-      required:
-      - recordId
-      properties:
-        recordId:
-          type: string
-          description: The ID or Ironclad ID (readable ID) of the record to set as parent
-          example: 17009e0d-z2e9-425d-a85b-1cf152773efg
-        parentLinkType:
-          $ref: '#/components/schemas/LinkType'
-    RecordPropertyMonetaryAmount:
-      title: Record Property Monetary Amount
-      type: object
-      description: A monetary amount-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - monetary_amount
-          example: monetary_amount
-        value:
-          type: object
-          description: The monetary amount value of the property
-          required:
-          - amount
-          - currency
-          properties:
-            currency:
-              type: string
-              description: The currency of the monetary value in ISO 4217 format
-              example: USD
-            amount:
-              type: number
-              description: The amount of the monetary value
-              example: 100000
-        originalValue:
-          type: object
-          description: The original value of the property before amendment (only present when property is amended)
-          required:
-          - amount
-          - currency
-          properties:
-            currency:
-              type: string
-              description: The currency of the original monetary value in ISO 4217 format
-              example: USD
-            amount:
-              type: number
-              description: The original amount of the monetary value
-              example: 50000
-    BadRequestErrorRecordAttachmentAlreadyExists:
-      type: object
-      description: Bad request error. The specified attachment key has an existing file.
-      title: Bad Request Error - Record Attachment Already Exists.
-      properties:
-        code:
-          type: string
-          example: INVALID_PARAM
-        message:
-          type: string
-          example: record attachment key 'signedCopy' already exists for record
-        param:
-          type: string
-          example: attachmentKey
     UndoContractAction:
       type: object
       required:
@@ -2560,391 +2987,21 @@ components:
                   - undo
           additionalProperties: false
       additionalProperties: false
-    RecordPropertyType:
+    BadRequestErrorRecordAttachmentAlreadyExists:
       type: object
-      oneOf:
-      - $ref: '#/components/schemas/RecordPropertyString'
-      - $ref: '#/components/schemas/RecordPropertyNumber'
-      - $ref: '#/components/schemas/RecordPropertyBoolean'
-      - $ref: '#/components/schemas/RecordPropertyDate'
-      - $ref: '#/components/schemas/RecordPropertyDuration'
-      - $ref: '#/components/schemas/RecordPropertyEmail'
-      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
-      - $ref: '#/components/schemas/RecordPropertyClause'
-      - $ref: '#/components/schemas/RecordPropertyPlaybookClause'
-      - $ref: '#/components/schemas/RecordPropertyAddress'
-      - $ref: '#/components/schemas/RecordPropertyArray'
-      - $ref: '#/components/schemas/RecordPropertyReference'
-    ContractAction:
-      type: object
-      oneOf:
-      - $ref: '#/components/schemas/ActivateContractAction'
-      - $ref: '#/components/schemas/TerminateContractAction'
-      - $ref: '#/components/schemas/SupersedeContractAction'
-      - $ref: '#/components/schemas/ExtendContractAction'
-      - $ref: '#/components/schemas/CancelAutoRenewalContractAction'
-      - $ref: '#/components/schemas/EditRenewalContractAction'
-      - $ref: '#/components/schemas/UndoContractAction'
-    ExtendContractAction:
-      type: object
-      required:
-      - type
-      - properties
-      properties:
-        type:
-          type: string
-          description: The action type to run on the contract.
-          enum:
-          - extend
-        properties:
-          $ref: '#/components/schemas/RenewalTermLengthContractActionProperties'
-      additionalProperties: false
-    BadRequestErrorRecordAttachmentMissingFormDataPart:
-      type: object
-      description: Bad request error. Missing form-data part.
-      title: Bad Request Error - Missing Form-Data Part
+      description: Bad request error. The specified attachment key has an existing file.
+      title: Bad Request Error - Record Attachment Already Exists.
       properties:
         code:
           type: string
           example: INVALID_PARAM
         message:
           type: string
-          example: missing required form-data part 'metadata'
+          example: record attachment key 'signedCopy' already exists for record
         param:
           type: string
-          example: metadata
-    RecordPropertyBoolean:
-      title: Record Property Boolean
-      type: object
-      description: A true/false boolean-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - boolean
-          example: boolean
-        value:
-          type: boolean
-          description: The boolean value of the property
-          example: true
-        originalValue:
-          type: boolean
-          description: The original value of the property before amendment (only present when property is amended)
-          example: false
-    ClauseLanguagePositionCustom:
-      title: Clause Language Position Custom
-      type: object
-      description: A custom clause language position
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The source type of the custom clause
-          enum:
-          - custom
-          example: custom
-    EntityPropertyType:
-      type: object
-      oneOf:
-      - $ref: '#/components/schemas/RecordPropertyString'
-      - $ref: '#/components/schemas/RecordPropertyNumber'
-      - $ref: '#/components/schemas/RecordPropertyBoolean'
-      - $ref: '#/components/schemas/RecordPropertyDate'
-      - $ref: '#/components/schemas/RecordPropertyDuration'
-      - $ref: '#/components/schemas/RecordPropertyEmail'
-      - $ref: '#/components/schemas/RecordPropertyMonetaryAmount'
-      - $ref: '#/components/schemas/RecordPropertyAddress'
-    RenewalTermLengthContractActionProperties:
-      type: object
-      properties:
-        standard_renewalTermLength:
-          type: object
-          description: Renewal Term Length
-          required:
-          - type
-          - value
-          properties:
-            type:
-              type: string
-              enum:
-              - duration
-            value:
-              type: string
-              example: P1Y
-    RecordPropertyEmail:
-      title: Record Property Email
-      type: object
-      description: An email-type record property
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          description: The data type of the property
-          enum:
-          - email
-          example: email
-        value:
-          type: string
-          format: email
-          description: The email value of the property
-          example: ironclad@example.com
-        originalValue:
-          type: string
-          format: email
-          description: The original value of the property before amendment (only present when property is amended)
-          example: original@example.com
-    RollUpConfiguration:
-      type: object
-      required:
-      - amendmentType
-      properties:
-        amendmentType:
-          type: string
-          enum:
-          - replace
-          description: How to amend the property value. Currently only 'replace' is supported.
-    RenewalContractActionProperties:
-      type: object
-      allOf:
-      - type: object
-        properties:
-          standard_renewalsRemaining:
-            type: object
-            description: The number of renewals an auto-renewal or optional extension with limited renewals has left.
-            required:
-            - type
-            - value
-            properties:
-              type:
-                type: string
-                enum:
-                - number
-              value:
-                type: number
-                example: 5
-          standard_renewalOptOutDate:
-            type: object
-            description: An agreement may have an opt-out date that lets you opt-out of the upcoming auto-renewal before it renews.
-            required:
-            - type
-            - value
-            properties:
-              type:
-                type: string
-                enum:
-                - date
-              value:
-                type: string
-                example: '2018-05-08T00:00:00-07:00'
-          standard_renewalOptOutPeriod:
-            type: object
-            description: An agreement may have an opt-out period that lets you opt-out of the upcoming auto-renewal before it renews. In the case of an opt period the last day to opt-out is the expiration date minus the opt-out period.
-            required:
-            - type
-            - value
-            properties:
-              type:
-                type: string
-                enum:
-                - duration
-              value:
-                type: string
-                example: P1M
-      - $ref: '#/components/schemas/RenewalTermLengthContractActionProperties'
-    LinkType:
-      type: string
-      enum:
-      - amendment
-      - obligation
-      description: Identifies the type of relationship this child record has with its parent (e.g. amendment)
-    SourcedFromImportProject:
-      title: Sourced From Import Project
-      type: object
-      description: Record created from an import project
-      required:
-      - type
-      - importId
-      properties:
-        type:
-          type: string
-          description: The source type of the record
-          enum:
-          - import_project
-          example: import_project
-        importId:
-          type: string
-          description: The unique identifier of the import project that created the record
-          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
-    SourcedFromConnector:
-      title: Sourced From Connector
-      type: object
-      description: Record created from a connector integration
-      required:
-      - type
-      - connectorId
-      properties:
-        type:
-          type: string
-          description: The source type of the record
-          enum:
-          - connector
-          example: connector
-        connectorId:
-          type: string
-          description: The unique identifier of the connector integration that created the record
-          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
-    RecordPropertyLinkModel:
-      type: object
-      required:
-      - recordId
-      properties:
-        recordId:
-          type: string
-          example: 17009e0d-z2e9-425d-a85b-1cf152773e49
-    SourcedFromMetadataImport:
-      title: Sourced From Metadata Import
-      type: object
-      description: Record created from a metadata import
-      required:
-      - type
-      - metadataImportId
-      properties:
-        type:
-          type: string
-          description: The source type of the record
-          enum:
-          - metadata_import
-          example: metadata_import
-        metadataImportId:
-          type: string
-          description: The unique identifier of the metadata import that created the record
-          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
-    EffectiveContractActionProperties:
-      type: object
-      properties:
-        standard_initialTermLength:
-          type: object
-          description: The initial term is the time from the effective date that the agreement will be effective for. If not defined, then the agreement will be active until the expiration date. If an expiration date is also not defined then the agreement will be active indefinitely, until the status of the agreement is manually changed.
-          required:
-          - type
-          - value
-          properties:
-            type:
-              type: string
-              enum:
-              - duration
-            value:
-              type: string
-              example: P1Y
-        expirationDate:
-          type: object
-          description: Expiration date is when this agreement will end or become inactive. If an expiration date isn't present then the effective date plus the initial term length are used to expire the contract.
-          required:
-          - type
-          - value
-          properties:
-            type:
-              type: string
-              enum:
-              - date
-            value:
-              type: string
-              example: '2018-05-08T00:00:00-07:00'
-    SourcedFromContract:
-      title: Sourced From Contract
-      type: object
-      description: Record created from a contract (typically an obligation)
-      required:
-      - type
-      - contractId
-      properties:
-        type:
-          type: string
-          description: The source type of the record
-          enum:
-          - contract
-          example: contract
-        contractId:
-          type: string
-          description: The unique identifier of the contract that created the record
-          example: 4a785686-d3d5-47bc-960e-3df0df871ea9
-    EntityProperties:
-      type: object
-      description: The entity properties associated with the entity
-      additionalProperties:
-        $ref: '#/components/schemas/EntityPropertyType'
-    ActivateContractAction:
-      type: object
-      required:
-      - type
-      - properties
-      additionalProperties: false
-      properties:
-        type:
-          type: string
-          description: The action type to run on the contract.
-          enum:
-          - activate
-        properties:
-          type: object
-          allOf:
-          - type: object
-            properties:
-              standard_terminationNoticePeriod:
-                type: object
-                description: This is the number of days of notice that needs to be given before this agreement can be terminated.
-                required:
-                - type
-                - value
-                properties:
-                  type:
-                    type: string
-                    enum:
-                    - duration
-                  value:
-                    type: string
-                    example: P14D
-              effectiveDate:
-                type: object
-                description: Effective date is when this agreement begins and is considered active. If effective date is not defined then the executed date of the agreement is used to mark the contract as active.
-                required:
-                - type
-                - value
-                properties:
-                  type:
-                    type: string
-                    enum:
-                    - date
-                  value:
-                    type: string
-                    example: '2018-05-08T00:00:00-07:00'
-          - $ref: '#/components/schemas/RenewalContractActionProperties'
-          - $ref: '#/components/schemas/RenewalTypeContractActionProperties'
-          - $ref: '#/components/schemas/EffectiveContractActionProperties'
+          example: attachmentKey
   responses:
-    BadRequestError400:
-      description: '400'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: string
-                example: MISSING_PARAM
-              message:
-                type: string
-                example: reason why something has gone wrong
-              param:
-                type: string
-                example: parameter identifier
     NotFoundError404:
       description: '404'
       content:
@@ -2958,6 +3015,19 @@ components:
               message:
                 type: string
                 example: not found
+    ForbiddenError403:
+      description: '403'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FORBIDDEN
+              message:
+                type: string
+                example: access forbidden
     UnauthorizedError401:
       description: '401'
       content:
@@ -2986,33 +3056,6 @@ components:
               value:
                 code: UNAUTHORIZED
                 message: token has expired
-    ForbiddenError403:
-      description: '403'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: string
-                example: FORBIDDEN
-              message:
-                type: string
-                example: access forbidden
-    AttachmentDeleteResponse404:
-      description: Bad request error when deleting attachment.
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/BadRequestErrorRecordIDNotFound'
-            - $ref: '#/components/schemas/BadRequestErrorRecordAttachmentIDNotFound'
-    ContractActionResponse400:
-      description: Bad input for contract action
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BadRequestErrorContractAction'
     RecordAttachmentResponse400:
       description: Bad request error for creating record attachment.
       content:
@@ -3025,79 +3068,36 @@ components:
             - $ref: '#/components/schemas/BadRequestErrorRecordAttachmentUnknownAttachmentKey'
             - $ref: '#/components/schemas/BadRequestErrorRecordAttachmentUnknownContentType'
             - $ref: '#/components/schemas/BadRequestErrorRecordAttachmentMissingFormDataPart'
-  parameters:
-    addressAsObject:
-      name: addressAsObject
-      in: query
-      description: When true, returns addresses as objects instead of strings.
-      schema:
-        type: boolean
-        default: false
-    QueryPageSize:
-      name: pageSize
-      in: query
-      description: A limit of the number of results to return.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-        default: 20
-    HydrateEntitiesFlag:
-      name: hydrateEntities
-      in: query
-      description: Indicates whether to fully hydrate related entities (true) or return minimal information (false).
-      required: false
-      schema:
-        type: boolean
-        default: false
-    RecordType:
-      name: types
-      in: query
-      description: Comma separated (no spaces) record types to export. Use the [Retrieve Records Schema](https://developer.ironcladapp.com/reference/list-all-records-metadata) endpoint to retrieve a list of types.
-      example: mutualNDA,consultingAgreement
-      schema:
-        type: string
-    XAsUserEmail:
-      name: x-as-user-email
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-id` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: jane.doe@test.com
-    RecordLastUpdated:
-      name: lastUpdated
-      in: query
-      description: Get records updated since (UTC)
-      example: '2018-03-10T00:00:00.000Z'
-      schema:
-        type: string
-    XAsUserId:
-      name: x-as-user-id
-      in: header
-      description: Denotes the actor of the request. When used, the API will take into account this user's permissions and access. This or `x-as-user-email` is required when the associated token was produced from the Client Credentials grant or with legacy bearer tokens on select endpoints. More information about [permissions](https://support.ironcladapp.com/hc/en-us/articles/23063233934999-Ironclad-Permissions-Overview).
-      required: false
-      schema:
-        type: string
-        example: 5f0375c4cdc1927a3c5edcd3
-    RecordFilter:
-      name: filter
-      in: query
-      description: "Filter records using a formula. The record property ID should be enclosed in brackets `[ ]` and the value should be enclosed in single quotes `' '`. \n\nRecord properties can be identified using the [Retrieve Records Schema](https://developer.ironcladapp.com/reference/list-all-records-metadata) endpoint.\n\nSupported formula operations include the following with documentation found [here](/reference/filter-query-param):\n\n<ul>\n <li>Equals / NotEqual</li>\n <li>Contains</li>\n <li>IsEmpty / IsNotEmpty</li>\n <li>LessThan / LessThanOrEqual</li>\n <li>GreaterThan / GreaterThanOrEqual</li>\n <li>Date / Today / RelativeDate</li>\n <li>And / Or</li>\n</ul>"
-      schema:
-        type: string
-      example: Equals([counterpartyName], 'Test LLC')
-    QueryPageNumber:
-      name: page
-      in: query
-      description: The page number used when paginating through a list of results.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-        maximum: 100000000
+    ContractActionResponse400:
+      description: Bad input for contract action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestErrorContractAction'
+    AttachmentDeleteResponse404:
+      description: Bad request error when deleting attachment.
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/BadRequestErrorRecordIDNotFound'
+            - $ref: '#/components/schemas/BadRequestErrorRecordAttachmentIDNotFound'
+    BadRequestError400:
+      description: '400'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: MISSING_PARAM
+              message:
+                type: string
+                example: reason why something has gone wrong
+              param:
+                type: string
+                example: parameter identifier
   securitySchemes:
     sec0:
       type: apiKey
