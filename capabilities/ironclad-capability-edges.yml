@@ -1,0 +1,63 @@
+slug: ironclad
+provider: Ironclad
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 5
+edges:
+- tag: Records
+  spec_file: ironclad-records-api-openapi.yml
+  capability_id: BC-150.10
+  capability_id_l1: BC-150
+  capability_name: Contract Management
+  confidence: 0.85
+  evidence: POST /records/smart-import  create-a-smart-import-record; schemas CancelAutoRenewalContractAction,
+    EditRenewalContractAction, RecordModel
+  reason: 'The Records surface is the contract repository: create/retrieve contract records, smart import
+    with predictions, metadata schema, and contract renewal actions. Plainly contract lifecycle management.'
+- tag: Workflows
+  spec_file: ironclad-workflows-api-openapi.yml
+  capability_id: BC-150.10
+  capability_id_l1: BC-150
+  capability_name: Contract Management
+  confidence: 0.85
+  evidence: GET /workflows/{id}/approvals  List All Workflow Approvals; POST /workflows/{id}/sign-status/send-signature-request  Send
+    Signature Request; schemas WorkflowDocumentModel, SignatureStatusModel
+  reason: Contract workflow surface covering drafting documents, approval requests, turn history and signature
+    execution — the drafting-to-signature stages of contract lifecycle management.
+- tag: Obligations
+  spec_file: ironclad-obligations-api-openapi.yml
+  capability_id: BC-150.10
+  capability_id_l1: BC-150
+  capability_name: Contract Management
+  confidence: 0.8
+  evidence: POST /obligations  create-an-obligation; schemas ObligationModel, ObligationTypeKey, RecordPropertyClause
+  reason: Tracking contractual obligations extracted from contract records is a core part of contract
+    lifecycle management (post-signature obligation management).
+- tag: Groups
+  spec_file: ironclad-groups-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: 'openapi description: ''Documentation for Ironclad''s SCIM Implementation''; PATCH /Groups/{groupId}  update-group-membership'
+  reason: SCIM group provisioning and membership management is identity and access administration. Mapped
+    to IAM rather than any contract capability; some ambiguity as it could equally be read as tenant identity
+    federation from the vendor side.
+- tag: Users
+  spec_file: ironclad-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: 'openapi description: ''Documentation for Ironclad''s SCIM Implementation''; POST /Users  create-a-user'
+  reason: SCIM user provisioning/deprovisioning lifecycle maps to identity and access management (joiners-movers-leavers),
+    not to any contract capability.
