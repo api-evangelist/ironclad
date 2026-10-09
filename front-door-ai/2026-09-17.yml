@@ -7,14 +7,17 @@ front_door_ai:
   probed_at: '2026-09-17'
   host: www.ironcladapp.com
   final_host: ironcladapp.com
-  ownership: inherited
+  ownership: own
   owner: ironclad
   shares_host_with: null
-  inherited_from: ironcladapp.com
+  inherited_from: null
+  alias_of: ironcladapp.com
   verdict: scored
-  score: null
+  score: 21
+  band: 5
+  band_label: prominent
   host_score: 21
-  density: null
+  density: 19.34
   words: 1086
   tiers:
     agentic: 3
