@@ -1,0 +1,14 @@
+edges: []
+marketplace_apps:
+- marketplace: own
+  channel: null
+  app: ironclad
+  url: https://ironcladapp.com/product/integrations
+  adapter: sweep-legal.py:read_ironclad
+  listed: 39
+  status: names-only
+  note: no partner domain on any entry; names are not edges
+generated: '2026-10-14'
+method: none
+checked:
+- https://ironcladapp.com/wp-json/wp/v2/integration?per_page=100&page=1
