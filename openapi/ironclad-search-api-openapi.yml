@@ -124,6 +124,19 @@ components:
               value:
                 code: UNAUTHORIZED
                 message: token has expired
+    ForbiddenError403:
+      description: '403'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FORBIDDEN
+              message:
+                type: string
+                example: access forbidden
     BadRequestError400:
       description: '400'
       content:
@@ -140,19 +153,6 @@ components:
               param:
                 type: string
                 example: parameter identifier
-    ForbiddenError403:
-      description: '403'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              code:
-                type: string
-                example: FORBIDDEN
-              message:
-                type: string
-                example: access forbidden
   securitySchemes:
     sec0:
       type: apiKey
