@@ -78,7 +78,7 @@
     - connectors/applications/ironclad
     vendor_link: https://ironcladapp.com/
     builder: Fivetran
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: ironclad-microsoft-teams-own
   label: Microsoft Teams (own)
