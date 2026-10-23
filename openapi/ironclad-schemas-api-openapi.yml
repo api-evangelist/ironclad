@@ -1149,3 +1149,9 @@ x-readme:
   - ruby
   - javascript
   - python
+x-provenance:
+  method: harvested
+  publisher: Ironclad
+  source: https://developer.ironcladapp.com/openapi/ironclad-scim-api.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
