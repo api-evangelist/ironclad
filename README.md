@@ -1,4 +1,4 @@
-# Ironclad (ironclad)
+# Ironclad
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,178 +66,223 @@
 
 Ironclad is the enterprise contract lifecycle management (CLM) platform used by legal, sales, procurement, and finance teams to draft, negotiate, approve, sign, store, and analyze contracts at scale. The platform combines a no-code Workflow Designer, AI-powered Jurist agentic assistant (contract review, redlining, drafting, repository search), a Records repository with smart import and metadata extraction, Clickwrap for online acceptance, and deep integrations with Salesforce, Microsoft 365, Slack, Workday, ServiceNow, Jira, HubSpot, NetSuite, Dynamics 365, and Power Automate. Ironclad publishes three first-party OpenAPI 3.1 specifications (Public API, OAuth 2.0, SCIM 2.0) plus the Clickwrap REST/JS surface, supports regional NA1/EU1 hosting, OAuth 2.0 with scoped tokens, SCIM-based provisioning, and event-driven webhooks. Ironclad reported surpassing $200M in ARR in February 2026.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/ironclad/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/ironclad/refs/heads/main/apis.yml)
+**Areas:** Contract Lifecycle Management · Contracts · Legal Tech · LegalOps · Enterprise · Workflows · E-Signature · Clickwrap · Artificial Intelligence · Authentication · SCIM · Webhook
 
-## Scope
+## Ironclad on APIs.io
 
-- **Access:** 3rd-Party
+Everything profiled for Ironclad is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/ironclad/](https://apis.io/providers/ironclad/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (13)
 
-- Contract Lifecycle Management
-- CLM
-- Contracts
-- Legal Tech
-- LegalOps
-- Enterprise
-- Workflows
-- eSignature
-- Clickwrap
-- AI
-- OAuth
-- SCIM
-- Webhooks
+- [Ironclad Clickwrap API](https://apis.io/apis/ironclad/ironclad-clickwrap-api/) — The Ironclad Clickwrap (formerly PactSafe) API delivers programmatic clickwrap and browsewrap acceptance tracking for online agreements — terms of service,…
+- [Ironclad Authorization API](https://apis.io/apis/ironclad/ironclad-authorization-api/) — OAuth 2.0 authorization endpoints for token management and user authentication.
+- [Ironclad Entities API](https://apis.io/apis/ironclad/ironclad-entities-api/) — Documentation on Ironclad Entities.
+- [Ironclad Exports API](https://apis.io/apis/ironclad/ironclad-exports-api/) — Documentation on Ironclad Data Exports.
+- [Ironclad Groups API](https://apis.io/apis/ironclad/ironclad-groups-api/) — Documentation on SCIM Groups.
+- [Ironclad Obligations API](https://apis.io/apis/ironclad/ironclad-obligations-api/) — Documentation on Ironclad Obligations.
+- [Ironclad Records API](https://apis.io/apis/ironclad/ironclad-records-api/) — Documentation on Ironclad Records.
+- [Ironclad Resources API](https://apis.io/apis/ironclad/ironclad-resources-api/) — Resource access endpoints for retrieving user information and token details.
+- [Ironclad Schemas API](https://apis.io/apis/ironclad/ironclad-schemas-api/) — Documentation on SCIM Schemas.
+- [Ironclad Search API](https://apis.io/apis/ironclad/ironclad-search-api/) — Documentation on Ironclad Search.
+- [Ironclad Users API](https://apis.io/apis/ironclad/ironclad-users-api/) — Documentation on SCIM Users.
+- [Ironclad Webhooks API](https://apis.io/apis/ironclad/ironclad-webhooks-api/) — Documentation on Ironclad Webhooks.
+- [Ironclad Workflows API](https://apis.io/apis/ironclad/ironclad-workflows-api/) — Documentation on Ironclad Workflows.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-05-25
-- **Modified:** 2026-05-25
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Arazzo workflows (14)
 
-### Ironclad Public API
+Multi-step workflows that chain operations into a business task.
 
-The Ironclad Public API exposes contract lifecycle management primitives — Workflows (contract authoring, approvals, signature packets, comments, signers), Records (the executed contract repository with metadata, attachments, smart-import predictions), Entities (counterparties and parties referenced across workflows and records), Obligations (post-signature commitments derived from contracts), Webhooks (event-driven integration into downstream systems), Exports (bulk data warehouse pulls), and Conversational Search (Jurist-powered natural-language queries over the contract repository). REST/JSON over HTTPS with OAuth 2.0 (Authorization Code and Client Credentials) and bearer-token authentication; OpenAPI 3.1; regional NA1, EU1, and demo servers.
+- [Ironclad Audit a Workflow's Activity](https://apis.io/arazzos/ironclad/ironclad-audit-workflow-activity/)
+- [Ironclad Cancel a Workflow with an Audit Comment](https://apis.io/arazzos/ironclad/ironclad-cancel-workflow-with-comment/)
+- [Ironclad Create and Retrieve a Contract Record](https://apis.io/arazzos/ironclad/ironclad-create-and-retrieve-record/)
+- [Ironclad Curate a Signature Packet](https://apis.io/arazzos/ironclad/ironclad-curate-signature-packet/)
+- [Ironclad Discover a Template and Launch a Workflow](https://apis.io/arazzos/ironclad/ironclad-discover-and-launch-from-schema/)
+- [Ironclad Launch and Track a Workflow](https://apis.io/arazzos/ironclad/ironclad-launch-and-track-workflow/)
+- [Ironclad Launch a Workflow Asynchronously and Poll](https://apis.io/arazzos/ironclad/ironclad-launch-workflow-async-poll/)
+- [Ironclad Pause and Resume a Workflow](https://apis.io/arazzos/ironclad/ironclad-pause-and-resume-workflow/)
+- [Ironclad Register and Verify a Webhook](https://apis.io/arazzos/ironclad/ironclad-register-and-verify-webhook/)
+- [Ironclad Review and Approve a Workflow](https://apis.io/arazzos/ironclad/ironclad-review-and-approve-workflow/)
+- [Ironclad Schedule a Signature Send](https://apis.io/arazzos/ironclad/ironclad-schedule-signature-send/)
+- [Ironclad Send a Workflow for Signature](https://apis.io/arazzos/ironclad/ironclad-send-workflow-for-signature/)
+- [Ironclad Update a Webhook Subscription](https://apis.io/arazzos/ironclad/ironclad-update-webhook-subscription/)
+- [Ironclad Upsert a Contract Record](https://apis.io/arazzos/ironclad/ironclad-upsert-contract-record/)
 
-- **Human URL:** [https://developer.ironcladapp.com/reference/getting-started-api](https://developer.ironcladapp.com/reference/getting-started-api)
-- **Base URL:** `https://na1.ironcladapp.com/public/api/v1`
+#### GraphQL (1)
 
-#### Tags
+GraphQL schemas.
 
-- Contracts
-- Contract Lifecycle Management
-- CLM
-- Workflows
-- Records
-- Entities
-- Obligations
-- Webhooks
-- Exports
+- [Moved to /providers/ironclad/](https://apis.io/graphqls/ironclad/ironclad-graphql/)
 
-#### Properties
+#### Agentic access (1)
 
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Ironclad Agentic Access](https://apis.io/agentic-access/ironclad/ironclad-agentic-access/)
+
+#### JSON Schema (5)
+
+The data models the API reads and writes.
+
+- [Ironclad Entity](https://apis.io/schemas/ironclad/ironclad-entity/)
+- [Ironclad Record](https://apis.io/schemas/ironclad/ironclad-record/)
+- [Ironclad SCIM User](https://apis.io/schemas/ironclad/ironclad-user/)
+- [Ironclad Webhook](https://apis.io/schemas/ironclad/ironclad-webhook/)
+- [Ironclad Workflow](https://apis.io/schemas/ironclad/ironclad-workflow/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Ironclad Context](https://apis.io/jsonld/ironclad/ironclad-context/)
+
+#### Vocabulary (1)
+
+The provider's domain terms, defined.
+
+- [Ironclad Vocabulary](https://apis.io/vocabularies/ironclad/ironclad-vocabulary/)
+
+#### Examples (4)
+
+Example requests and responses.
+
+- [Ironclad Conversational Search Example](https://apis.io/examples/ironclad/ironclad-conversational-search-example/)
+- [Ironclad Create Record Example](https://apis.io/examples/ironclad/ironclad-create-record-example/)
+- [Ironclad Create Webhook Example](https://apis.io/examples/ironclad/ironclad-create-webhook-example/)
+- [Ironclad Launch Workflow Example](https://apis.io/examples/ironclad/ironclad-launch-workflow-example/)
+
+#### Collections (18)
+
+Postman and Open Collection request collections.
+
+- [Ironclad OAuth 2.0 Authorization API](https://apis.io/collections/ironclad/open-ironclad-authorization-api/)
+- [Ironclad OAuth 2.0 Authorization Entities API](https://apis.io/collections/ironclad/open-ironclad-entities-api/)
+- [Ironclad OAuth 2.0 Authorization Exports API](https://apis.io/collections/ironclad/open-ironclad-exports-api/)
+- [Ironclad OAuth 2.0 Authorization Groups API](https://apis.io/collections/ironclad/open-ironclad-groups-api/)
+- [Ironclad OAuth 2.0 API](https://apis.io/collections/ironclad/open-ironclad-oauth-20-api/)
+- [Ironclad OAuth 2.0 Authorization Obligations API](https://apis.io/collections/ironclad/open-ironclad-obligations-api/)
+- [Ironclad Public API](https://apis.io/collections/ironclad/open-ironclad-public-api/)
+- [Ironclad OAuth 2.0 Authorization Records API](https://apis.io/collections/ironclad/open-ironclad-records-api/)
+- [Ironclad OAuth 2.0 Authorization Resources API](https://apis.io/collections/ironclad/open-ironclad-resources-api/)
+- [Ironclad OAuth 2.0 Authorization Schemas API](https://apis.io/collections/ironclad/open-ironclad-schemas-api/)
+- [Ironclad SCIM API](https://apis.io/collections/ironclad/open-ironclad-scim-api/)
+- [Ironclad OAuth 2.0 Authorization Search API](https://apis.io/collections/ironclad/open-ironclad-search-api/)
+- [Ironclad OAuth 2.0 Authorization Users API](https://apis.io/collections/ironclad/open-ironclad-users-api/)
+- [Ironclad OAuth 2.0 Authorization Webhooks API](https://apis.io/collections/ironclad/open-ironclad-webhooks-api/)
+- [Ironclad OAuth 2.0 Authorization Workflows API](https://apis.io/collections/ironclad/open-ironclad-workflows-api/)
+- [Ironclad OAuth 2.0 API](https://apis.io/collections/ironclad/postman-ironclad-oauth-20-api/)
+- [Ironclad Public API](https://apis.io/collections/ironclad/postman-ironclad-public-api/)
+- [Ironclad SCIM API](https://apis.io/collections/ironclad/postman-ironclad-scim-api/)
+
+#### Governance rules (2)
+
+Spectral rulesets for the provider's contracts.
+
+- [Ironclad — jsonschema rules](https://apis.io/rules/ironclad/ironclad-jsonschema-spectral-rules/)
+- [Ironclad API Rules](https://apis.io/rules/ironclad/ironclad-rules/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Ironclad Authentication](https://apis.io/security/ironclad/ironclad-authentication/)
+- [Ironclad Domain Security](https://apis.io/security/ironclad/ironclad-domain-security/)
+- [Ironclad Trust Center](https://apis.io/security/ironclad/ironclad-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Ironclad Scopes](https://apis.io/scopes/ironclad/ironclad-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Ironclad Plans Pricing](https://apis.io/plans/ironclad/ironclad-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Ironclad Rate Limits](https://apis.io/rate-limits/ironclad/ironclad-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Ironclad Finops](https://apis.io/finops/ironclad/ironclad-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.ironcladapp.com/)
 - [Documentation](https://developer.ironcladapp.com/reference/getting-started-api)
-- [Authentication](https://developer.ironcladapp.com/reference/authenticate-a-request)
-- [Rate Limits](https://developer.ironcladapp.com/reference/clm-api-rate-limits)
-- [OpenAPI](openapi/ironclad-public-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/ironclad-public-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/ironclad-public-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [JSON Schema](json-schema/ironclad-workflow-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/ironclad-record-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/ironclad-entity-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/ironclad-webhook-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON-LD](json-ld/ironclad-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
-- [Example](examples/ironclad-launch-workflow-example.json)
-- [Example](examples/ironclad-create-record-example.json)
-- [Example](examples/ironclad-create-webhook-example.json)
-- [Example](examples/ironclad-conversational-search-example.json)
-
-### Ironclad OAuth 2.0 API
-
-OAuth 2.0 endpoints for delegated and machine-to-machine access to the Ironclad Public API. Supports the Authorization Code grant (with PKCE for public clients) and the Client Credentials grant for server-to-server integrations. Exposes /authorize, /token, /userinfo, and /company-info; scopes follow the `public.{resource}.{action}` convention (e.g., `public.workflows.readWorkflows`, `public.records.createRecords`).
-
-- **Human URL:** [https://developer.ironcladapp.com/reference/authentication-api](https://developer.ironcladapp.com/reference/authentication-api)
-- **Base URL:** `https://na1.ironcladapp.com/oauth`
-
-#### Tags
-
-- OAuth
-- Authentication
-- Authorization
-- Identity
-
-#### Properties
-
-- [Documentation](https://developer.ironcladapp.com/reference/authentication-api)
-- [Documentation](https://developer.ironcladapp.com/reference/authorization-code-grant)
-- [Documentation](https://developer.ironcladapp.com/reference/client-credentials-grant)
-- [Documentation](https://developer.ironcladapp.com/reference/register-oauth-client)
-- [Documentation](https://developer.ironcladapp.com/reference/guidance-for-oauth-migration)
-- [OpenAPI](openapi/ironclad-oauth-20-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/ironclad-oauth-20-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/ironclad-oauth-20-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Ironclad SCIM 2.0 API
-
-SCIM 2.0 endpoints for Just-in-Time and bulk provisioning of Ironclad users and groups from an upstream identity provider (Okta, Azure AD, OneLogin, etc.). Implements /Users, /Groups, and /Schemas with standard SCIM semantics — list/get/create/replace/delete plus PATCH for partial updates and group-membership edits. Enables SSO-aligned lifecycle management and role-based access.
-
-- **Human URL:** [https://developer.ironcladapp.com/reference/retrieve-all-users](https://developer.ironcladapp.com/reference/retrieve-all-users)
-- **Base URL:** `https://na1.ironcladapp.com/scim/v2`
-
-#### Tags
-
-- SCIM
-- Identity
-- User Provisioning
-- Groups
-- Directory
-
-#### Properties
-
-- [Documentation](https://developer.ironcladapp.com/reference/retrieve-all-users)
-- [OpenAPI](openapi/ironclad-scim-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/ironclad-scim-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/ironclad-scim-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [JSON Schema](json-schema/ironclad-user-schema.json) — [JSON Schema](https://json-schema.org/specification)
-
-### Ironclad Clickwrap API
-
-The Ironclad Clickwrap (formerly PactSafe) API delivers programmatic clickwrap and browsewrap acceptance tracking for online agreements — terms of service, privacy policies, EULAs, and checkout-flow agreements. Comprises a JavaScript library (PS.js) for rendering and capturing acceptance events, an Activity API for sending acceptance/visit/displayed/agreed events server-side, and a REST API for managing Sites, Groups, Contracts, and Signer records. Powers in-product acceptance for SaaS sign-ups, checkout pages, mobile apps, and embedded forms.
-
-- **Human URL:** [https://clickwrap-developer.ironcladapp.com/docs/getting-started](https://clickwrap-developer.ironcladapp.com/docs/getting-started)
-- **Base URL:** `https://pactsafe.io`
-
-#### Tags
-
-- Clickwrap
-- Acceptance
-- Online Agreements
-- PactSafe
-
-#### Properties
-
-- [Documentation](https://clickwrap-developer.ironcladapp.com/docs/getting-started)
-- [Documentation](https://clickwrap-developer.ironcladapp.com/docs/activity-api)
-- [SDK](https://clickwrap-developer.ironcladapp.com/docs/javascript-library-getting-started)
-- [Authentication](https://clickwrap-developer.ironcladapp.com/docs/getting-your-access-token)
-- [Postman Collection](collections/ironclad-oauth-20-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/ironclad-oauth-20-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/ironclad-public-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/ironclad-public-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/ironclad-scim-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/ironclad-scim-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [Arazzo Workflows](arazzo/) — [Arazzo Specification](https://spec.openapis.org/arazzo/latest.html)
-- [Portal](https://developer.ironcladapp.com/)
-- [Documentation](https://developer.ironcladapp.com/reference/getting-started-api)
-- [Documentation](https://developer.ironcladapp.com/docs/getting-started)
-- [API Reference](https://developer.ironcladapp.com/reference)
-- [Authentication](https://developer.ironcladapp.com/reference/authentication-api)
-- [Rate Limits](https://developer.ironcladapp.com/reference/clm-api-rate-limits)
-- [Changelog](https://developer.ironcladapp.com/changelog/release-notes)
-- [Status Page](https://status.ironcladapp.com/)
-- [GitHub Organization](https://github.com/ironclad)
-- [SDK](https://github.com/ironclad/rivet)
-- [LinkedIn](https://www.linkedin.com/company/ironclad-inc-)
+- [API reference](https://developer.ironcladapp.com/reference)
 - [Pricing](https://ironcladapp.com/pricing)
-- [Terms of Service](https://ironcladapp.com/master-subscription-agreement/)
-- [Privacy Policy](https://ironcladapp.com/privacy/)
 - [Support](https://support.ironcladapp.com/)
+- [Changelog](https://developer.ironcladapp.com/changelog/release-notes)
 - [Blog](https://ironcladapp.com/journal/)
-- [Plans](plans/ironclad-plans-pricing.yml)
-- [Rate Limits](rate-limits/ironclad-rate-limits.yml)
-- [Fin Ops](finops/ironclad-finops.yml)
-- [Spectral Rules](rules/ironclad-rules.yml)
-- [Vocabulary](vocabulary/ironclad-vocabulary.yml)
-- [Features](undefined)
-- [Use Cases](undefined)
-- [Integrations](undefined)
-- [Solutions](undefined)
+- [Terms of service](https://ironcladapp.com/master-subscription-agreement/)
+- [Privacy policy](https://ironcladapp.com/privacy/)
+- [GitHub](https://github.com/ironclad)
+- [Status](https://status.ironcladapp.com/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** info@apievangelist.com
-**URL:** http://kinlane.com
+**Kin Score 51.8** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 71.4 |
+| Contract quality | 69.0 |
+| Contract governance | 27.3 |
+| Operational transparency | 34.2 |
+| Developer ergonomics | 44.0 |
+| Access clarity | 47.4 |
+
+**Agent readiness 35.3** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | documented (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | mostly |
+
+**Regulatory alignment 29.1** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/ironclad/](https://apis.io/providers/ironclad/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Ironclad: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/ironclad/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
